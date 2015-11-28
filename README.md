@@ -14,3 +14,13 @@
 # deploy
 
 + `gulp deploy`
+
+# demo
+
+## normal
+
+http://115.29.42.125/
+
+## test
+
+http://115.29.42.125:8888/

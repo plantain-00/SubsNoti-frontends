@@ -1,0 +1,37 @@
+{
+  "name": "subsnoti-frontends",
+  "version": "1.0.0",
+  "description": "the frondends of `SubsNoti`.",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/plantain-00/SubsNoti-frontends.git"
+  },
+  "author": "yao",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/plantain-00/SubsNoti-frontends/issues"
+  },
+  "homepage": "https://github.com/plantain-00/SubsNoti-frontends#readme",
+  "devDependencies": {
+    "autoprefixer": "latest",
+    "gulp": "latest",
+    "gulp-ejs": "latest",
+    "gulp-minify-css": "latest",
+    "gulp-minify-html": "latest",
+    "gulp-postcss": "latest",
+    "gulp-rename": "latest",
+    "gulp-rev": "latest",
+    "gulp-rev-replace": "latest",
+    "gulp-sass": "latest",
+    "gulp-shell": "latest",
+    "gulp-tslint": "^3.6.0",
+    "live-server": "latest",
+    "tslint": "next",
+    "typescript": "next",
+    "webpack-stream": "latest"
+  }
+}

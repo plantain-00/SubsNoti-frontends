@@ -1,1 +1,8 @@
 node_modules/
+.sass-cache/
+dev/*.html
+dev/scripts/*.js
+dev/styles/*.css
+dest/*.html
+dest/scripts/*.js
+dest/styles/*.css

@@ -11,7 +11,6 @@ let autoprefixer = require("autoprefixer");
 let postcss = require("gulp-postcss");
 let revReplace = require("gulp-rev-replace");
 let shell = require("gulp-shell");
-let sass = require("gulp-sass");
 let tslint = require("gulp-tslint");
 let liveServer = require("live-server");
 
@@ -26,8 +25,12 @@ let jsFiles = ["index", "login", "new_organization", "invite", "user", "error", 
 let htmlFiles = ["index", "login", "new_organization", "invite", "user", "error", "success"];
 let cssFiles = ["base"];
 
-let devCommand = "rm -rf build && tsc -p scripts --pretty && gulp tslint && scss-lint styles/*.scss && gulp css-dev && gulp js-dev && gulp rev-dev && gulp html-dev && rm -rf build";
-let destCommand = "rm -rf build && tsc -p scripts --pretty && gulp tslint && scss-lint styles/*.scss && gulp css-dest && gulp js-dest && gulp rev-dest && gulp html-dest && rm -rf build";
+let sassCommand = "sass styles/base.scss > build/base.css";
+
+let command = "rm -rf build && tsc -p scripts --pretty && gulp tslint && scss-lint styles/*.scss";
+
+let devCommand = `${command} && ${sassCommand} && gulp css-dev && gulp js-dev && gulp rev-dev && gulp html-dev && rm -rf build`;
+let destCommand = `${command} && ${sassCommand} && gulp css-dest && gulp js-dest && gulp rev-dest && gulp html-dest && rm -rf build`;
 
 gulp.task("build", shell.task(`rm -rf dest && rm -rf dev && ${devCommand}`));
 
@@ -109,15 +112,13 @@ gulp.task("host-dest", () => {
 
 function uglifyCss(name, isDevelopment) {
     if (isDevelopment) {
-        gulp.src("styles/" + name + ".scss")
-            .pipe(sass())
+        gulp.src("build/" + name + ".css")
             .pipe(postcss([autoprefixer({ browsers: ["last 2 versions"] })]))
             .pipe(rename(name + ".css"))
             .pipe(gulp.dest("build/styles/"));
     }
     else {
-        gulp.src("styles/" + name + ".scss")
-            .pipe(sass())
+        gulp.src("build/" + name + ".css")
             .pipe(postcss([autoprefixer({ browsers: ["last 2 versions"] })]))
             .pipe(minifyCSS())
             .pipe(rename(name + ".min.css"))

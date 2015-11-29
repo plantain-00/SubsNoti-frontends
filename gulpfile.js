@@ -92,7 +92,7 @@ gulp.task("host", () => {
     liveServer.start({
         port: 8888,
         host: "0.0.0.0",
-        root: "dest",
+        root: "dev",
         open: false,
         ignore: "",
         wait: 500,
@@ -166,10 +166,14 @@ function bundleAndUglifyHtml(name, isDevelopment) {
         dotMin: ".min",
         version: pjson.version,
         environment: "",
+        imageServerBaseUrl: "http://115.29.42.125:7777",
+        imageUploaderBaseUrl: "http://115.29.42.125:9999",
+        apiBaseUrl: "http://115.29.42.125:9998",
     };
     if (isDevelopment) {
         config.dotMin = "";
         config.environment = "dev";
+
         gulp.src("templates/" + name + ".ejs")
             .pipe(ejs(config))
             .pipe(rename(name + ".html"))

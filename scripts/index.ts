@@ -125,7 +125,7 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             $.ajax({
-                url: "/api/user/joined",
+                url: base.apiUrl + "/api/user/joined",
                 cache: false,
             }).then((data: OrganizationsResponse) => {
                 if (data.isSuccess) {
@@ -154,7 +154,7 @@ let vueBody: VueBodyModel = new Vue({
             self.currentPage = page;
 
             $.ajax({
-                url: "/api/organizations/" + self.currentOrganizationId + "/themes",
+                url: base.apiUrl + "/api/organizations/" + self.currentOrganizationId + "/themes",
                 data: {
                     page: page,
                     limit: base.itemLimit,
@@ -215,7 +215,7 @@ let vueBody: VueBodyModel = new Vue({
         createTheme: function() {
             let self: VueBodyModel = this;
 
-            $.post("/api/themes", {
+            $.post(base.apiUrl + "/api/themes", {
                 themeTitle: self.newThemeTitle,
                 themeDetail: self.newThemeDetail,
                 organizationId: self.currentOrganizationId,
@@ -243,7 +243,7 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             $.ajax({
-                url: "/api/user/watched/" + theme.id,
+                url: base.apiUrl + "/api/user/watched/" + theme.id,
                 type: "PUT",
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
@@ -267,7 +267,7 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             $.ajax({
-                url: "/api/user/watched/" + theme.id,
+                url: base.apiUrl + "/api/user/watched/" + theme.id,
                 data: {},
                 type: "DELETE",
             }).then((data: types.Response) => {
@@ -294,7 +294,7 @@ let vueBody: VueBodyModel = new Vue({
         },
         close: function(theme: Theme) {
             $.ajax({
-                url: "/api/themes/" + theme.id,
+                url: base.apiUrl + "/api/themes/" + theme.id,
                 data: {
                     status: types.ThemeStatus.closed
                 },
@@ -310,7 +310,7 @@ let vueBody: VueBodyModel = new Vue({
         },
         reopen: function(theme: Theme) {
             $.ajax({
-                url: "/api/themes/" + theme.id,
+                url: base.apiUrl + "/api/themes/" + theme.id,
                 data: {
                     status: types.ThemeStatus.open
                 },
@@ -342,7 +342,7 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             $.ajax({
-                url: "/api/themes/" + theme.id,
+                url: base.apiUrl + "/api/themes/" + theme.id,
                 data: {
                     title: self.titleInEditing,
                     detail: self.detailInEditing,

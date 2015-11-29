@@ -1,11 +1,3 @@
-/**
- * enum, interface, class, type. do not rely on other thing.
- */
-
-export const enum OrganizationStatus {
-    normal
-}
-
 export const enum StatusCode {
     OK = 200,
     createdOrModified = 201,
@@ -41,10 +33,6 @@ export const themeStatus = {
     closed: <ThemeStatusType>"closed",
 };
 
-export const enum UserStatus {
-    normal
-}
-
 export interface CurrentUserResponse {
     id: string;
     email: string;
@@ -52,10 +40,6 @@ export interface CurrentUserResponse {
     createdOrganizationCount: number;
     joinedOrganizationCount: number;
     avatar: string;
-}
-
-export interface E extends Error {
-    statusCode: StatusCode;
 }
 
 export interface Response {
@@ -66,24 +50,6 @@ export interface Response {
     documentUrl?: string;
     actualErrorMessage?: string;
 }
-
-export interface Document {
-    url: string;
-    method: "get" | "post" | "put" | "delete";
-    documentUrl: string;
-}
-
-export interface ObsoleteDocument extends Document {
-    versionRange: string;
-    expiredDate: string;
-}
-
-type Environment = "development" | "production";
-
-export const environment = {
-    development: <Environment>"development",
-    production: <Environment>"production",
-};
 
 export type PushEvent = "theme created" | "theme updated";
 
@@ -104,17 +70,10 @@ export interface Theme {
     title: string;
     detail: string;
     organizationId: string;
-    createTime: string | number;
-    updateTime?: string | number;
-    status: ThemeStatusType | ThemeStatus;
+    createTime: string;
+    updateTime?: string;
+    status: ThemeStatusType;
     creator: User;
     owners: User[];
     watchers: User[];
 }
-
-export type ResponseType = "json" | "html";
-
-export const responseType = {
-    json: <ResponseType>"json",
-    html: <ResponseType>"html",
-};

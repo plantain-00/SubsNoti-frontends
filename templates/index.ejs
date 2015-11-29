@@ -189,7 +189,7 @@
 <% include scripts %>
 <script>
     // socket.io must be defined here.
-    var socket = io();
+    var socket = io("<%- apiBaseUrl %>");
 </script>
 <script type="text/javascript" src="./scripts/index<%- dotMin %>.js"></script>
 <% include foot %>

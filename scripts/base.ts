@@ -1,5 +1,5 @@
 declare let Vue;
-declare let version;
+declare let version: string;
 
 import * as types from "./types";
 import * as common from "./common";
@@ -20,9 +20,14 @@ export const loginStatus = {
 
 export let itemLimit = 10;
 export let maxOrganizationNumberUserCanCreate = 3;
-export let imageServerUrl = "http://115.29.42.125:7777";
-export let imageUploaderUrl = "http://115.29.42.125:9999";
-export let apiUrl = "http://115.29.42.125:9998";
+
+declare let imageServerBaseUrl: string;
+declare let imageUploaderBaseUrl: string;
+declare let apiBaseUrl: string;
+
+export let imageServerUrl = imageServerBaseUrl;
+export let imageUploaderUrl = imageUploaderBaseUrl;
+export let apiUrl = apiBaseUrl;
 
 export function getFullUrl(avatar: string): string {
     return `${imageServerUrl}/${avatar}`;
@@ -37,7 +42,7 @@ function getCurrentUser(next: (data: CurrentUserResponse) => void) {
         next(data);
     } else {
         $.ajax({
-            url: "/api/user",
+            url: apiUrl + "/api/user",
             cache: false,
         }).then((data: CurrentUserResponse) => {
             window.sessionStorage.setItem(common.sessionStorageNames.loginResult, JSON.stringify(data));
@@ -119,7 +124,7 @@ export let vueHead: VueHeadModel = new Vue({
 
             $.ajax({
                 type: "DELETE",
-                url: "/api/user/logged_in",
+                url: apiUrl + "/api/user/logged_in",
                 cache: false,
             }).then((data: CurrentUserResponse) => {
                 if (data.isSuccess) {
@@ -173,5 +178,8 @@ $(document).ajaxSend(() => {
 $.ajaxSetup({
     headers: {
         "X-Version": version
+    },
+    xhrFields: {
+        withCredentials: true
     },
 });

@@ -87,7 +87,7 @@ let vueBody: VueBodyModel = new Vue({
                 }
             }
 
-            $.post("/api/tokens", {
+            $.post(base.apiUrl + "/api/tokens", {
                 email: `${self.emailHead}@${self.emailTail}`,
                 name: self.name,
                 guid: guid,
@@ -103,7 +103,7 @@ let vueBody: VueBodyModel = new Vue({
             });
         },
         refreshCaptcha: function() {
-            $.post("/api/captchas", {
+            $.post(base.apiUrl + "/api/captchas", {
                 id: guid
             }).then((data: CaptchaResponse) => {
                 if (data.isSuccess) {

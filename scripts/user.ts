@@ -44,9 +44,6 @@ let vueBody: VueBodyModel = new Vue({
                     processData: false,
                     contentType: false,
                     type: "POST",
-                    xhrFields: {
-                        withCredentials: true
-                    },
                 }).then((data: UploadResponse) => {
                     if (data.isSuccess) {
                         let name = data.names[0];
@@ -65,7 +62,7 @@ let vueBody: VueBodyModel = new Vue({
 
             if (self.name.trim() !== base.vueHead.currentUserName || avatarFileName) {
                 $.ajax({
-                    url: "/api/user",
+                    url: base.apiUrl + "/api/user",
                     data: {
                         name: self.name,
                         avatarFileName: avatarFileName,

@@ -29,12 +29,9 @@ let sassCommand = "sass styles/base.scss > build/base.css";
 
 let command = "rm -rf build && tsc -p scripts --pretty && gulp tslint && scss-lint styles/*.scss";
 
-let devCommand = `${command} && ${sassCommand} && gulp css-dev && gulp js-dev && gulp rev-dev && gulp html-dev && rm -rf build`;
-let destCommand = `${command} && ${sassCommand} && gulp css-dest && gulp js-dest && gulp rev-dest && gulp html-dest && rm -rf build`;
+gulp.task("build", shell.task(`rm -rf dest && ${command} && ${sassCommand} && gulp css-dev && gulp js-dev && gulp rev-dev && gulp html-dev && rm -rf build`));
 
-gulp.task("build", shell.task(`rm -rf dest && rm -rf dev && ${devCommand}`));
-
-gulp.task("deploy", shell.task(`${devCommand} && ${destCommand}`));
+gulp.task("deploy", shell.task(`${command} && ${sassCommand} && gulp css-dest && gulp js-dest && gulp rev-dest && gulp html-dest && rm -rf build`));
 
 gulp.task("css-dev", () => {
     for (let file of cssFiles) {
@@ -92,17 +89,6 @@ gulp.task("host", () => {
     liveServer.start({
         port: 8888,
         host: "0.0.0.0",
-        root: "dev",
-        open: false,
-        ignore: "",
-        wait: 500,
-    });
-});
-
-gulp.task("host-dest", () => {
-    liveServer.start({
-        port: 8888,
-        host: "0.0.0.0",
         root: "dest",
         open: false,
         ignore: "",
@@ -149,15 +135,13 @@ function bundleAndUglifyJs(name, isDevelopment) {
 }
 
 function revCssAndJs(isDevelopment) {
-    let dest = isDevelopment ? "dev" : "dest";
-
     gulp.src(["build/styles/*.css", "build/scripts/*.js"], { base: "build" })
         .pipe(rev())
-        .pipe(gulp.dest(dest))
+        .pipe(gulp.dest("dest"))
         .pipe(rev.manifest())
         .pipe(gulp.dest("build/"));
     gulp.src("build/scripts/*.map", { base: "build" })
-        .pipe(gulp.dest(dest));
+        .pipe(gulp.dest("dest"));
 }
 
 function bundleAndUglifyHtml(name, isDevelopment) {
@@ -173,6 +157,9 @@ function bundleAndUglifyHtml(name, isDevelopment) {
     if (isDevelopment) {
         config.dotMin = "";
         config.environment = "dev";
+        config.imageServerBaseUrl = "http://localhost:7777";
+        config.imageUploaderBaseUrl = "http://localhost:9999";
+        config.apiBaseUrl = "http://localhost:9998";
 
         gulp.src("templates/" + name + ".ejs")
             .pipe(ejs(config))
@@ -180,7 +167,7 @@ function bundleAndUglifyHtml(name, isDevelopment) {
             .pipe(revReplace({
                 manifest: manifest
             }))
-            .pipe(gulp.dest("dev"));
+            .pipe(gulp.dest("dest"));
     }
     else {
         gulp.src("templates/" + name + ".ejs")

@@ -296,7 +296,7 @@ let vueBody: VueBodyModel = new Vue({
             $.ajax({
                 url: base.apiUrl + "/api/themes/" + theme.id,
                 data: {
-                    status: "closed"
+                    status: types.themeStatus.closed
                 },
                 cache: false,
                 type: "PUT",
@@ -312,7 +312,7 @@ let vueBody: VueBodyModel = new Vue({
             $.ajax({
                 url: base.apiUrl + "/api/themes/" + theme.id,
                 data: {
-                    status: "open"
+                    status: types.themeStatus.open
                 },
                 cache: false,
                 type: "PUT",

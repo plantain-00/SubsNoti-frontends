@@ -33,3 +33,6 @@ export const localStorageNames = {
     lastLoginEmail: "lastLoginEmail",
     lastLoginName: "lastLoginName",
 };
+
+export const yes = "√";
+export const no = "X";

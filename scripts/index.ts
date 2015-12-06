@@ -3,7 +3,8 @@ import * as common from "./common";
 import * as types from "./types";
 
 declare let Vue;
-declare let io;
+declare let Clipboard;
+declare let socket;
 
 interface Organization {
     id: string;
@@ -73,6 +74,12 @@ interface VueBodyModel {
     clickOrder: (order: types.ThemeOrderType) => void;
 }
 
+function changeOrganization(id) {
+    socket.emit("change organization", {
+        to: id
+    });
+}
+
 let vueBody: VueBodyModel = new Vue({
     el: "#vue-body",
     data: {
@@ -137,6 +144,8 @@ let vueBody: VueBodyModel = new Vue({
                         } else {
                             self.currentOrganizationId = data.organizations[0].id;
                         }
+
+                        changeOrganization(self.currentOrganizationId);
 
                         self.fetchThemes(1);
                     }
@@ -206,6 +215,10 @@ let vueBody: VueBodyModel = new Vue({
         },
         clickOrganization: function(organization: Organization) {
             let self: VueBodyModel = this;
+
+            if (self.currentOrganizationId !== organization.id) {
+                changeOrganization(organization.id);
+            }
 
             self.currentOrganizationId = organization.id;
             self.fetchThemes(1);
@@ -382,10 +395,7 @@ let vueBody: VueBodyModel = new Vue({
     },
 });
 
-declare let Clipboard;
-declare let socket;
-
-$(document).ready(function() {
+$(document).ready(() => {
     let clipboard = new Clipboard(".clip");
 
     clipboard.on("success", e => {
@@ -419,7 +429,7 @@ $(document).ready(function() {
 
         let w = $(window);
         let d = $(document);
-        w.scroll(function() {
+        w.scroll(() => {
             if (w.scrollTop() >= d.height() - w.height()
                 && vueBody.canShowMoreThemes) {
                 vueBody.showMoreThemes();

@@ -152,7 +152,7 @@ function bundleAndUglifyHtml(name, isDevelopment) {
         environment: "",
         imageServerBaseUrl: "http://115.29.42.125:7777",
         imageUploaderBaseUrl: "http://115.29.42.125:9999",
-        apiBaseUrl: "http://115.29.42.125:9998",
+        apiBaseUrl: "",
     };
     if (isDevelopment) {
         config.dotMin = "";

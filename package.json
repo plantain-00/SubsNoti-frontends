@@ -1,6 +1,6 @@
 {
   "name": "subsnoti-frontends",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "the frondends of `SubsNoti`.",
   "main": "gulpfile.js",
   "scripts": {
@@ -27,7 +27,7 @@
     "gulp-rev": "latest",
     "gulp-rev-replace": "latest",
     "gulp-shell": "latest",
-    "gulp-tslint": "^3.6.0",
+    "gulp-tslint": "latest",
     "live-server": "latest",
     "tslint": "next",
     "typescript": "next",

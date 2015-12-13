@@ -260,16 +260,6 @@ let vueBody: VueBodyModel = new Vue({
                 type: "PUT",
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
-                    theme.watchers.push({
-                        id: base.vueHead.currentUserId,
-                        name: base.vueHead.currentUserName,
-                        email: base.vueHead.currentUserEmail,
-                        avatar: base.vueHead.currentAvatar,
-                    });
-                    theme.isWatching = true;
-                    theme.watchersEmails += base.vueHead.currentUserEmail + ";";
-                    theme.updateTime = moment().toISOString();
-                    theme.updateTimeText = moment(theme.updateTime).fromNow();
                     base.vueHead.showAlert(true, "success");
                 } else {
                     base.vueHead.showAlert(false, data.errorMessage);
@@ -285,14 +275,6 @@ let vueBody: VueBodyModel = new Vue({
                 type: "DELETE",
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
-                    let index = _.findIndex(theme.watchers, w => w.id === base.vueHead.currentUserId);
-                    if (~index) {
-                        theme.watchers.splice(index, 1);
-                        theme.watchersEmails = self.getEmails(theme.watchers);
-                    }
-                    theme.isWatching = false;
-                    theme.updateTime = moment().toISOString();
-                    theme.updateTimeText = moment(theme.updateTime).fromNow();
                     base.vueHead.showAlert(true, "success");
                 } else {
                     base.vueHead.showAlert(false, data.errorMessage);

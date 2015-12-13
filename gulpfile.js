@@ -150,8 +150,8 @@ function bundleAndUglifyHtml(name, isDevelopment) {
         dotMin: ".min",
         version: pjson.version,
         environment: "",
-        imageServerBaseUrl: "https://yorkyao.xyz:7777",
-        imageUploaderBaseUrl: "https://yorkyao.xyz:7777",
+        imageServerBaseUrl: "https://img.yorkyao.xyz",
+        imageUploaderBaseUrl: "https://img.yorkyao.xyz",
         apiBaseUrl: "",
     };
     if (isDevelopment) {

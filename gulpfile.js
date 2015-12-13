@@ -157,7 +157,7 @@ function bundleAndUglifyHtml(name, isDevelopment) {
     if (isDevelopment) {
         config.dotMin = "";
         config.environment = "dev";
-        config.imageServerBaseUrl = "http://localhost:7777";
+        // config.imageServerBaseUrl = "http://localhost:7777";
         config.imageUploaderBaseUrl = "http://localhost:9999";
         config.apiBaseUrl = "http://localhost:9998";
 

@@ -6,8 +6,8 @@ import * as common from "./common";
 
 Vue.config.debug = true;
 
-interface CurrentUserResponse extends types.CurrentUserResponse, types.Response {
-
+interface CurrentUserResponse extends types.Response {
+    user: types.User;
 }
 
 type LoginStatus = "unknown" | "fail" | "success";
@@ -147,15 +147,15 @@ export let vueHead: VueHeadModel = new Vue({
             getCurrentUser(data => {
                 if (data.isSuccess) {
                     self.loginStatus = loginStatus.success;
-                    self.currentUserId = data.id;
-                    self.currentUserName = data.name;
-                    self.currentUserEmail = data.email;
-                    self.currentAvatar = getFullUrl(data.avatar);
-                    self.createdOrganizationCount = data.createdOrganizationCount;
-                    self.joinedOrganizationCount = data.joinedOrganizationCount;
+                    self.currentUserId = data.user.id;
+                    self.currentUserName = data.user.name;
+                    self.currentUserEmail = data.user.email;
+                    self.currentAvatar = getFullUrl(data.user.avatar);
+                    self.createdOrganizationCount = data.user.createdOrganizationCount;
+                    self.joinedOrganizationCount = data.user.joinedOrganizationCount;
 
-                    window.localStorage.setItem(common.localStorageNames.lastLoginEmail, data.email);
-                    window.localStorage.setItem(common.localStorageNames.lastLoginName, data.name);
+                    window.localStorage.setItem(common.localStorageNames.lastLoginEmail, data.user.email);
+                    window.localStorage.setItem(common.localStorageNames.lastLoginName, data.user.name);
 
                     next(null);
                 } else {

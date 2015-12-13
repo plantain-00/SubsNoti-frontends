@@ -61,8 +61,10 @@ export const pushEvents = {
 export interface User {
     id: string;
     name: string;
-    email: string;
+    email?: string;
     avatar: string;
+    createdOrganizationCount?: number;
+    joinedOrganizationCount?: number;
 }
 
 export interface Theme {

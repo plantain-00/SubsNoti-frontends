@@ -1,6 +1,6 @@
 {
     "name": "subsnoti-frontends",
-    "version": "1.1.9",
+    "version": "1.1.10",
     "description": "the frondends of `SubsNoti`.",
     "main": "gulpfile.js",
     "scripts": {
@@ -17,20 +17,20 @@
     },
     "homepage": "https://github.com/plantain-00/SubsNoti-frontends#readme",
     "devDependencies": {
-        "autoprefixer": "latest",
-        "gulp": "latest",
-        "gulp-ejs": "latest",
-        "gulp-minify-css": "latest",
-        "gulp-minify-html": "latest",
-        "gulp-postcss": "latest",
-        "gulp-rename": "latest",
-        "gulp-rev": "latest",
-        "gulp-rev-replace": "latest",
-        "gulp-shell": "latest",
-        "gulp-tslint": "latest",
-        "live-server": "latest",
+        "autoprefixer": "^6.1.2",
+        "gulp": "^3.9.0",
+        "gulp-ejs": "^1.2.2",
+        "gulp-minify-css": "^1.2.2",
+        "gulp-minify-html": "^1.0.4",
+        "gulp-postcss": "^6.0.1",
+        "gulp-rename": "^1.2.2",
+        "gulp-rev": "^6.0.1",
+        "gulp-rev-replace": "^0.4.2",
+        "gulp-shell": "^0.5.1",
+        "gulp-tslint": "^4.2.1",
+        "live-server": "^0.9.0",
         "tslint": "next",
-        "typescript": "1.8.0-dev.20151213",
-        "webpack-stream": "latest"
+        "typescript": "^1.8.0-dev.20151213",
+        "webpack-stream": "^3.0.1"
     }
 }

@@ -85,6 +85,10 @@ export interface Scope {
     description: string;
 }
 
+export interface ScopesResponse extends Response {
+    scopes: Scope[];
+}
+
 export interface Application {
     id: string;
     name: string;

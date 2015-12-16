@@ -21,8 +21,8 @@ let minifyHtmlConfig = {
     spare: true,
 };
 
-let jsFiles = ["index", "login", "new_organization", "invite", "user", "error", "success", "registered"];
-let htmlFiles = ["index", "login", "new_organization", "invite", "user", "error", "success", "registered"];
+let jsFiles = ["index", "login", "new_organization", "invite", "user", "error", "success", "registered", "access_tokens"];
+let htmlFiles = ["index", "login", "new_organization", "invite", "user", "error", "success", "registered", "access_tokens"];
 let cssFiles = ["base"];
 
 let sassCommand = "sass styles/base.scss > build/base.css";

@@ -1,0 +1,53 @@
+<% include head %>
+<div class="container" style="margin-top: 60px;">
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Access tokens
+            </div>
+            <div class="panel-body" id="vue-body">
+                <form class="form">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <table class="table">
+                                <tbody>
+                                    <tr v-for="accessToken in accessTokens">
+                                        <td>
+                                            <a href="javascript:void(0)"
+                                                @click="edit(accessToken)">
+                                                {{accessToken.description}}
+                                            </a>
+                                            <p>
+                                                {{accessToken.scopes}}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+                <form class="form">
+                    <button type="button" class="btn btn-default"
+                        v-show="idInEditing"
+                        @click="new()">New</button>
+                    <button type="button" class="btn btn-danger"
+                        v-show="idInEditing"
+                        @click="regenerate()">Regenerate access token</button>
+                    <div class="form-group">
+                        <label for="description">description</label>
+                        <input type="text" class="form-control" id="description" v-model="descriptionInEditing">
+                    </div>
+                    <button type="button" class="btn btn-primary"
+                        @click="save()">{{idInEditing ? "Update" : "Create"}}</button>
+                    <button type="button" class="btn btn-danger"
+                        v-show="idInEditing"
+                        @click="remove()">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<% include scripts %>
+<script type="text/javascript" src="./scripts/access_tokens<%- dotMin %>.js"></script>
+<% include foot %>

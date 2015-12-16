@@ -4,29 +4,8 @@ import * as types from "./types";
 
 declare let Vue;
 
-interface Scope {
-    name: string;
-    description: string;
-}
-
-interface Application {
-    id: string;
-    name: string;
-    homeUrl: string;
-    description: string;
-    authorizationCallbackUrl?: string;
-    clientId?: string;
-    clientSecret?: string;
-    creator?: types.User;
-    scopes?: Scope[];
-}
-
-interface ApplicationsResponse extends types.Response {
-    applications: Application[];
-}
-
 interface VueBodyModel {
-    applications: Application[];
+    applications: types.Application[];
     idInEditing: string;
     nameInEditing: string;
     homeUrlInEditing: string;
@@ -34,7 +13,7 @@ interface VueBodyModel {
     authorizationCallbackUrlInEditing: string;
     clientSecretInEditing: string;
 
-    show: (application: Application) => void;
+    show: (application: types.Application) => void;
     get: () => void;
     new: () => void;
     save: () => void;
@@ -54,7 +33,7 @@ let vueBody: VueBodyModel = new Vue({
         clientSecretInEditing: "",
     },
     methods: {
-        edit: function(application: Application) {
+        edit: function(application: types.Application) {
             let self: VueBodyModel = this;
 
             self.idInEditing = application.id;
@@ -70,7 +49,7 @@ let vueBody: VueBodyModel = new Vue({
             $.ajax({
                 url: base.apiUrl + "/api/user/registered",
                 cache: false,
-            }).then((data: ApplicationsResponse) => {
+            }).then((data: types.ApplicationsResponse) => {
                 if (data.isSuccess) {
                     self.applications = data.applications;
                 } else {

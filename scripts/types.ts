@@ -79,3 +79,24 @@ export interface Theme {
     owners: User[];
     watchers: User[];
 }
+
+export interface Scope {
+    name: string;
+    description: string;
+}
+
+export interface Application {
+    id: string;
+    name: string;
+    homeUrl: string;
+    description: string;
+    authorizationCallbackUrl?: string;
+    clientId?: string;
+    clientSecret?: string;
+    creator?: User;
+    scopes?: Scope[];
+}
+
+export interface ApplicationsResponse extends Response {
+    applications: Application[];
+}

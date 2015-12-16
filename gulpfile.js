@@ -21,8 +21,8 @@ let minifyHtmlConfig = {
     spare: true,
 };
 
-let jsFiles = ["index", "login", "new_organization", "invite", "user", "error", "success"];
-let htmlFiles = ["index", "login", "new_organization", "invite", "user", "error", "success"];
+let jsFiles = ["index", "login", "new_organization", "invite", "user", "error", "success", "registered"];
+let htmlFiles = ["index", "login", "new_organization", "invite", "user", "error", "success", "registered"];
 let cssFiles = ["base"];
 
 let sassCommand = "sass styles/base.scss > build/base.css";
@@ -157,7 +157,7 @@ function bundleAndUglifyHtml(name, isDevelopment) {
     if (isDevelopment) {
         config.dotMin = "";
         config.environment = "dev";
-        // config.imageServerBaseUrl = "http://localhost:7777";
+        config.imageServerBaseUrl = "http://localhost:7777";
         config.imageUploaderBaseUrl = "http://localhost:9999";
         config.apiBaseUrl = "http://localhost:9998";
 

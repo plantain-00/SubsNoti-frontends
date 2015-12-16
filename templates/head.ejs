@@ -20,6 +20,9 @@
                 <li v-show="canInvite" style="display: none;">
                     <a href="./invite.html">Invite</a>
                 </li>
+                <li v-show="loginStatus === 'success'" style="display: none;">
+                    <a href="./registered.html">Registered</a>
+                </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>

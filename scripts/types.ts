@@ -14,12 +14,16 @@ export const enum StatusCode {
     internalServerError = 500
 }
 
+function stringEnumify<T extends { [prop: string]: "" | string }>(obj: T) {
+    return obj;
+}
+
 export type ThemeOrderType = "newest" | "recently updated";
 
-export const themeOrder = {
-    newest: <ThemeOrderType>"newest",
-    recentlyUpdated: <ThemeOrderType>"recently updated",
-};
+export const themeOrder = stringEnumify({
+    newest: "newest",
+    recentlyUpdated: "recently updated",
+});
 
 export const enum ThemeStatus {
     open,
@@ -28,10 +32,10 @@ export const enum ThemeStatus {
 
 export type ThemeStatusType = "open" | "closed";
 
-export const themeStatus = {
-    open: <ThemeStatusType>"open",
-    closed: <ThemeStatusType>"closed",
-};
+export const themeStatus = stringEnumify({
+    open: "open",
+    closed: "closed",
+});
 
 export interface CurrentUserResponse {
     id: string;
@@ -53,10 +57,10 @@ export interface Response {
 
 export type PushEvent = "theme created" | "theme updated";
 
-export const pushEvents = {
-    themeCreated: <PushEvent>"theme created",
-    themeUpdated: <PushEvent>"theme updated",
-};
+export const pushEvents = stringEnumify({
+    themeCreated: "theme created",
+    themeUpdated: "theme updated",
+});
 
 export interface User {
     id: string;

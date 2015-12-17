@@ -2,9 +2,12 @@
 <div class="container" style="margin-top: 60px;">
     <div class="row">
         <div class="panel panel-default">
-            <div class="panel-body">
+            <div class="panel-body" id="vue-body">
                 <div class="alert alert-success" role="alert">
                     success! go to <a href="/index.html" class="alert-link">Home page</a> now.
+                    <span v-show="redirectUrl" style="display: none;">
+                        or <a href="{{redirectUrl}}" class="alert-link">Continue</a>
+                    </span>
                 </div>
             </div>
         </div>

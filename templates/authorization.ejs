@@ -1,0 +1,25 @@
+<% include head %>
+<div class="container" style="margin-top: 60px;">
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Authorization
+            </div>
+            <div class="panel-body" id="vue-body">
+                <form class="form" v-show="code">
+                    <div class="checkbox">
+                        <label class="checkbox" v-for="scope in allScopes">
+                            <input type="checkbox" v-model="scopes" value="{{scope.name}}" disabled>
+                            {{scope.name}} : {{scope.description}}
+                        </label>
+                    </div>
+                    <button type="button" class="btn btn-primary"
+                        @click="confirm()">Confirm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<% include scripts %>
+<script type="text/javascript" src="./scripts/authorization<%- dotMin %>.js"></script>
+<% include foot %>

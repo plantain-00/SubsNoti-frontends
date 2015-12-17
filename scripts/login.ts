@@ -11,6 +11,7 @@ interface VueBodyModel {
     innerRawEmail: string;
     captchaUrl: string;
     code: string;
+    redirectUrl: string;
 
     rawEmail: string;
     canLogin: boolean;
@@ -31,6 +32,7 @@ let vueBody: VueBodyModel = new Vue({
         innerRawEmail: "",
         captchaUrl: "",
         code: "",
+        redirectUrl: "",
     },
     computed: {
         rawEmail: {
@@ -92,6 +94,7 @@ let vueBody: VueBodyModel = new Vue({
                 name: self.name,
                 guid: guid,
                 code: self.code,
+                redirectUrl: self.redirectUrl,
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
                     base.vueHead.showAlert(true, "success, please check your email.");
@@ -129,6 +132,8 @@ $(document).ready(function() {
             vueBody.name = window.localStorage.getItem(common.localStorageNames.lastLoginName);
 
             vueBody.refreshCaptcha();
+
+            vueBody.redirectUrl = decodeURIComponent(common.getUrlParameter("redirect_url"));
             return;
         }
 

@@ -1,6 +1,6 @@
 "use strict";
 
-var gulp = require("gulp");
+let gulp = require("gulp");
 let rename = require("gulp-rename");
 let ejs = require("gulp-ejs");
 let webpack = require("webpack-stream");
@@ -21,8 +21,8 @@ let minifyHtmlConfig = {
     spare: true,
 };
 
-let jsFiles = ["index", "login", "new_organization", "invite", "user", "error", "success", "registered", "authorized", "access_tokens"];
-let htmlFiles = ["index", "login", "new_organization", "invite", "user", "error", "success", "registered", "authorized", "access_tokens"];
+let jsFiles = ["index", "login", "new_organization", "invite", "user", "error", "success", "registered", "authorized", "access_tokens", "authorization"];
+let htmlFiles = ["index", "login", "new_organization", "invite", "user", "error", "success", "registered", "authorized", "access_tokens", "authorization"];
 let cssFiles = ["base"];
 
 let sassCommand = "sass styles/base.scss > build/base.css";

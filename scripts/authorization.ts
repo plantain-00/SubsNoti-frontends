@@ -9,6 +9,7 @@ interface VueBodyModel {
     scopes: string[];
     redirectUrl: string;
     code: string;
+    application: types.Application;
 
     confirm: () => void;
 }
@@ -20,6 +21,9 @@ let vueBody: VueBodyModel = new Vue({
         scopes: [],
         redirectUrl: "",
         code: "",
+        application: {
+            creator: {}
+        },
     },
     methods: {
         confirm: function() {
@@ -51,6 +55,19 @@ $(document).ready(function() {
         let scopes = decodeURIComponent(common.getUrlParameter("scopes"));
         vueBody.scopes = scopes.split(",");
         vueBody.code = decodeURIComponent(common.getUrlParameter("code"));
+
+        let applicationId = common.getUrlParameter("application_id");
+        if (applicationId) {
+            $.ajax({
+                url: base.apiUrl + `/api/applications/${decodeURIComponent(applicationId)}`
+            }).then((data: types.ApplicationResponse) => {
+                if (data.isSuccess) {
+                    vueBody.application = data.application;
+                } else {
+                    base.vueHead.showAlert(false, data.errorMessage);
+                }
+            });
+        }
 
         $.ajax({
             url: base.apiUrl + "/api/scopes"

@@ -16,8 +16,11 @@
                                             <a href="javascript:void(0)"
                                                 @click="edit(accessToken)">
                                                 {{accessToken.description}}
+                                                (last used: {{accessToken.lastUsed}})
                                             </a>
                                             <p>
+                                                last used: {{accessToken.lastUsed}}
+                                                •
                                                 <span class="label label-success"
                                                     style="margin:0 5px"
                                                     v-for="scope in accessToken.scopes">

@@ -1,11 +1,11 @@
 <% include head %>
 <div class="container" style="margin-top: 60px;">
     <div class="row">
-        <div class="panel panel-default">
+        <div class="panel panel-default" id="vue-body">
             <div class="panel-heading">
-                Authorization
+                Authorization to {{application.name}} (owned by {{application.creator.name}})
             </div>
-            <div class="panel-body" id="vue-body">
+            <div class="panel-body">
                 <form class="form" v-show="code">
                     <div class="checkbox">
                         <label class="checkbox" v-for="scope in allScopes">

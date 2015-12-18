@@ -8,6 +8,7 @@ export interface AccessToken {
     id: string;
     description: string;
     scopes: types.Scope[];
+    lastUsed: string;
 }
 
 export interface AccessTokensResponse extends types.Response {
@@ -61,6 +62,9 @@ let vueBody: VueBodyModel = new Vue({
                 cache: false,
             }).then((data: AccessTokensResponse) => {
                 if (data.isSuccess) {
+                    for (let token of data.accessTokens) {
+                        token.lastUsed = token.lastUsed ? moment(token.lastUsed, moment.ISO_8601).fromNow() : "never used";
+                    }
                     self.accessTokens = data.accessTokens;
                 } else {
                     base.vueHead.showAlert(false, data.errorMessage);

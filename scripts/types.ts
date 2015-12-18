@@ -103,8 +103,13 @@ export interface Application {
     clientSecret?: string;
     creator?: User;
     scopes?: Scope[];
+    lastUsed?: string;
 }
 
 export interface ApplicationsResponse extends Response {
     applications: Application[];
+}
+
+export interface ApplicationResponse extends Response {
+    application: Application;
 }

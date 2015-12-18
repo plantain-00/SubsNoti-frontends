@@ -20,5 +20,9 @@ $(document).ready(function() {
     if (willClearPreviousStatus === common.yes) {
         window.sessionStorage.removeItem(common.sessionStorageNames.loginResult);
     }
-    vueBody.redirectUrl = decodeURIComponent(common.getUrlParameter("redirect_url"));
+
+    let redirectUrl = common.getUrlParameter("redirect_url");
+    if (redirectUrl) {
+        vueBody.redirectUrl = decodeURIComponent(redirectUrl);
+    }
 });

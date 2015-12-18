@@ -33,6 +33,9 @@ let vueBody: VueBodyModel = new Vue({
                 cache: false,
             }).then((data: types.ApplicationsResponse) => {
                 if (data.isSuccess) {
+                    for (let application of data.applications) {
+                        application.lastUsed = application.lastUsed ? moment(application.lastUsed, moment.ISO_8601).fromNow() : "never used";
+                    }
                     self.applications = data.applications;
                 } else {
                     base.vueHead.showAlert(false, data.errorMessage);

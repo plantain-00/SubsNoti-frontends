@@ -22,9 +22,9 @@ let minifyHtmlConfig = {
     spare: true,
 };
 
-let jsFiles = ["index", "login", "new_organization", "invite", "user", "error", "success", "registered", "authorized", "access_tokens", "authorization"];
+let jsFiles = ["index", "login", "new_organization", "invite", "user", "registered", "authorized", "access_tokens", "authorization"];
 let cssFiles = ["base"];
-let jsxFiles = ["app", "success"];
+let jsxFiles = ["app", "success", "error"];
 
 gulp.task("jsx", () => {
     for (let file of jsxFiles) {

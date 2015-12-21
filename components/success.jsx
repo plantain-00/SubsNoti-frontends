@@ -27,7 +27,7 @@ export let SuccessComponent = React.createClass({
                         <div className="panel panel-default">
                             <div className="panel-body" id="vue-body">
                                 <div className="alert alert-success" role="alert">
-                                    success! go to <a href="/index.html" className="alert-link">Home page</a> now.
+                                    success! go to <a href="#/" className="alert-link">Home page</a> now.
                                     {redirectUrl}
                                 </div>
                             </div>

@@ -114,7 +114,7 @@ let vueBody: VueBodyModel = new Vue({
         canShowCreate: function(): boolean {
             let self: VueBodyModel = this;
 
-            return base.vueHead.loginStatus === base.loginStatus.success;
+            return base.vueHead.loginStatus === types.loginStatus.success;
         },
         canSave: function(): boolean {
             let self: VueBodyModel = this;
@@ -194,9 +194,9 @@ let vueBody: VueBodyModel = new Vue({
 
             theme.isWatching = theme.watchers.some(w => w.id === base.vueHead.currentUserId);
             theme.isOwner = theme.owners.some(w => w.id === base.vueHead.currentUserId);
-            theme.createTimeText = moment(<string>theme.createTime, moment.ISO_8601).fromNow();
+            theme.createTimeText = moment(theme.createTime, moment.ISO_8601).fromNow();
             if (theme.updateTime) {
-                theme.updateTimeText = moment(<string>theme.updateTime, moment.ISO_8601).fromNow();
+                theme.updateTimeText = moment(theme.updateTime, moment.ISO_8601).fromNow();
             } else {
                 theme.updateTimeText = theme.createTimeText;
             }
@@ -244,9 +244,9 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             for (let theme of self.themes) {
-                theme.createTimeText = moment(<string>theme.createTime, moment.ISO_8601).fromNow();
+                theme.createTimeText = moment(theme.createTime, moment.ISO_8601).fromNow();
                 if (theme.updateTime) {
-                    theme.updateTimeText = moment(<string>theme.updateTime, moment.ISO_8601).fromNow();
+                    theme.updateTimeText = moment(theme.updateTime, moment.ISO_8601).fromNow();
                 } else {
                     theme.updateTimeText = theme.createTimeText;
                 }

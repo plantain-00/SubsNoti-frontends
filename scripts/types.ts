@@ -113,3 +113,11 @@ export interface ApplicationsResponse extends Response {
 export interface ApplicationResponse extends Response {
     application: Application;
 }
+
+export type LoginStatus = "unknown" | "fail" | "success";
+
+export const loginStatus = stringEnumify({
+    unknown: "unknown",
+    fail: "fail",
+    success: "success",
+});

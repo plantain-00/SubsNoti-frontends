@@ -1,13 +1,24 @@
 import * as types from "./types";
 import {HeadComponent, showAlert, addOrganization} from "./head";
 
+interface State {
+    organizationName?: string;
+}
+
+interface Self {
+    state: State;
+    setState: (state: State) => void;
+    add: () => void;
+    organizationNameChanged: () => void;
+}
+
 export let NewOrganizationComponent = React.createClass({
     add: function() {
-        let self = this;
+        let self: Self = this;
 
         $.post(apiBaseUrl + "/api/organizations", {
             organizationName: self.state.organizationName
-        }).then(data => {
+        }).then((data: types.Response) => {
             if (data.isSuccess) {
                 addOrganization();
                 showAlert(true, "success");
@@ -17,18 +28,22 @@ export let NewOrganizationComponent = React.createClass({
         });
     },
     organizationNameChanged: function(e) {
-        this.setState({ organizationName: e.target.value });
+        let self: Self = this;
+
+        self.setState({ organizationName: e.target.value });
     },
-    getInitialState: () => {
+    getInitialState: function() {
         return {
             organizationName: ""
-        };
+        } as State;
     },
     render: function() {
+        let self: Self = this;
+
         let addView;
-        if (this.state.organizationName.trim()) {
+        if (self.state.organizationName.trim()) {
             addView = (
-                <button type="button" className="btn btn-primary" onClick={this.add}>
+                <button type="button" className="btn btn-primary" onClick={self.add}>
                     Add
                 </button>
             );
@@ -54,7 +69,7 @@ export let NewOrganizationComponent = React.createClass({
                                         <label className="col-sm-2 control-label">organization name:</label>
 
                                         <div className="col-sm-4">
-                                            <input type="text" className="form-control" value={this.state.organizationName} onChange={this.organizationNameChanged}/>
+                                            <input type="text" className="form-control" value={self.state.organizationName} onChange={self.organizationNameChanged}/>
                                         </div>
 
                                         <div className="col-sm-2">

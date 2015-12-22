@@ -1,27 +1,29 @@
 import * as types from "./types";
 import * as common from "./common";
 
-
+interface CurrentUserResponse extends types.Response {
+    user: types.User;
+}
 
 export let itemLimit = 10;
 export let maxOrganizationNumberUserCanCreate = 3;
 
-export function getFullUrl(avatar) {
+export function getFullUrl(avatar: string): string {
     return `${imageServerBaseUrl}/${avatar}`;
 }
 
-function getCurrentUser(next) {
+function getCurrentUser(next: (data: CurrentUserResponse) => void) {
     let loginResult = window.sessionStorage.getItem(common.sessionStorageNames.loginResult);
 
     if (loginResult) {
-        let data = JSON.parse(loginResult);
+        let data: CurrentUserResponse = JSON.parse(loginResult);
 
         next(data);
     } else {
         $.ajax({
             url: apiBaseUrl + "/api/user",
             cache: false,
-        }).then(data => {
+        }).then((data: CurrentUserResponse) => {
             window.sessionStorage.setItem(common.sessionStorageNames.loginResult, JSON.stringify(data));
 
             next(data);
@@ -29,19 +31,42 @@ function getCurrentUser(next) {
     }
 }
 
-export let showAlert;
-export let addOrganization;
+export let showAlert: (isSuccess: boolean, message: string) => void;
+export let addOrganization: () => void;
 
 let timeoutId;
 
+interface State {
+    loginStatus?: types.LoginStatus;
+    currentUserId?: string;
+    currentUserName?: string;
+    currentUserEmail?: string;
+    currentAvatar?: string;
+    createdOrganizationCount?: number;
+    joinedOrganizationCount?: number;
+    requestCount?: number;
+    alertIsSuccess?: boolean;
+    showAlertMessage?: boolean;
+    alertMessage?: string;
+}
+
+interface Self {
+    state: State;
+    setState: (state: State) => void;
+    showAlert: (isSuccess: boolean, message: string) => void;
+    authenticate: (next: (error: Error) => void) => void;
+    exit: () => void;
+}
+
 export let HeadComponent = React.createClass({
-    exit: function () {
-        let self = this;
+    exit: function() {
+        let self: Self = this;
+
         $.ajax({
             type: "DELETE",
             url: apiBaseUrl + "/api/user/logged_in",
             cache: false,
-        }).then(data => {
+        }).then((data: CurrentUserResponse) => {
             if (data.isSuccess) {
                 self.setState({ loginStatus: types.loginStatus.fail });
                 self.setState({ currentUserId: "" });
@@ -56,8 +81,8 @@ export let HeadComponent = React.createClass({
             }
         });
     },
-    showAlert: function(isSuccess, message) {
-        let self = this;
+    showAlert: function(isSuccess: boolean, message: string) {
+        let self: Self = this;
 
         self.setState({ alertIsSuccess: isSuccess });
         self.setState({ alertMessage: message });
@@ -72,8 +97,8 @@ export let HeadComponent = React.createClass({
             timeoutId = null;
         }, 3000);
     },
-    authenticate: function(next) {
-        let self = this;
+    authenticate: function(next: (error: Error) => void) {
+        let self: Self = this;
 
         getCurrentUser(data => {
             if (data.isSuccess) {
@@ -96,10 +121,12 @@ export let HeadComponent = React.createClass({
         });
     },
     componentWillMount: function() {
-        let self = this;
+        let self: Self = this;
 
         showAlert = self.showAlert;
-        addOrganization = self.setState({ createdOrganizationCount: self.state.createdOrganizationCount + 1 });
+        addOrganization = () => {
+            self.setState({ createdOrganizationCount: self.state.createdOrganizationCount + 1 });
+        };
 
         $(document).ajaxSend(() => {
             self.setState({ requestCount: self.state.requestCount + 1 });
@@ -126,8 +153,8 @@ export let HeadComponent = React.createClass({
             });
         });
     },
-    getInitialState: () => {
-        let self = this;
+    getInitialState: function() {
+        let self: Self = this;
 
         return {
             loginStatus: types.loginStatus.unknown,
@@ -141,11 +168,13 @@ export let HeadComponent = React.createClass({
             alertIsSuccess: true,
             showAlertMessage: false,
             alertMessage: "",
-        };
+        } as State;
     },
     render: function() {
+        let self: Self = this;
+
         let createOrganizationView;
-        if (this.state.createdOrganizationCount < maxOrganizationNumberUserCanCreate) {
+        if (self.state.createdOrganizationCount < maxOrganizationNumberUserCanCreate) {
             createOrganizationView = (
                 <li>
                     <a href="#/new_organization">New Organization</a>
@@ -153,7 +182,7 @@ export let HeadComponent = React.createClass({
             );
         }
         let inviteView;
-        if (this.state.joinedOrganizationCount > 0) {
+        if (self.state.joinedOrganizationCount > 0) {
             inviteView = (
                 <li>
                     <a href="#/invite">Invite</a>
@@ -164,7 +193,7 @@ export let HeadComponent = React.createClass({
         let authorizedView;
         let sccessTokenView;
         let logoutView;
-        if (this.state.loginStatus === types.loginStatus.success) {
+        if (self.state.loginStatus === types.loginStatus.success) {
             registeredView = (
                 <li>
                     <a href="#/registered">Registered</a>
@@ -182,14 +211,14 @@ export let HeadComponent = React.createClass({
             );
             logoutView = (
                 <li>
-                    <a href="javascript:void(0)" onClick={this.exit}>
+                    <a href="javascript:void(0)" onClick={self.exit}>
                         <span className="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                     </a>
                 </li>
             );
         }
         let loginView;
-        switch (this.state.loginStatus) {
+        switch (self.state.loginStatus) {
             case types.loginStatus.unknown:
                 loginView = (
                     <a href="javascript:void(0)">
@@ -202,10 +231,10 @@ export let HeadComponent = React.createClass({
                 loginView = (
                     <a href="#/user">
                         <span className="glyphicon glyphicon-user" style={{ top: 2 + "px" }}></span> &nbsp;
-                        <span>{this.state.currentUserName}</span>
+                        <span>{self.state.currentUserName}</span>
                         <span className="glyphicon glyphicon-envelope" style={{ top: 2 + "px" }}></span> &nbsp;
-                        <span>{this.state.currentUserEmail}</span>
-                        <img src={this.state.currentAvatar} style={{ height: 20 + "px", width: 20 + "px" }}/>
+                        <span>{self.state.currentUserEmail}</span>
+                        <img src={self.state.currentAvatar} style={{ height: 20 + "px", width: 20 + "px" }}/>
                     </a>
                 );
                 break;
@@ -220,7 +249,7 @@ export let HeadComponent = React.createClass({
                 break;
         }
         let loginWithGithubView;
-        if (this.state.loginStatus === types.loginStatus.fail) {
+        if (self.state.loginStatus === types.loginStatus.fail) {
             loginWithGithubView = (
                 <li>
                     <a href={apiBaseUrl + "/login_with_github"}>
@@ -230,16 +259,16 @@ export let HeadComponent = React.createClass({
             );
         }
         let alertMessageView;
-        if (this.state.showAlertMessage) {
+        if (self.state.showAlertMessage) {
             alertMessageView = (
                 <div className="alert alert-{{alertIsSuccess ? 'success' : 'danger'}}" role="alert"
                     style={{ position: "fixed", top: 60 + "px", left: 20 + "px", right: 20 + "px", zIndex: 1 }}>
-                    {this.state.alertMessage}
+                    {self.state.alertMessage}
                 </div>
             );
         }
         let waitView;
-        if (this.state.requestCount > 0) {
+        if (self.state.requestCount > 0) {
             waitView = (
                 <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, textAlign: "center", zIndex: 1 }}>
                     <i className="fa fa-spinner fa-pulse fa-5x" style={{ marginTop: 200 + "px" }}></i>

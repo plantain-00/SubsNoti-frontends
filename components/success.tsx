@@ -1,7 +1,16 @@
 import * as common from "./common";
 
+interface State {
+    redirectUrl?: string;
+}
+
+interface Self {
+    state: State;
+    setState: (state: State) => void;
+}
+
 export let SuccessComponent = React.createClass({
-    getInitialState: () => {
+    getInitialState: function() {
         let willClearPreviousStatus = common.getUrlParameter("clear_previous_status");
 
         if (willClearPreviousStatus === common.yes) {
@@ -12,14 +21,16 @@ export let SuccessComponent = React.createClass({
 
         return {
             redirectUrl: redirectUrl ? decodeURIComponent(redirectUrl) : ""
-        };
+        } as State;
     },
     render: function() {
+        let self: Self = this;
+
         let redirectUrlView;
-        if (this.state.redirectUrl) {
+        if (self.state.redirectUrl) {
             redirectUrlView = (
                 <span>
-                    or <a href={this.state.redirectUrl} className="alert-link">Continue</a>
+                    or <a href={self.state.redirectUrl} className="alert-link">Continue</a>
                 </span>
             );
         }

@@ -7,5 +7,3 @@ dest/*.html
 dest/scripts/*.js
 dest/styles/*.css
 build/
-components/*.js
-components/*.jsx

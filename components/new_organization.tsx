@@ -68,5 +68,5 @@ export let NewOrganizationComponent = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });

@@ -70,7 +70,7 @@ gulp.task("html-dest", () => {
 });
 
 gulp.task("tslint", () => {
-    return gulp.src(["scripts/**/*.ts"])
+    return gulp.src(["scripts/**/*.ts", "components/**/*.ts", "components/**/*.tsx"])
         .pipe(tslint({
             tslint: require("tslint")
         }))

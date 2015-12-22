@@ -21,5 +21,5 @@ export let ErrorComponent = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });

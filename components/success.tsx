@@ -37,5 +37,5 @@ export let SuccessComponent = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });

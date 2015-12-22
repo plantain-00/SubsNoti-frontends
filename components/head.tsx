@@ -140,12 +140,12 @@ export let HeadComponent = React.createClass({
             requestCount: 0,
             alertIsSuccess: true,
             showAlertMessage: false,
-            alertMessage: ""
+            alertMessage: "",
         };
     },
     render: function() {
         let createOrganizationView;
-        if(this.state.createdOrganizationCount < maxOrganizationNumberUserCanCreate){
+        if (this.state.createdOrganizationCount < maxOrganizationNumberUserCanCreate) {
             createOrganizationView = (
                 <li>
                     <a href="#/new_organization">New Organization</a>
@@ -153,7 +153,7 @@ export let HeadComponent = React.createClass({
             );
         }
         let inviteView;
-        if(this.state.joinedOrganizationCount > 0){
+        if (this.state.joinedOrganizationCount > 0) {
             inviteView = (
                 <li>
                     <a href="#/invite">Invite</a>
@@ -281,5 +281,5 @@ export let HeadComponent = React.createClass({
                 {waitView}
             </header>
         );
-    }
+    },
 });

@@ -1,4 +1,3 @@
-let React = window.React;
 import * as common from "./common";
 
 export let ErrorComponent = React.createClass({

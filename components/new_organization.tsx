@@ -1,4 +1,3 @@
-let React = window.React;
 import * as types from "./types";
 import {HeadComponent, showAlert, addOrganization} from "./head";
 
@@ -26,7 +25,7 @@ export let NewOrganizationComponent = React.createClass({
         };
     },
     render: function() {
-        let addView = "";
+        let addView;
         if (this.state.organizationName.trim()) {
             addView = (
                 <button type="button" className="btn btn-primary" onClick={this.add}>

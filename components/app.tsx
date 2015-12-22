@@ -1,8 +1,8 @@
-let Router = window.ReactRouter.Router;
-let Route = window.ReactRouter.Router;
-let Link = window.ReactRouter.Link;
-let React = window.React;
-let ReactDOM = window.ReactDOM;
+/// <reference path="./common.d.ts" />
+
+let Router = ReactRouter.Router;
+let Route = ReactRouter.Route;
+let Link = ReactRouter.Link;
 
 import {SuccessComponent} from "./success";
 import {ErrorComponent} from "./error";

@@ -1,4 +1,3 @@
-let React = window.React;
 import * as common from "./common";
 
 export let SuccessComponent = React.createClass({
@@ -16,8 +15,8 @@ export let SuccessComponent = React.createClass({
         };
     },
     render: function() {
-        let redirectUrlView = "";
-        if(this.state.redirectUrl){
+        let redirectUrlView;
+        if (this.state.redirectUrl) {
             redirectUrlView = (
                 <span>
                     or <a href={this.state.redirectUrl} className="alert-link">Continue</a>

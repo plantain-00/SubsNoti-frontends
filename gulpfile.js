@@ -13,7 +13,6 @@ let revReplace = require("gulp-rev-replace");
 let shell = require("gulp-shell");
 let tslint = require("gulp-tslint");
 let liveServer = require("live-server");
-let babel = require("gulp-babel");
 
 let pjson = require("./package.json");
 
@@ -24,24 +23,15 @@ let minifyHtmlConfig = {
 
 let jsFiles = ["index", "login", "invite", "user", "registered", "authorized", "access_tokens", "authorization"];
 let cssFiles = ["base"];
-let jsxFiles = ["app", "success", "error", "new_organization", "head"];
-
-gulp.task("jsx", () => {
-    for (let file of jsxFiles) {
-        gulp.src(`components/${file}.jsx`)
-            .pipe(babel())
-            .pipe(rename(`${file}.js`))
-            .pipe(gulp.dest("build"));
-    }
-});
+let tsxFiles = ["success", "error", "new_organization", "head"];
 
 let sassCommand = "sass styles/base.scss > build/base.css";
 
-let command = "rm -rf build && tsc -p scripts --pretty && gulp tslint && scss-lint styles/*.scss";
+let command = "rm -rf build && tsc -p components --pretty && gulp tslint && scss-lint styles/*.scss";
 
-gulp.task("build", shell.task(`rm -rf dest && ${command} && ${sassCommand} && gulp jsx && gulp css-dev && gulp js-dev && gulp rev-dev && gulp html-dev && rm -rf build`));
+gulp.task("build", shell.task(`rm -rf dest && ${command} && ${sassCommand} && gulp css-dev && gulp js-dev && gulp rev-dev && gulp html-dev && rm -rf build`));
 
-gulp.task("deploy", shell.task(`${command} && ${sassCommand} && gulp jsx && gulp css-dest && gulp js-dest && gulp rev-dest && gulp html-dest && rm -rf build`));
+gulp.task("deploy", shell.task(`${command} && ${sassCommand} && gulp css-dest && gulp js-dest && gulp rev-dest && gulp html-dest && rm -rf build`));
 
 gulp.task("css-dev", () => {
     for (let file of cssFiles) {

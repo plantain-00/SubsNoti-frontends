@@ -1,6 +1,7 @@
-let React = window.React;
 import * as types from "./types";
 import * as common from "./common";
+
+
 
 export let itemLimit = 10;
 export let maxOrganizationNumberUserCanCreate = 3;
@@ -143,7 +144,7 @@ export let HeadComponent = React.createClass({
         };
     },
     render: function() {
-        let createOrganizationView = "";
+        let createOrganizationView;
         if(this.state.createdOrganizationCount < maxOrganizationNumberUserCanCreate){
             createOrganizationView = (
                 <li>
@@ -151,7 +152,7 @@ export let HeadComponent = React.createClass({
                 </li>
             );
         }
-        let inviteView = "";
+        let inviteView;
         if(this.state.joinedOrganizationCount > 0){
             inviteView = (
                 <li>
@@ -159,10 +160,10 @@ export let HeadComponent = React.createClass({
                 </li>
             );
         }
-        let registeredView = "";
-        let authorizedView = "";
-        let sccessTokenView = "";
-        let logoutView = "";
+        let registeredView;
+        let authorizedView;
+        let sccessTokenView;
+        let logoutView;
         if (this.state.loginStatus === types.loginStatus.success) {
             registeredView = (
                 <li>
@@ -187,7 +188,7 @@ export let HeadComponent = React.createClass({
                 </li>
             );
         }
-        let loginView = "";
+        let loginView;
         switch (this.state.loginStatus) {
             case types.loginStatus.unknown:
                 loginView = (
@@ -215,19 +216,20 @@ export let HeadComponent = React.createClass({
                     </a>
                 );
                 break;
-            
+            default:
+                break;
         }
-        let loginWithGithubView = "";
+        let loginWithGithubView;
         if (this.state.loginStatus === types.loginStatus.fail) {
             loginWithGithubView = (
                 <li>
                     <a href={apiBaseUrl + "/login_with_github"}>
-                        <span className="fa fa-github" style="top:2px"></span> &nbsp;Login with Github
+                        <span className="fa fa-github" style={{ top: 2 + "px" }}></span> &nbsp;Login with Github
                     </a>
                 </li>
             );
         }
-        let alertMessageView = "";
+        let alertMessageView;
         if (this.state.showAlertMessage) {
             alertMessageView = (
                 <div className="alert alert-{{alertIsSuccess ? 'success' : 'danger'}}" role="alert"
@@ -236,7 +238,7 @@ export let HeadComponent = React.createClass({
                 </div>
             );
         }
-        let waitView = "";
+        let waitView;
         if (this.state.requestCount > 0) {
             waitView = (
                 <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, textAlign: "center", zIndex: 1 }}>

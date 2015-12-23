@@ -1,3 +1,4 @@
+import * as types from "./types";
 import * as common from "./common";
 
 let Link = ReactRouter.Link;
@@ -6,10 +7,7 @@ interface State {
     message?: string;
 }
 
-interface Self {
-    state: State;
-    setState: (state: State) => void;
-}
+interface Self extends types.Self<State> { }
 
 export let ErrorComponent = React.createClass({
     getInitialState: function() {

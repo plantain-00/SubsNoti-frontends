@@ -33,12 +33,30 @@ function getCurrentUser(next: (data: CurrentUserResponse) => void) {
     }
 }
 
+$.ajaxSetup({
+    headers: {
+        "X-Version": version
+    },
+    xhrFields: {
+        withCredentials: true
+    },
+});
+
 export let events: {
     showAlert?: (isSuccess: boolean, message: string) => void;
     addOrganization?: () => void;
     getRequestCount?: () => number;
+    setRequestCount?: (count: number) => void;
     authenticated?: () => void;
 } = new Object();
+
+$(document).ajaxSend(() => {
+    events.setRequestCount(events.getRequestCount() + 1);
+}).ajaxComplete(() => {
+    events.setRequestCount(events.getRequestCount() - 1);
+}).ajaxError(() => {
+    events.showAlert(false, "something happens unexpectedly, see console to get more details.");
+});
 
 let timeoutId;
 
@@ -56,9 +74,7 @@ interface State {
     alertMessage?: string;
 }
 
-interface Self {
-    state: State;
-    setState: (state: State) => void;
+interface Self extends types.Self<State> {
     showAlert: (isSuccess: boolean, message: string) => void;
     authenticate: (next: (error: Error) => void) => void;
     exit: () => void;
@@ -142,23 +158,9 @@ export let HeadComponent = React.createClass({
         events.getRequestCount = () => {
             return self.state.requestCount;
         };
-
-        $(document).ajaxSend(() => {
-            self.setState({ requestCount: self.state.requestCount + 1 });
-        }).ajaxComplete(() => {
-            self.setState({ requestCount: self.state.requestCount - 1 });
-        }).ajaxError(() => {
-            self.showAlert(false, "something happens unexpectedly, see console to get more details.");
-        });
-
-        $.ajaxSetup({
-            headers: {
-                "X-Version": version
-            },
-            xhrFields: {
-                withCredentials: true
-            },
-        });
+        events.setRequestCount = count => {
+            self.setState({ requestCount: count });
+        };
 
         $(document).ready(function() {
             self.authenticate(error => {
@@ -172,9 +174,13 @@ export let HeadComponent = React.createClass({
             });
         });
     },
+    componentWillUnmount: function() {
+        events.showAlert = undefined;
+        events.addOrganization = undefined;
+        events.getRequestCount = undefined;
+        events.setRequestCount = undefined;
+    },
     getInitialState: function() {
-        let self: Self = this;
-
         return {
             loginStatus: types.loginStatus.unknown,
             currentUserId: "",

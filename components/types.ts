@@ -130,3 +130,8 @@ export interface Organization {
 export interface OrganizationsResponse extends Response {
     organizations: Organization[];
 }
+
+export interface Self<T> {
+    state: T;
+    setState: (state: T) => void;
+}

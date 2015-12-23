@@ -10,12 +10,11 @@ interface State {
     currentOrganizationId?: string;
 }
 
-interface Self {
-    state: State;
-    setState: (state: State) => void;
+interface Self extends types.Self<State> {
     getOrganizationsCurrentUserCreated: () => void;
     invite: () => void;
     clickOrganization: (organization: types.Organization) => void;
+
     emailChanged: (e) => void;
 }
 
@@ -74,6 +73,9 @@ export let InviteComponent = React.createClass({
         let self: Self = this;
 
         events.authenticated = self.getOrganizationsCurrentUserCreated;
+    },
+    componentWillUnmount: function() {
+        events.authenticated = undefined;
     },
     getInitialState: function() {
         return {

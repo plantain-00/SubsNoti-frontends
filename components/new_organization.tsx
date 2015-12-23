@@ -5,10 +5,9 @@ interface State {
     organizationName?: string;
 }
 
-interface Self {
-    state: State;
-    setState: (state: State) => void;
+interface Self extends types.Self<State> {
     add: () => void;
+
     organizationNameChanged: () => void;
 }
 

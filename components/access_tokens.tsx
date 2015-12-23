@@ -28,15 +28,14 @@ interface State {
     newAccessToken?: string;
 }
 
-interface Self {
-    state: State;
-    setState: (state: State) => void;
+interface Self extends types.Self<State> {
     edit: (accessToken: AccessToken) => void;
     get: () => void;
     new: () => void;
     save: () => void;
     remove: () => void;
     regenerate: () => void;
+
     descriptionInEditingChanged: (e) => void;
     scopesInEditingChanged: (e) => void;
 }
@@ -184,6 +183,9 @@ export let AccessTokensComponent = React.createClass({
                 }
             });
         };
+    },
+    componentWillUnmount: function() {
+        events.authenticated = undefined;
     },
     getInitialState: function() {
         return {

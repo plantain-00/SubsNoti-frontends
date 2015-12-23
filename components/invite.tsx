@@ -90,30 +90,23 @@ export let InviteComponent = React.createClass({
         let inviteView;
         if (common.isEmail(self.state.email.trim()) && events.getRequestCount() === 0) {
             inviteView = (
-                <button type="button" className="btn btn-primary"
-                    onClick={self.invite}>
-                    Invite
-                </button>
+                <button type="button" className="btn btn-primary" onClick={self.invite}>Invite</button>
             );
         } else {
             inviteView = (
-                <button type="button" className="btn btn-primary" disabled>
-                    Please input invitee's email
-                </button>
+                <button type="button" className="btn btn-primary" disabled>Please input invitee's email</button>
             );
         }
         let organizationsView = self.state.organizationsCurrentUserCreated.map(organization => {
             if (self.state.currentOrganizationId === organization.id) {
                 return (
-                    <label className="the-label label-active" key={organization.id}
-                        onClick={self.clickOrganization.bind(this, organization)}>
+                    <label className="the-label label-active" key={organization.id} onClick={self.clickOrganization.bind(this, organization)}>
                         {organization.name}
                     </label>
                 );
             } else {
                 return (
-                    <label className="the-label" key={organization.id}
-                        onClick={self.clickOrganization.bind(this, organization)}>
+                    <label className="the-label" key={organization.id} onClick={self.clickOrganization.bind(this, organization)}>
                         {organization.name}
                     </label>
                 );
@@ -142,7 +135,7 @@ export let InviteComponent = React.createClass({
                                         </label>
 
                                         <div className="col-sm-4">
-                                            <input type="text" className="form-control" onChange={self.emailChanged}/>
+                                            <input type="text" className="form-control" onChange={self.emailChanged} value={self.state.email}/>
                                         </div>
 
                                         <div className="col-sm-2">

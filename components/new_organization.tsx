@@ -42,15 +42,11 @@ export let NewOrganizationComponent = React.createClass({
         let addView;
         if (self.state.organizationName.trim()) {
             addView = (
-                <button type="button" className="btn btn-primary" onClick={self.add}>
-                    Add
-                </button>
+                <button type="button" className="btn btn-primary" onClick={self.add}>Add</button>
             );
         } else {
             addView = (
-                <button type="button" className="btn btn-primary" disabled>
-                    Please input organization name
-                </button>
+                <button type="button" className="btn btn-primary" disabled>Please input organization name</button>
             );
         }
         return (

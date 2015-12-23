@@ -11,6 +11,7 @@ import {NewOrganizationComponent} from "./new_organization";
 import {InviteComponent} from "./invite";
 import {AccessTokensComponent} from "./access_tokens";
 import {AuthorizedComponent} from "./authorized";
+import {RegisteredComponent} from "./registered";
 
 ReactDOM.render(
     <Router>
@@ -20,6 +21,7 @@ ReactDOM.render(
         <Route path="/invite" component={InviteComponent}/>
         <Route path="/access_tokens" component={AccessTokensComponent}/>
         <Route path="/authorized" component={AuthorizedComponent}/>
+        <Route path="/registered" component={RegisteredComponent}/>
     </Router>,
     document.getElementById("container")
 );

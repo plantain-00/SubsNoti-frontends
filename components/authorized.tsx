@@ -77,9 +77,7 @@ export let AuthorizedComponent = React.createClass({
             return (
                 <tr key={application.id}>
                     <td>
-                        <a href="javascript:void(0)" onClick={self.show.bind(this, application)}>
-                            {application.name}
-                        </a>
+                        <a href="javascript:void(0)" onClick={self.show.bind(this, application)}>{application.name}</a>
                         <p>
                             owned by: {application.creator.name}
                             •

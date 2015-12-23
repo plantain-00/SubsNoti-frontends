@@ -214,7 +214,7 @@ export let AccessTokensComponent = React.createClass({
                         <a href="javascript:void(0)" onClick={self.edit.bind(this, accessToken) }>
                             {accessToken.description}
                             (last used: {accessToken.lastUsed})
-                            </a>
+                        </a>
                         <p>
                             last used: {accessToken.lastUsed}
                             •
@@ -258,17 +258,13 @@ export let AccessTokensComponent = React.createClass({
                     {newAccessTokenView}
                     <div className="form-group">
                         <label htmlFor="description">description</label>
-                        <input type="text" className="form-control" id="description" onChange={self.descriptionInEditingChanged} />
+                        <input type="text" className="form-control" id="description" onChange={self.descriptionInEditingChanged} value={self.state.descriptionInEditing} />
                     </div>
                     <div className="checkbox">
                         {scopesView}
                     </div>
-                    <button type="button" className="btn btn-primary" onClick={self.save}>
-                        Update
-                    </button>
-                    <button type="button" className="btn btn-danger" onClick={self.remove}>
-                        Delete
-                    </button>
+                    <button type="button" className="btn btn-primary" onClick={self.save}>Update</button>
+                    <button type="button" className="btn btn-danger" onClick={self.remove}>Delete</button>
                 </form>
             );
         } else {
@@ -277,14 +273,12 @@ export let AccessTokensComponent = React.createClass({
                     {newAccessTokenView}
                     <div className="form-group">
                         <label htmlFor="description">description</label>
-                        <input type="text" className="form-control" id="description" onChange={self.descriptionInEditingChanged} />
+                        <input type="text" className="form-control" id="description" onChange={self.descriptionInEditingChanged} value={self.state.descriptionInEditing} />
                     </div>
                     <div className="checkbox">
                         {scopesView}
                     </div>
-                    <button type="button" className="btn btn-primary" onClick={self.save}>
-                        Create
-                    </button>
+                    <button type="button" className="btn btn-primary" onClick={self.save}>Create</button>
                 </form>
             );
         }

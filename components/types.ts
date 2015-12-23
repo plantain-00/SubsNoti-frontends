@@ -121,3 +121,12 @@ export const loginStatus = stringEnumify({
     fail: "fail",
     success: "success",
 });
+
+export interface Organization {
+    id: string;
+    name: string;
+}
+
+export interface OrganizationsResponse extends Response {
+    organizations: Organization[];
+}

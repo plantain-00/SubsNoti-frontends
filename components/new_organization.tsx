@@ -1,5 +1,5 @@
 import * as types from "./types";
-import {HeadComponent, showAlert, addOrganization} from "./head";
+import {HeadComponent, events} from "./head";
 
 interface State {
     organizationName?: string;
@@ -20,10 +20,10 @@ export let NewOrganizationComponent = React.createClass({
             organizationName: self.state.organizationName
         }).then((data: types.Response) => {
             if (data.isSuccess) {
-                addOrganization();
-                showAlert(true, "success");
+                events.addOrganization();
+                events.showAlert(true, "success");
             } else {
-                showAlert(false, data.errorMessage);
+                events.showAlert(false, data.errorMessage);
             }
         });
     },

@@ -1,6 +1,8 @@
 import * as types from "./types";
 import * as common from "./common";
 
+let Link = ReactRouter.Link;
+
 interface CurrentUserResponse extends types.Response {
     user: types.User;
 }
@@ -31,8 +33,12 @@ function getCurrentUser(next: (data: CurrentUserResponse) => void) {
     }
 }
 
-export let showAlert: (isSuccess: boolean, message: string) => void;
-export let addOrganization: () => void;
+export let events: {
+    showAlert?: (isSuccess: boolean, message: string) => void;
+    addOrganization?: () => void;
+    getRequestCount?: () => number;
+    authenticated?: () => void;
+} = new Object();
 
 let timeoutId;
 
@@ -123,9 +129,12 @@ export let HeadComponent = React.createClass({
     componentWillMount: function() {
         let self: Self = this;
 
-        showAlert = self.showAlert;
-        addOrganization = () => {
+        events.showAlert = self.showAlert;
+        events.addOrganization = () => {
             self.setState({ createdOrganizationCount: self.state.createdOrganizationCount + 1 });
+        };
+        events.getRequestCount = () => {
+            return self.state.requestCount;
         };
 
         $(document).ajaxSend(() => {
@@ -149,6 +158,10 @@ export let HeadComponent = React.createClass({
             self.authenticate(error => {
                 if (error) {
                     console.log(error);
+                }
+
+                if (events.authenticated) {
+                    events.authenticated();
                 }
             });
         });
@@ -177,7 +190,7 @@ export let HeadComponent = React.createClass({
         if (self.state.createdOrganizationCount < maxOrganizationNumberUserCanCreate) {
             createOrganizationView = (
                 <li>
-                    <a href="#/new_organization">New Organization</a>
+                    <Link to="/new_organization">New Organization</Link>
                 </li>
             );
         }
@@ -185,7 +198,7 @@ export let HeadComponent = React.createClass({
         if (self.state.joinedOrganizationCount > 0) {
             inviteView = (
                 <li>
-                    <a href="#/invite">Invite</a>
+                    <Link to="/invite">Invite</Link>
                 </li>
             );
         }
@@ -196,17 +209,17 @@ export let HeadComponent = React.createClass({
         if (self.state.loginStatus === types.loginStatus.success) {
             registeredView = (
                 <li>
-                    <a href="#/registered">Registered</a>
+                    <Link to="/registered">Registered</Link>
                 </li>
             );
             authorizedView = (
                 <li>
-                    <a href="#/authorized">Authorized</a>
+                    <Link to="/authorized">Authorized</Link>
                 </li>
             );
             sccessTokenView = (
                 <li>
-                    <a href="#/access_tokens">Access tokens</a>
+                    <Link to="/access_tokens">Access tokens</Link>
                 </li>
             );
             logoutView = (
@@ -229,20 +242,20 @@ export let HeadComponent = React.createClass({
                 break;
             case types.loginStatus.success:
                 loginView = (
-                    <a href="#/user">
+                    <Link to="/user">
                         <span className="glyphicon glyphicon-user" style={{ top: 2 + "px" }}></span> &nbsp;
                         <span>{self.state.currentUserName}</span>
                         <span className="glyphicon glyphicon-envelope" style={{ top: 2 + "px" }}></span> &nbsp;
                         <span>{self.state.currentUserEmail}</span>
                         <img src={self.state.currentAvatar} style={{ height: 20 + "px", width: 20 + "px" }}/>
-                    </a>
+                    </Link>
                 );
                 break;
             case types.loginStatus.fail:
                 loginView = (
-                    <a href="#/login">
+                    <Link to="/login">
                         <span className="glyphicon glyphicon-user" style={{ top: 2 + "px" }}></span> &nbsp;Login
-                    </a>
+                    </Link>
                 );
                 break;
             default:
@@ -284,12 +297,12 @@ export let HeadComponent = React.createClass({
                             <span className="icon-bar"></span>
                             <span className="icon-bar"></span>
                         </button>
-                        <a className="navbar-brand hidden-sm" href="#/">Home</a>
+                        <Link className="navbar-brand hidden-sm" to="/">Home</Link>
                     </div>
                     <div className="collapse navbar-collapse" role="navigation" id="navbar-collapse-1">
                         <ul className="nav navbar-nav">
                             <li>
-                                <a href="#/">Themes</a>
+                                <Link to="/">Themes</Link>
                             </li>
                             {createOrganizationView}
                             {inviteView}

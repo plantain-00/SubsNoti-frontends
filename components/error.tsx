@@ -1,5 +1,7 @@
 import * as common from "./common";
 
+let Link = ReactRouter.Link;
+
 interface State {
     message?: string;
 }
@@ -24,7 +26,7 @@ export let ErrorComponent = React.createClass({
                         <div className="panel-body">
                             <div className="alert alert-danger" role="alert">
                                 <span>{self.state.message}</span>
-                                go to <a href="#/" className="alert-link">Home page</a> now.
+                                go to <Link to="/" className="alert-link">Home page</Link> now.
                             </div>
                         </div>
                     </div>

@@ -139,7 +139,7 @@ let vueBody: VueBodyModel = new Vue({
                     self.organizationsCurrentUserIn = data.organizations;
                     if (data.organizations.length > 0) {
                         let lastOrganizationId = window.localStorage.getItem(common.localStorageNames.lastOrganizationId);
-                        if (lastOrganizationId && ~_.findIndex(data.organizations, o => o.id === lastOrganizationId)) {
+                        if (lastOrganizationId && ~data.organizations.findIndex(o => o.id === lastOrganizationId)) {
                             self.currentOrganizationId = lastOrganizationId;
                         } else {
                             self.currentOrganizationId = data.organizations[0].id;
@@ -155,7 +155,7 @@ let vueBody: VueBodyModel = new Vue({
             });
         },
         getEmails: function(users: types.User[]) {
-            return _.reduce(users, (r, w) => r + w.email + ";", "");
+            return users.reduce((r, w) => r + w.email + ";", "");
         },
         fetchThemes: function(page: number) {
             let self: VueBodyModel = this;
@@ -401,7 +401,7 @@ $(document).ready(() => {
 
         socket.on(types.pushEvents.themeUpdated, (theme: Theme) => {
             if (theme.organizationId === vueBody.currentOrganizationId) {
-                let index = _.findIndex(vueBody.themes, t => t.id === theme.id);
+                let index = vueBody.themes.findIndex(t => t.id === theme.id);
                 if (index > -1) {
                     vueBody.initTheme(theme);
                     vueBody.themes["$set"](index, theme);

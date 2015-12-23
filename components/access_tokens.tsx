@@ -47,7 +47,7 @@ export let AccessTokensComponent = React.createClass({
         self.setState({
             idInEditing: accessToken.id,
             descriptionInEditing: accessToken.description,
-            scopesInEditing: _.map(accessToken.scopes, a => a.name),
+            scopesInEditing: accessToken.scopes.map(a => a.name),
             newAccessToken: "",
         });
     },

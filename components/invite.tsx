@@ -100,19 +100,19 @@ export let InviteComponent = React.createClass({
                 </button>
             );
         }
-        let organizationsView = self.state.organizationsCurrentUserCreated.map(o => {
-            if (self.state.currentOrganizationId === o.id) {
+        let organizationsView = self.state.organizationsCurrentUserCreated.map(organization => {
+            if (self.state.currentOrganizationId === organization.id) {
                 return (
-                    <label className="the-label label-active" key={o.id}
-                        onClick={self.clickOrganization.bind(this, o)}>
-                        {o.name}
+                    <label className="the-label label-active" key={organization.id}
+                        onClick={self.clickOrganization.bind(this, organization)}>
+                        {organization.name}
                     </label>
                 );
             } else {
                 return (
-                    <label className="the-label" key={o.id}
-                        onClick={self.clickOrganization.bind(this, o)}>
-                        {o.name}
+                    <label className="the-label" key={organization.id}
+                        onClick={self.clickOrganization.bind(this, organization)}>
+                        {organization.name}
                     </label>
                 );
             }

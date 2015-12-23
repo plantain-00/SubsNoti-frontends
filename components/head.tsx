@@ -74,14 +74,16 @@ export let HeadComponent = React.createClass({
             cache: false,
         }).then((data: CurrentUserResponse) => {
             if (data.isSuccess) {
-                self.setState({ loginStatus: types.loginStatus.fail });
-                self.setState({ currentUserId: "" });
-                self.setState({ currentUserName: "" });
-                self.setState({ currentUserEmail: "" });
-                self.setState({ currentAvatar: "" });
+                self.setState({
+                    loginStatus: types.loginStatus.fail,
+                    currentUserId: "",
+                    currentUserName: "",
+                    currentUserEmail: "",
+                    currentAvatar: "",
+                    createdOrganizationCount: maxOrganizationNumberUserCanCreate,
+                    joinedOrganizationCount: 0,
+                });
                 window.sessionStorage.removeItem(common.sessionStorageNames.loginResult);
-                self.setState({ createdOrganizationCount: maxOrganizationNumberUserCanCreate });
-                self.setState({ joinedOrganizationCount: 0 });
             } else {
                 self.showAlert(false, data.errorMessage);
             }
@@ -90,9 +92,11 @@ export let HeadComponent = React.createClass({
     showAlert: function(isSuccess: boolean, message: string) {
         let self: Self = this;
 
-        self.setState({ alertIsSuccess: isSuccess });
-        self.setState({ alertMessage: message });
-        self.setState({ showAlertMessage: true });
+        self.setState({
+            alertIsSuccess: isSuccess,
+            alertMessage: message,
+            showAlertMessage: true,
+        });
 
         if (timeoutId) {
             clearTimeout(timeoutId);
@@ -108,13 +112,15 @@ export let HeadComponent = React.createClass({
 
         getCurrentUser(data => {
             if (data.isSuccess) {
-                self.setState({ loginStatus: types.loginStatus.success });
-                self.setState({ currentUserId: data.user.id });
-                self.setState({ currentUserName: data.user.name });
-                self.setState({ currentUserEmail: data.user.email });
-                self.setState({ currentAvatar: getFullUrl(data.user.avatar) });
-                self.setState({ createdOrganizationCount: data.user.createdOrganizationCount });
-                self.setState({ joinedOrganizationCount: data.user.joinedOrganizationCount });
+                self.setState({
+                    loginStatus: types.loginStatus.success,
+                    currentUserId: data.user.id,
+                    currentUserName: data.user.name,
+                    currentUserEmail: data.user.email,
+                    currentAvatar: getFullUrl(data.user.avatar),
+                    createdOrganizationCount: data.user.createdOrganizationCount,
+                    joinedOrganizationCount: data.user.joinedOrganizationCount,
+                });
 
                 window.localStorage.setItem(common.localStorageNames.lastLoginEmail, data.user.email);
                 window.localStorage.setItem(common.localStorageNames.lastLoginName, data.user.name);

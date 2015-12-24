@@ -38,7 +38,7 @@ export let SuccessComponent = React.createClass({
             <div className="container" style={{ marginTop: 60 + "px" }}>
                 <div className="row">
                     <div className="panel panel-default">
-                        <div className="panel-body" id="vue-body">
+                        <div className="panel-body">
                             <div className="alert alert-success" role="alert">
                                 success! go to <Link to="/" className="alert-link">Home page</Link> now.
                                 {redirectUrlView}

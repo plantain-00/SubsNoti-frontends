@@ -14,6 +14,7 @@ import {AuthorizedComponent} from "./authorized";
 import {RegisteredComponent} from "./registered";
 import {AuthorizationComponent} from "./authorization";
 import {LoginComponent} from "./login";
+import {UserComponent} from "./user";
 
 ReactDOM.render(
     <Router>
@@ -26,6 +27,7 @@ ReactDOM.render(
         <Route path="/registered" component={RegisteredComponent}/>
         <Route path="/authorization" component={AuthorizationComponent}/>
         <Route path="/login" component={LoginComponent}/>
+        <Route path="/user" component={UserComponent}/>
     </Router>,
     document.getElementById("container")
 );

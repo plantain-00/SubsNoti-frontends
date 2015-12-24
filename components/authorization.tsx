@@ -1,5 +1,5 @@
 import * as types from "./types";
-import {HeadComponent, events} from "./head";
+import {HeadComponent, events, head} from "./head";
 import * as common from "./common";
 
 let Link = ReactRouter.Link;
@@ -28,7 +28,7 @@ export let AuthorizationComponent = React.createClass({
                 alert("success");
                 location.href = self.state.redirectUrl;
             } else {
-                events.showAlert(false, data.errorMessage);
+                head.showAlert(false, data.errorMessage);
             }
         });
     },
@@ -51,7 +51,7 @@ export let AuthorizationComponent = React.createClass({
                     if (data.isSuccess) {
                         self.setState({ application: data.application });
                     } else {
-                        events.showAlert(false, data.errorMessage);
+                        head.showAlert(false, data.errorMessage);
                     }
                 });
             }
@@ -62,7 +62,7 @@ export let AuthorizationComponent = React.createClass({
                 if (data.isSuccess) {
                     self.setState({ allScopes: data.scopes });
                 } else {
-                    events.showAlert(false, data.errorMessage);
+                    head.showAlert(false, data.errorMessage);
                 }
             });
         };

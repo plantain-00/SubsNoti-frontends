@@ -1,5 +1,5 @@
 import * as types from "./types";
-import {HeadComponent, events} from "./head";
+import {HeadComponent, events, head} from "./head";
 import * as common from "./common";
 
 let Link = ReactRouter.Link;
@@ -64,7 +64,7 @@ export let AccessTokensComponent = React.createClass({
                 }
                 self.setState({ accessTokens: data.accessTokens });
             } else {
-                events.showAlert(false, data.errorMessage);
+                head.showAlert(false, data.errorMessage);
             }
         });
     },
@@ -91,11 +91,11 @@ export let AccessTokensComponent = React.createClass({
                 },
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
-                    events.showAlert(true, "success");
+                    head.showAlert(true, "success");
                     self.new();
                     self.get();
                 } else {
-                    events.showAlert(false, data.errorMessage);
+                    head.showAlert(false, data.errorMessage);
                 }
             });
         } else {
@@ -108,12 +108,12 @@ export let AccessTokensComponent = React.createClass({
                 },
             }).then((data: AccessTokenResponse) => {
                 if (data.isSuccess) {
-                    events.showAlert(true, "success");
+                    head.showAlert(true, "success");
                     self.new();
                     self.get();
                     self.setState({ newAccessToken: data.accessToken });
                 } else {
-                    events.showAlert(false, data.errorMessage);
+                    head.showAlert(false, data.errorMessage);
                 }
             });
         }
@@ -126,11 +126,11 @@ export let AccessTokensComponent = React.createClass({
             method: "DELETE",
         }).then((data: types.Response) => {
             if (data.isSuccess) {
-                events.showAlert(true, "success");
+                head.showAlert(true, "success");
                 self.new();
                 self.get();
             } else {
-                events.showAlert(false, data.errorMessage);
+                head.showAlert(false, data.errorMessage);
             }
         });
     },
@@ -142,12 +142,12 @@ export let AccessTokensComponent = React.createClass({
             method: "PUT",
         }).then((data: AccessTokenResponse) => {
             if (data.isSuccess) {
-                events.showAlert(true, "success");
+                head.showAlert(true, "success");
                 self.new();
                 self.get();
                 self.setState({ newAccessToken: data.accessToken });
             } else {
-                events.showAlert(false, data.errorMessage);
+                head.showAlert(false, data.errorMessage);
             }
         });
     },
@@ -179,7 +179,7 @@ export let AccessTokensComponent = React.createClass({
                 if (data.isSuccess) {
                     self.setState({ scopes: data.scopes });
                 } else {
-                    events.showAlert(false, data.errorMessage);
+                    head.showAlert(false, data.errorMessage);
                 }
             });
         };

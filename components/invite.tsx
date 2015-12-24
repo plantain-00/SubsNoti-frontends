@@ -1,5 +1,5 @@
 import * as types from "./types";
-import {HeadComponent, events} from "./head";
+import {HeadComponent, events, head} from "./head";
 import * as common from "./common";
 
 let Link = ReactRouter.Link;
@@ -37,7 +37,7 @@ export let InviteComponent = React.createClass({
                     }
                 }
             } else {
-                events.showAlert(false, data.errorMessage);
+                head.showAlert(false, data.errorMessage);
             }
         });
     },
@@ -51,9 +51,9 @@ export let InviteComponent = React.createClass({
             type: "PUT",
         }).then((data: types.Response) => {
             if (data.isSuccess) {
-                events.showAlert(true, "success");
+                head.showAlert(true, "success");
             } else {
-                events.showAlert(false, data.errorMessage);
+                head.showAlert(false, data.errorMessage);
             }
         });
     },
@@ -90,7 +90,7 @@ export let InviteComponent = React.createClass({
         let self: Self = this;
 
         let inviteView;
-        if (common.isEmail(self.state.email.trim()) && events.getRequestCount() === 0) {
+        if (common.isEmail(self.state.email.trim()) && head.state.requestCount === 0) {
             inviteView = (
                 <button type="button" className="btn btn-primary" onClick={self.invite}>Invite</button>
             );

@@ -42,20 +42,24 @@ $.ajaxSetup({
     },
 });
 
+export let head: Self;
+
 export let events: {
-    showAlert?: (isSuccess: boolean, message: string) => void;
-    addOrganization?: () => void;
-    getRequestCount?: () => number;
-    setRequestCount?: (count: number) => void;
     authenticated?: (error: Error) => void;
 } = new Object();
 
 $(document).ajaxSend(() => {
-    events.setRequestCount(events.getRequestCount() + 1);
+    if (head) {
+        head.setState({ requestCount: head.state.requestCount + 1 });
+    }
 }).ajaxComplete(() => {
-    events.setRequestCount(events.getRequestCount() - 1);
+    if (head) {
+        head.setState({ requestCount: head.state.requestCount - 1 });
+    }
 }).ajaxError(() => {
-    events.showAlert(false, "something happens unexpectedly, see console to get more details.");
+    if (head) {
+        head.showAlert(false, "something happens unexpectedly, see console to get more details.");
+    }
 });
 
 let timeoutId;
@@ -151,16 +155,7 @@ export let HeadComponent = React.createClass({
     componentWillMount: function() {
         let self: Self = this;
 
-        events.showAlert = self.showAlert;
-        events.addOrganization = () => {
-            self.setState({ createdOrganizationCount: self.state.createdOrganizationCount + 1 });
-        };
-        events.getRequestCount = () => {
-            return self.state.requestCount;
-        };
-        events.setRequestCount = count => {
-            self.setState({ requestCount: count });
-        };
+        head = self;
 
         $(document).ready(function() {
             self.authenticate(error => {
@@ -175,10 +170,10 @@ export let HeadComponent = React.createClass({
         });
     },
     componentWillUnmount: function() {
-        events.showAlert = undefined;
-        events.addOrganization = undefined;
-        events.getRequestCount = undefined;
-        events.setRequestCount = undefined;
+        head = undefined;
+        events.authenticated = undefined;
+        clearTimeout(timeoutId);
+        timeoutId = null;
     },
     getInitialState: function() {
         return {
@@ -285,12 +280,21 @@ export let HeadComponent = React.createClass({
         }
         let alertMessageView;
         if (self.state.showAlertMessage) {
-            alertMessageView = (
-                <div className="alert alert-{{alertIsSuccess ? 'success' : 'danger'}}" role="alert"
-                    style={{ position: "fixed", top: 60 + "px", left: 20 + "px", right: 20 + "px", zIndex: 1 }}>
-                    {self.state.alertMessage}
-                </div>
-            );
+            if (self.state.alertIsSuccess) {
+                alertMessageView = (
+                    <div className="alert alert-success" role="alert"
+                        style={{ position: "fixed", top: 60 + "px", left: 20 + "px", right: 20 + "px", zIndex: 1 }}>
+                        {self.state.alertMessage}
+                    </div>
+                );
+            } else {
+                alertMessageView = (
+                    <div className="alert alert-danger" role="alert"
+                        style={{ position: "fixed", top: 60 + "px", left: 20 + "px", right: 20 + "px", zIndex: 1 }}>
+                        {self.state.alertMessage}
+                    </div>
+                );
+            }
         }
         let waitView;
         if (self.state.requestCount > 0) {

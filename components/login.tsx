@@ -1,5 +1,5 @@
 import * as types from "./types";
-import {HeadComponent, events} from "./head";
+import {HeadComponent, events, head} from "./head";
 import * as common from "./common";
 
 let Link = ReactRouter.Link;
@@ -39,7 +39,7 @@ export let LoginComponent = React.createClass({
         if (lastSuccessfulEmailTime) {
             let time = new Date().getTime() - parseInt(lastSuccessfulEmailTime, 10);
             if (time < 60 * 1000) {
-                events.showAlert(false, "please do it after " + (60 - time / 1000) + " seconds");
+                head.showAlert(false, "please do it after " + (60 - time / 1000) + " seconds");
                 return;
             }
         }
@@ -52,10 +52,10 @@ export let LoginComponent = React.createClass({
             redirectUrl: self.state.redirectUrl,
         }).then((data: types.Response) => {
             if (data.isSuccess) {
-                events.showAlert(true, "success, please check your email.");
+                head.showAlert(true, "success, please check your email.");
                 window.localStorage.setItem(common.localStorageNames.lastSuccessfulEmailTime, new Date().getTime().toString());
             } else {
-                events.showAlert(false, data.errorMessage);
+                head.showAlert(false, data.errorMessage);
                 self.refreshCaptcha();
             }
         });
@@ -69,7 +69,7 @@ export let LoginComponent = React.createClass({
             if (data.isSuccess) {
                 self.setState({ captchaUrl: data.url });
             } else {
-                events.showAlert(false, data.errorMessage);
+                head.showAlert(false, data.errorMessage);
             }
         });
     },
@@ -153,7 +153,7 @@ export let LoginComponent = React.createClass({
         let self: Self = this;
 
         let loginView;
-        if (self.state.emailHead && self.state.emailTail && self.state.code && events.getRequestCount() === 0) {
+        if (self.state.emailHead && self.state.emailTail && self.state.code && head.state.requestCount === 0) {
             loginView = (
                 <button type="button" className="btn btn-primary" onClick={self.login}>
                     Login

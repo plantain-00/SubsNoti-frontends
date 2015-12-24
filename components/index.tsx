@@ -26,7 +26,7 @@ ReactDOM.render(
         <Route path="/error.html" component={ErrorComponent}/>
         <Route path="/new_organization.html" component={NewOrganizationComponent}/>
         <Route path="/invite.html" component={InviteComponent}/>
-        <Route path="/access_tokens" component={AccessTokensComponent}/>
+        <Route path="/access_tokens.html" component={AccessTokensComponent}/>
         <Route path="/authorized.html" component={AuthorizedComponent}/>
         <Route path="/registered.html" component={RegisteredComponent}/>
         <Route path="/authorization.html" component={AuthorizationComponent}/>

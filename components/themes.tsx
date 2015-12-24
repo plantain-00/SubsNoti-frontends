@@ -66,8 +66,8 @@ interface Self extends types.Self<State> {
     clickOrder: (order: types.ThemeOrderType) => void;
     nextThemeCount: () => number;
     canShowMoreThemes: () => boolean;
-    mouseOverTheme: (theme: Theme) => void;
-    mouseOutTheme: (theme: Theme) => void;
+    mouseEnterTheme: (theme: Theme) => void;
+    mouseLeaveTheme: (theme: Theme) => void;
     newThemeTitleChanged: (e) => void;
     newThemeDetailChanged: (e) => void;
     qChanged: (e) => void;
@@ -377,14 +377,14 @@ export let ThemesComponent = React.createClass({
 
         return self.nextThemeCount() > 0 && head.state.requestCount === 0;
     },
-    mouseOverTheme: function(theme: Theme) {
+    mouseEnterTheme: function(theme: Theme) {
         let self: Self = this;
 
         let themes = self.state.themes;
         theme.isHovering = true;
         self.setState({ themes: themes });
     },
-    mouseOutTheme: function(theme: Theme) {
+    mouseLeaveTheme: function(theme: Theme) {
         let self: Self = this;
 
         let themes = self.state.themes;
@@ -645,7 +645,7 @@ export let ThemesComponent = React.createClass({
             }
 
             return (
-                <tr key={theme.id} onMouseOver={self.mouseOverTheme.bind(this, theme)} onMouseOut={self.mouseOutTheme.bind(this, theme)}>
+                <tr key={theme.id} onMouseEnter={self.mouseEnterTheme.bind(this, theme)} onMouseLeave={self.mouseLeaveTheme.bind(this, theme)}>
                     <td style={{ width: 70 + "px" }}>
                         <img src={theme.creator.avatar} height="50" width="50"/>
                     </td>
@@ -763,7 +763,7 @@ export let ThemesComponent = React.createClass({
                                 onClick={self.clickOrder.bind(this, "recently updated")}>
                                 recently updated
                             </label>
-                            <span className="glyphicon glyphicon-search btn btn-primary" aria-hidden="true" onClick={self.fetchThemes.bind(this, 1)}></span>
+                            <span className="glyphicon glyphicon-search btn btn-primary" aria-hidden="true" onClick={self.fetchThemes.bind(this, 1, undefined)}></span>
                             {showCreateView}
                         </div>
                     </div>

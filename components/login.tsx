@@ -2,8 +2,6 @@ import * as types from "./types";
 import {HeadComponent, events, head} from "./head";
 import * as common from "./common";
 
-let Link = ReactRouter.Link;
-
 interface CaptchaResponse extends types.Response {
     url: string;
 }

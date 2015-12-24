@@ -7,3 +7,4 @@ dest/*.html
 dest/scripts/*.js
 dest/styles/*.css
 build/
+**/*.map

@@ -190,7 +190,7 @@ export let HeadComponent = React.createClass({
         if (self.state.createdOrganizationCount < common.maxOrganizationNumberUserCanCreate) {
             createOrganizationView = (
                 <li>
-                    <Link to="/new_organization">New Organization</Link>
+                    <Link to="/new_organization.html">New Organization</Link>
                 </li>
             );
         }
@@ -198,7 +198,7 @@ export let HeadComponent = React.createClass({
         if (self.state.joinedOrganizationCount > 0) {
             inviteView = (
                 <li>
-                    <Link to="/invite">Invite</Link>
+                    <Link to="/invite.html">Invite</Link>
                 </li>
             );
         }
@@ -209,17 +209,17 @@ export let HeadComponent = React.createClass({
         if (self.state.loginStatus === types.loginStatus.success) {
             registeredView = (
                 <li>
-                    <Link to="/registered">Registered</Link>
+                    <Link to="/registered.html">Registered</Link>
                 </li>
             );
             authorizedView = (
                 <li>
-                    <Link to="/authorized">Authorized</Link>
+                    <Link to="/authorized.html">Authorized</Link>
                 </li>
             );
             sccessTokenView = (
                 <li>
-                    <Link to="/access_tokens">Access tokens</Link>
+                    <Link to="/access_tokens.html">Access tokens</Link>
                 </li>
             );
             logoutView = (
@@ -242,7 +242,7 @@ export let HeadComponent = React.createClass({
                 break;
             case types.loginStatus.success:
                 loginView = (
-                    <Link to="/user">
+                    <Link to="/user.html">
                         <span className="glyphicon glyphicon-user" style={{ top: 2 + "px" }}></span> &nbsp;
                         <span>{self.state.currentUserName}</span>
                         <span className="glyphicon glyphicon-envelope" style={{ top: 2 + "px" }}></span> &nbsp;
@@ -253,7 +253,7 @@ export let HeadComponent = React.createClass({
                 break;
             case types.loginStatus.fail:
                 loginView = (
-                    <Link to="/login">
+                    <Link to="/login.html">
                         <span className="glyphicon glyphicon-user" style={{ top: 2 + "px" }}></span> &nbsp;Login
                     </Link>
                 );

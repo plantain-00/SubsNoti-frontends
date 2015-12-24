@@ -21,9 +21,6 @@ let minifyHtmlConfig = {
     spare: true,
 };
 
-let tsxFiles = ["success", "error", "new_organization", "head"];
-
-
 let command = "rm -rf build && tsc -p components --pretty && sass styles/base.scss > build/base.css && scss-lint styles/*.scss";
 
 gulp.task("build", shell.task(`rm -rf dest && ${command} && gulp html-dev && rm -rf build`));
@@ -39,11 +36,11 @@ gulp.task("css-dest", () => {
 });
 
 gulp.task("js-dev", ["tslint"], () => {
-    return bundleAndUglifyJs("app", true);
+    return bundleAndUglifyJs("index", true);
 });
 
 gulp.task("js-dest", ["tslint"], () => {
-    return bundleAndUglifyJs("app", false);
+    return bundleAndUglifyJs("index", false);
 });
 
 gulp.task("rev-dev", ["css-dev", "js-dev"], () => {
@@ -59,11 +56,11 @@ gulp.task("map-dest", ["css-dest", "js-dest"], () => {
 });
 
 gulp.task("html-dev", ["rev-dev"], () => {
-    return bundleAndUglifyHtml("app", true);
+    return bundleAndUglifyHtml("index", true);
 });
 
 gulp.task("html-dest", ["rev-dest", "map-dest"], () => {
-    return bundleAndUglifyHtml("app", false);
+    return bundleAndUglifyHtml("index", false);
 });
 
 gulp.task("tslint", () => {

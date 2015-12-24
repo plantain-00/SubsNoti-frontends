@@ -199,6 +199,31 @@ export let RegisteredComponent = React.createClass({
             );
         });
 
+        let nameView = (
+            <div className="form-group">
+                <label htmlFor="name">name</label>
+                <input type="text" className="form-control" id="name" placeholder="name" onChange={self.nameInEditingChanged} value={self.state.nameInEditing}/>
+            </div>
+        );
+        let homeUrlView = (
+            <div className="form-group">
+                <label htmlFor="home-url">home url</label>
+                <input type="text" className="form-control" id="home-url" placeholder="https://" onChange={self.homeUrlInEditingChanged} value={self.state.homeUrlInEditing}/>
+            </div>
+        );
+        let descriptionView = (
+            <div className="form-group">
+                <label htmlFor="description">description</label>
+                <input type="text" className="form-control" id="description" placeholder="optional" onChange={self.descriptionInEditingChanged} value={self.state.descriptionInEditing}/>
+            </div>
+        );
+        let authorizationCallbackUrl = (
+            <div className="form-group">
+                <label htmlFor="authorizationCallbackUrl">authorization callback url</label>
+                <input type="text" className="form-control" id="authorizationCallbackUrl" placeholder="https://" onChange={self.authorizationCallbackUrlInEditingChanged} value={self.state.authorizationCallbackUrlInEditing}/>
+            </div>
+        );
+
         let applicationView;
         if (self.state.idInEditing) {
             applicationView = (
@@ -209,22 +234,10 @@ export let RegisteredComponent = React.createClass({
                         <input type="text" className="form-control" readOnly value={self.state.clientSecretInEditing}/>
                     </div>
                     <button type="button" className="btn btn-danger" onClick={self.resetClientSecret}>Reset client secret</button>
-                    <div className="form-group">
-                        <label htmlFor="name">name</label>
-                        <input type="text" className="form-control" id="name" placeholder="name" onChange={self.nameInEditingChanged} value={self.state.nameInEditing}/>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="home-url">home url</label>
-                        <input type="text" className="form-control" id="home-url" placeholder="https://" onChange={self.homeUrlInEditingChanged} value={self.state.homeUrlInEditing}/>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="description">description</label>
-                        <input type="text" className="form-control" id="description" placeholder="optional" onChange={self.descriptionInEditingChanged} value={self.state.descriptionInEditing}/>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="authorizationCallbackUrl">authorization callback url</label>
-                        <input type="text" className="form-control" id="authorizationCallbackUrl" placeholder="https://" onChange={self.authorizationCallbackUrlInEditingChanged} value={self.state.authorizationCallbackUrlInEditing}/>
-                    </div>
+                    {nameView}
+                    {homeUrlView}
+                    {descriptionView}
+                    {authorizationCallbackUrl}
                     <button type="button" className="btn btn-primary" onClick={self.save}>Update</button>
                     <button type="button" className="btn btn-danger" onClick={self.remove}>Delete</button>
                 </form>
@@ -232,22 +245,10 @@ export let RegisteredComponent = React.createClass({
         } else {
             applicationView = (
                 <form className="form">
-                    <div className="form-group">
-                        <label htmlFor="name">name</label>
-                        <input type="text" className="form-control" id="name" placeholder="name" onChange={self.nameInEditingChanged} value={self.state.nameInEditing}/>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="home-url">home url</label>
-                        <input type="text" className="form-control" id="home-url" placeholder="https://" onChange={self.homeUrlInEditingChanged} value={self.state.homeUrlInEditing}/>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="description">description</label>
-                        <input type="text" className="form-control" id="description" placeholder="optional" onChange={self.descriptionInEditingChanged} value={self.state.descriptionInEditing}/>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="authorizationCallbackUrl">authorization callback url</label>
-                        <input type="text" className="form-control" id="authorizationCallbackUrl" placeholder="https://" onChange={self.authorizationCallbackUrlInEditingChanged} value={self.state.authorizationCallbackUrlInEditing}/>
-                    </div>
+                    {nameView}
+                    {homeUrlView}
+                    {descriptionView}
+                    {authorizationCallbackUrl}
                     <button type="button" className="btn btn-primary" onClick={self.save}>Register</button>
                 </form>
             );

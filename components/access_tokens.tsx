@@ -245,6 +245,13 @@ export let AccessTokensComponent = React.createClass({
             );
         }
 
+        let descriptionView = (
+            <div className="form-group">
+                <label htmlFor="description">description</label>
+                <input type="text" className="form-control" id="description" onChange={self.descriptionInEditingChanged} value={self.state.descriptionInEditing} />
+            </div>
+        );
+
         let accessTokenView;
         if (self.state.idInEditing) {
             accessTokenView = (
@@ -256,10 +263,7 @@ export let AccessTokensComponent = React.createClass({
                         Regenerate access token
                     </button>
                     {newAccessTokenView}
-                    <div className="form-group">
-                        <label htmlFor="description">description</label>
-                        <input type="text" className="form-control" id="description" onChange={self.descriptionInEditingChanged} value={self.state.descriptionInEditing} />
-                    </div>
+                    {descriptionView}
                     <div className="checkbox">
                         {scopesView}
                     </div>
@@ -271,10 +275,7 @@ export let AccessTokensComponent = React.createClass({
             accessTokenView = (
                 <form className="form">
                     {newAccessTokenView}
-                    <div className="form-group">
-                        <label htmlFor="description">description</label>
-                        <input type="text" className="form-control" id="description" onChange={self.descriptionInEditingChanged} value={self.state.descriptionInEditing} />
-                    </div>
+                    {descriptionView}
                     <div className="checkbox">
                         {scopesView}
                     </div>

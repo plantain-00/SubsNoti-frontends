@@ -15,9 +15,12 @@ import {RegisteredComponent} from "./registered";
 import {AuthorizationComponent} from "./authorization";
 import {LoginComponent} from "./login";
 import {UserComponent} from "./user";
+import {ThemesComponent} from "./themes";
 
 ReactDOM.render(
     <Router>
+        <Route path="/" component={ThemesComponent}/>
+        <Route path="/themes" component={ThemesComponent}/>
         <Route path="/success" component={SuccessComponent}/>
         <Route path="/error" component={ErrorComponent}/>
         <Route path="/new_organization" component={NewOrganizationComponent}/>

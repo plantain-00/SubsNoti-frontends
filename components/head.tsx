@@ -7,13 +7,6 @@ interface CurrentUserResponse extends types.Response {
     user: types.User;
 }
 
-export let itemLimit = 10;
-export let maxOrganizationNumberUserCanCreate = 3;
-
-export function getFullUrl(avatar: string): string {
-    return `${imageServerBaseUrl}/${avatar}`;
-}
-
 function getCurrentUser(next: (data: CurrentUserResponse) => void) {
     let loginResult = window.sessionStorage.getItem(common.sessionStorageNames.loginResult);
 
@@ -100,7 +93,7 @@ export let HeadComponent = React.createClass({
                     currentUserName: "",
                     currentUserEmail: "",
                     currentAvatar: "",
-                    createdOrganizationCount: maxOrganizationNumberUserCanCreate,
+                    createdOrganizationCount: common.maxOrganizationNumberUserCanCreate,
                     joinedOrganizationCount: 0,
                 });
                 window.sessionStorage.removeItem(common.sessionStorageNames.loginResult);
@@ -137,7 +130,7 @@ export let HeadComponent = React.createClass({
                     currentUserId: data.user.id,
                     currentUserName: data.user.name,
                     currentUserEmail: data.user.email,
-                    currentAvatar: getFullUrl(data.user.avatar),
+                    currentAvatar: common.getFullUrl(data.user.avatar),
                     createdOrganizationCount: data.user.createdOrganizationCount,
                     joinedOrganizationCount: data.user.joinedOrganizationCount,
                 });
@@ -182,7 +175,7 @@ export let HeadComponent = React.createClass({
             currentUserName: "",
             currentUserEmail: "",
             currentAvatar: "",
-            createdOrganizationCount: maxOrganizationNumberUserCanCreate,
+            createdOrganizationCount: common.maxOrganizationNumberUserCanCreate,
             joinedOrganizationCount: 0,
             requestCount: 0,
             alertIsSuccess: true,
@@ -194,7 +187,7 @@ export let HeadComponent = React.createClass({
         let self: Self = this;
 
         let createOrganizationView;
-        if (self.state.createdOrganizationCount < maxOrganizationNumberUserCanCreate) {
+        if (self.state.createdOrganizationCount < common.maxOrganizationNumberUserCanCreate) {
             createOrganizationView = (
                 <li>
                     <Link to="/new_organization">New Organization</Link>
@@ -280,21 +273,12 @@ export let HeadComponent = React.createClass({
         }
         let alertMessageView;
         if (self.state.showAlertMessage) {
-            if (self.state.alertIsSuccess) {
-                alertMessageView = (
-                    <div className="alert alert-success" role="alert"
-                        style={{ position: "fixed", top: 60 + "px", left: 20 + "px", right: 20 + "px", zIndex: 1 }}>
-                        {self.state.alertMessage}
-                    </div>
-                );
-            } else {
-                alertMessageView = (
-                    <div className="alert alert-danger" role="alert"
-                        style={{ position: "fixed", top: 60 + "px", left: 20 + "px", right: 20 + "px", zIndex: 1 }}>
-                        {self.state.alertMessage}
-                    </div>
-                );
-            }
+            alertMessageView = (
+                <div className={ "alert alert-" + (self.state.alertIsSuccess ? "success" : "danger")} role="alert"
+                    style={{ position: "fixed", top: 60 + "px", left: 20 + "px", right: 20 + "px", zIndex: 1 }}>
+                    {self.state.alertMessage}
+                </div>
+            );
         }
         let waitView;
         if (self.state.requestCount > 0) {

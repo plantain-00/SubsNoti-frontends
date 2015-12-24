@@ -100,19 +100,11 @@ export let InviteComponent = React.createClass({
             );
         }
         let organizationsView = self.state.organizationsCurrentUserCreated.map(organization => {
-            if (self.state.currentOrganizationId === organization.id) {
-                return (
-                    <label className="the-label label-active" key={organization.id} onClick={self.clickOrganization.bind(this, organization)}>
-                        {organization.name}
-                    </label>
-                );
-            } else {
-                return (
-                    <label className="the-label" key={organization.id} onClick={self.clickOrganization.bind(this, organization)}>
-                        {organization.name}
-                    </label>
-                );
-            }
+            return (
+                <label className={ "the-label " + (self.state.currentOrganizationId === organization.id ? "label-active" : "") } key={organization.id} onClick={self.clickOrganization.bind(this, organization)}>
+                    {organization.name}
+                </label>
+            );
         });
 
         return (

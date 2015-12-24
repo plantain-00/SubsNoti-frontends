@@ -36,3 +36,10 @@ export const localStorageNames = {
 
 export const yes = "√";
 export const no = "X";
+
+export let itemLimit = 10;
+export let maxOrganizationNumberUserCanCreate = 3;
+
+export function getFullUrl(avatar: string): string {
+    return `${imageServerBaseUrl}/${avatar}`;
+}

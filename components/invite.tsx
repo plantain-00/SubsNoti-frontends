@@ -2,8 +2,6 @@ import * as types from "./types";
 import {HeadComponent, events, head} from "./head";
 import * as common from "./common";
 
-let Link = ReactRouter.Link;
-
 interface State {
     email?: string;
     organizationsCurrentUserCreated?: types.Organization[];
@@ -30,7 +28,7 @@ export let InviteComponent = React.createClass({
                 self.setState({ organizationsCurrentUserCreated: data.organizations });
                 if (data.organizations.length > 0) {
                     let lastOrganizationId = window.localStorage.getItem(common.localStorageNames.lastOrganizationId);
-                    if (lastOrganizationId && data.organizations.find(o => o.id === lastOrganizationId)) {
+                    if (lastOrganizationId && common.find(data.organizations, o => o.id === lastOrganizationId)) {
                         self.setState({ currentOrganizationId: lastOrganizationId });
                     } else {
                         self.setState({ currentOrganizationId: data.organizations[0].id });

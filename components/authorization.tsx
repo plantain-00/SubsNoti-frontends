@@ -2,8 +2,6 @@ import * as types from "./types";
 import {HeadComponent, events, head} from "./head";
 import * as common from "./common";
 
-let Link = ReactRouter.Link;
-
 interface State {
     allScopes?: types.Scope[];
     scopes?: string[];

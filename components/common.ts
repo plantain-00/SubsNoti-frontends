@@ -43,3 +43,21 @@ export let maxOrganizationNumberUserCanCreate = 3;
 export function getFullUrl(avatar: string): string {
     return `${imageServerBaseUrl}/${avatar}`;
 }
+
+export function find<T>(array: T[], predicate: (t: T) => boolean) {
+    for (let a of array) {
+        if (predicate(a)) {
+            return a;
+        }
+    }
+    return null;
+}
+
+export function findIndex<T>(array: T[], predicate: (t: T) => boolean) {
+    for (let i = 0; i < array.length; i++) {
+        if (predicate(array[i])) {
+            return i;
+        }
+    }
+    return -1;
+}

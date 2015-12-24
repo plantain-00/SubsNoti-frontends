@@ -2,8 +2,6 @@ import * as types from "./types";
 import {HeadComponent, events, head} from "./head";
 import * as common from "./common";
 
-let Link = ReactRouter.Link;
-
 interface Organization {
     id: string;
     name: string;
@@ -128,7 +126,7 @@ export let ThemesComponent = React.createClass({
                 self.setState({ organizationsCurrentUserIn: data.organizations });
                 if (data.organizations.length > 0) {
                     let lastOrganizationId = window.localStorage.getItem(common.localStorageNames.lastOrganizationId);
-                    if (lastOrganizationId && data.organizations.find(o => o.id === lastOrganizationId)) {
+                    if (lastOrganizationId && common.find(data.organizations, o => o.id === lastOrganizationId)) {
                         self.setState({ currentOrganizationId: lastOrganizationId });
                     } else {
                         self.setState({ currentOrganizationId: data.organizations[0].id });
@@ -247,8 +245,6 @@ export let ThemesComponent = React.createClass({
         }
     },
     watch: function(theme: Theme) {
-        let self: Self = this;
-
         $.ajax({
             url: apiBaseUrl + "/api/user/watched/" + theme.id,
             type: "PUT",
@@ -261,8 +257,6 @@ export let ThemesComponent = React.createClass({
         });
     },
     unwatch: function(theme: Theme) {
-        let self: Self = this;
-
         $.ajax({
             url: apiBaseUrl + "/api/user/watched/" + theme.id,
             data: {},
@@ -445,7 +439,7 @@ export let ThemesComponent = React.createClass({
 
             themeUpdated = (theme: Theme) => {
                 if (theme.organizationId === self.state.currentOrganizationId) {
-                    let index = self.state.themes.findIndex(t => t.id === theme.id);
+                    let index = common.findIndex(self.state.themes, t => t.id === theme.id);
                     if (index > -1) {
                         self.initTheme(theme);
                         let themes = self.state.themes;

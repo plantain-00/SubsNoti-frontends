@@ -165,7 +165,7 @@ export let RegisteredComponent = React.createClass({
     componentWillMount: function() {
         let self: Self = this;
 
-        events.authenticated = () => {
+        events.authenticated = error => {
             self.get();
         };
     },

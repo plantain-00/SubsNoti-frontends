@@ -72,7 +72,9 @@ export let InviteComponent = React.createClass({
     componentWillMount: function() {
         let self: Self = this;
 
-        events.authenticated = self.getOrganizationsCurrentUserCreated;
+        events.authenticated = error => {
+            self.getOrganizationsCurrentUserCreated();
+        };
     },
     componentWillUnmount: function() {
         events.authenticated = undefined;

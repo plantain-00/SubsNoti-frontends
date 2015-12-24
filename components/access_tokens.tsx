@@ -160,7 +160,7 @@ export let AccessTokensComponent = React.createClass({
         let self: Self = this;
 
         let value = e.target.value;
-        let index = self.state.scopesInEditing.indexOf(e.target.value);
+        let index = self.state.scopesInEditing.indexOf(value);
         if (index >= 0) {
             self.setState({ scopesInEditing: self.state.scopesInEditing.splice(index, 1) });
         } else {
@@ -170,7 +170,7 @@ export let AccessTokensComponent = React.createClass({
     componentWillMount: function() {
         let self: Self = this;
 
-        events.authenticated = () => {
+        events.authenticated = error => {
             self.get();
 
             $.ajax({

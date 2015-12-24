@@ -47,7 +47,7 @@ export let events: {
     addOrganization?: () => void;
     getRequestCount?: () => number;
     setRequestCount?: (count: number) => void;
-    authenticated?: () => void;
+    authenticated?: (error: Error) => void;
 } = new Object();
 
 $(document).ajaxSend(() => {
@@ -169,7 +169,7 @@ export let HeadComponent = React.createClass({
                 }
 
                 if (events.authenticated) {
-                    events.authenticated();
+                    events.authenticated(error);
                 }
             });
         });

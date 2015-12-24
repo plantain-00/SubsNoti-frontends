@@ -35,7 +35,7 @@ export let AuthorizationComponent = React.createClass({
     componentWillMount: function() {
         let self: Self = this;
 
-        events.authenticated = () => {
+        events.authenticated = error => {
             let scopes = decodeURIComponent(common.getUrlParameter("scopes"));
             self.setState({
                 redirectUrl: decodeURIComponent(common.getUrlParameter("redirect_url")),

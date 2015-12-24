@@ -13,6 +13,7 @@ import {AccessTokensComponent} from "./access_tokens";
 import {AuthorizedComponent} from "./authorized";
 import {RegisteredComponent} from "./registered";
 import {AuthorizationComponent} from "./authorization";
+import {LoginComponent} from "./login";
 
 ReactDOM.render(
     <Router>
@@ -24,6 +25,7 @@ ReactDOM.render(
         <Route path="/authorized" component={AuthorizedComponent}/>
         <Route path="/registered" component={RegisteredComponent}/>
         <Route path="/authorization" component={AuthorizationComponent}/>
+        <Route path="/login" component={LoginComponent}/>
     </Router>,
     document.getElementById("container")
 );

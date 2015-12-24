@@ -21,64 +21,50 @@ let minifyHtmlConfig = {
     spare: true,
 };
 
-let jsFiles = ["index", "login", "new_organization", "invite", "user", "error", "success", "registered", "authorized", "access_tokens", "authorization"];
-let htmlFiles = ["index", "login", "new_organization", "invite", "user", "error", "success", "registered", "authorized", "access_tokens", "authorization"];
-let cssFiles = ["base"];
+let command = "rm -rf build && tsc -p components --pretty && sass styles/base.scss > build/base.css && scss-lint styles/*.scss";
 
-let sassCommand = "sass styles/base.scss > build/base.css";
+gulp.task("build", shell.task(`rm -rf dest && ${command} && gulp html-dev && rm -rf build`));
 
-let command = "rm -rf build && tsc -p scripts --pretty && gulp tslint && scss-lint styles/*.scss";
-
-gulp.task("build", shell.task(`rm -rf dest && ${command} && ${sassCommand} && gulp css-dev && gulp js-dev && gulp rev-dev && gulp html-dev && rm -rf build`));
-
-gulp.task("deploy", shell.task(`${command} && ${sassCommand} && gulp css-dest && gulp js-dest && gulp rev-dest && gulp html-dest && rm -rf build`));
+gulp.task("deploy", shell.task(`${command} && gulp html-dest && rm -rf build`));
 
 gulp.task("css-dev", () => {
-    for (let file of cssFiles) {
-        uglifyCss(file, true);
-    }
+    return uglifyCss("base", true);
 });
 
 gulp.task("css-dest", () => {
-    for (let file of cssFiles) {
-        uglifyCss(file, false);
-    }
+    return uglifyCss("base", false);
 });
 
-gulp.task("js-dev", () => {
-    for (let file of jsFiles) {
-        bundleAndUglifyJs(file, true);
-    }
+gulp.task("js-dev", ["tslint"], () => {
+    return bundleAndUglifyJs("index", true);
 });
 
-gulp.task("js-dest", () => {
-    for (let file of jsFiles) {
-        bundleAndUglifyJs(file, false);
-    }
+gulp.task("js-dest", ["tslint"], () => {
+    return bundleAndUglifyJs("index", false);
 });
 
-gulp.task("rev-dev", () => {
-    revCssAndJs(true);
+gulp.task("rev-dev", ["css-dev", "js-dev"], () => {
+    return revCssAndJs();
 });
 
-gulp.task("rev-dest", () => {
-    revCssAndJs(false);
+gulp.task("rev-dest", ["css-dest", "js-dest"], () => {
+    return revCssAndJs();
 });
 
-gulp.task("html-dev", () => {
-    for (let file of htmlFiles) {
-        bundleAndUglifyHtml(file, true);
-    }
+gulp.task("map-dest", ["css-dest", "js-dest"], () => {
+    return mapJs();
 });
 
-gulp.task("html-dest", () => {
-    for (let file of htmlFiles) {
-        bundleAndUglifyHtml(file, false);
-    }
+gulp.task("html-dev", ["rev-dev"], () => {
+    return bundleAndUglifyHtml("index", true);
+});
+
+gulp.task("html-dest", ["rev-dest", "map-dest"], () => {
+    return bundleAndUglifyHtml("index", false);
 });
 
 gulp.task("tslint", () => {
-    return gulp.src(["scripts/**/*.ts"])
+    return gulp.src(["components/**/*.ts", "components/**/*.tsx"])
         .pipe(tslint({
             tslint: require("tslint")
         }))
@@ -98,13 +84,13 @@ gulp.task("host", () => {
 
 function uglifyCss(name, isDevelopment) {
     if (isDevelopment) {
-        gulp.src("build/" + name + ".css")
+        return gulp.src("build/" + name + ".css")
             .pipe(postcss([autoprefixer({ browsers: ["last 2 versions"] })]))
             .pipe(rename(name + ".css"))
             .pipe(gulp.dest("build/styles/"));
     }
     else {
-        gulp.src("build/" + name + ".css")
+        return gulp.src("build/" + name + ".css")
             .pipe(postcss([autoprefixer({ browsers: ["last 2 versions"] })]))
             .pipe(minifyCSS())
             .pipe(rename(name + ".min.css"))
@@ -114,13 +100,13 @@ function uglifyCss(name, isDevelopment) {
 
 function bundleAndUglifyJs(name, isDevelopment) {
     if (isDevelopment) {
-        gulp.src("build/" + name + ".js")
+        return gulp.src("build/" + name + ".js")
             .pipe(webpack())
             .pipe(rename(name + ".js"))
             .pipe(gulp.dest("build/scripts/"));
     }
     else {
-        gulp.src("build/" + name + ".js")
+        return gulp.src("build/" + name + ".js")
             .pipe(webpack({
                 plugins: [
                     new webpack.webpack.optimize.UglifyJsPlugin({ minimize: true })
@@ -134,13 +120,16 @@ function bundleAndUglifyJs(name, isDevelopment) {
     }
 }
 
-function revCssAndJs(isDevelopment) {
-    gulp.src(["build/styles/*.css", "build/scripts/*.js"], { base: "build" })
+function revCssAndJs() {
+    return gulp.src(["build/styles/*.css", "build/scripts/*.js"], { base: "build" })
         .pipe(rev())
         .pipe(gulp.dest("dest"))
         .pipe(rev.manifest())
         .pipe(gulp.dest("build/"));
-    gulp.src("build/scripts/*.map", { base: "build" })
+}
+
+function mapJs() {
+    return gulp.src("build/scripts/*.map", { base: "build" })
         .pipe(gulp.dest("dest"));
 }
 
@@ -161,7 +150,7 @@ function bundleAndUglifyHtml(name, isDevelopment) {
         config.imageUploaderBaseUrl = "http://localhost:9999";
         config.apiBaseUrl = "http://localhost:9998";
 
-        gulp.src("templates/" + name + ".ejs")
+        return gulp.src("templates/" + name + ".ejs")
             .pipe(ejs(config))
             .pipe(rename(name + ".html"))
             .pipe(revReplace({
@@ -170,7 +159,7 @@ function bundleAndUglifyHtml(name, isDevelopment) {
             .pipe(gulp.dest("dest"));
     }
     else {
-        gulp.src("templates/" + name + ".ejs")
+        return gulp.src("templates/" + name + ".ejs")
             .pipe(ejs(config))
             .pipe(minifyHtml(minifyHtmlConfig))
             .pipe(rename(name + ".html"))

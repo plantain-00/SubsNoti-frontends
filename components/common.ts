@@ -1,4 +1,4 @@
-/// <reference path="../typings/tsd.d.ts" />
+/// <reference path="./common.d.ts" />
 
 export function getUrlParameter(name: string): string {
     let reg: RegExp = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
@@ -36,3 +36,10 @@ export const localStorageNames = {
 
 export const yes = "√";
 export const no = "X";
+
+export let itemLimit = 10;
+export let maxOrganizationNumberUserCanCreate = 3;
+
+export function getFullUrl(avatar: string): string {
+    return `${imageServerBaseUrl}/${avatar}`;
+}

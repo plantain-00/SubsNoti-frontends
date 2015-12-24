@@ -30,7 +30,7 @@ export let InviteComponent = React.createClass({
                 self.setState({ organizationsCurrentUserCreated: data.organizations });
                 if (data.organizations.length > 0) {
                     let lastOrganizationId = window.localStorage.getItem(common.localStorageNames.lastOrganizationId);
-                    if (lastOrganizationId && ~data.organizations.findIndex(o => o.id === lastOrganizationId)) {
+                    if (lastOrganizationId && data.organizations.find(o => o.id === lastOrganizationId)) {
                         self.setState({ currentOrganizationId: lastOrganizationId });
                     } else {
                         self.setState({ currentOrganizationId: data.organizations[0].id });

@@ -139,7 +139,7 @@ let vueBody: VueBodyModel = new Vue({
                     self.organizationsCurrentUserIn = data.organizations;
                     if (data.organizations.length > 0) {
                         let lastOrganizationId = window.localStorage.getItem(common.localStorageNames.lastOrganizationId);
-                        if (lastOrganizationId && ~data.organizations.findIndex(o => o.id === lastOrganizationId)) {
+                        if (lastOrganizationId && data.organizations.find(o => o.id === lastOrganizationId)) {
                             self.currentOrganizationId = lastOrganizationId;
                         } else {
                             self.currentOrganizationId = data.organizations[0].id;

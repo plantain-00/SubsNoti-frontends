@@ -34,9 +34,6 @@ export const localStorageNames = {
     lastLoginName: "lastLoginName",
 };
 
-export const yes = "√";
-export const no = "X";
-
 export let itemLimit = 10;
 export let maxOrganizationNumberUserCanCreate = 3;
 

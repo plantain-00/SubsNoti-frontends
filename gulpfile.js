@@ -100,13 +100,13 @@ function uglifyCss(name, isDevelopment) {
 
 function bundleAndUglifyJs(name, isDevelopment) {
     if (isDevelopment) {
-        return gulp.src("build/" + name + ".js")
+        return gulp.src("build/components/" + name + ".js")
             .pipe(webpack())
             .pipe(rename(name + ".js"))
             .pipe(gulp.dest("build/scripts/"));
     }
     else {
-        return gulp.src("build/" + name + ".js")
+        return gulp.src("build/components/" + name + ".js")
             .pipe(webpack({
                 plugins: [
                     new webpack.webpack.optimize.UglifyJsPlugin({ minimize: true })

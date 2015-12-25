@@ -1,24 +1,20 @@
-import * as types from "./types";
+import * as types from "../share/types";
 import * as common from "./common";
 
 let Link = ReactRouter.Link;
 
-interface CurrentUserResponse extends types.Response {
-    user: types.User;
-}
-
-function getCurrentUser(next: (data: CurrentUserResponse) => void) {
+function getCurrentUser(next: (data: types.CurrentUserResponse) => void) {
     let loginResult = window.sessionStorage.getItem(common.sessionStorageNames.loginResult);
 
     if (loginResult) {
-        let data: CurrentUserResponse = JSON.parse(loginResult);
+        let data: types.CurrentUserResponse = JSON.parse(loginResult);
 
         next(data);
     } else {
         $.ajax({
             url: apiBaseUrl + "/api/user",
             cache: false,
-        }).then((data: CurrentUserResponse) => {
+        }).then((data: types.CurrentUserResponse) => {
             window.sessionStorage.setItem(common.sessionStorageNames.loginResult, JSON.stringify(data));
 
             next(data);
@@ -91,7 +87,7 @@ export let HeadComponent = React.createClass({
             type: "DELETE",
             url: apiBaseUrl + "/api/user/logged_in",
             cache: false,
-        }).then((data: CurrentUserResponse) => {
+        }).then((data: types.CurrentUserResponse) => {
             if (data.isSuccess) {
                 self.setState({
                     loginStatus: types.loginStatus.fail,

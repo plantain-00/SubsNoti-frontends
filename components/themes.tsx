@@ -1,35 +1,11 @@
-import * as types from "./types";
+import * as types from "../share/types";
 import {HeadComponent, global} from "./head";
 import * as common from "./common";
 
-interface Organization {
-    id: string;
-    name: string;
-}
-
-interface OrganizationsResponse extends types.Response {
-    organizations: Organization[];
-}
-
-interface Theme extends types.Theme {
-    createTimeText: string;
-    updateTimeText?: string;
-    isWatching: boolean;
-    isHovering: boolean;
-    watchersEmails: string;
-    ownersEmails: string;
-    isOwner: boolean;
-}
-
-interface ThemesResponse extends types.Response {
-    themes: Theme[];
-    totalCount: number;
-}
-
 interface State {
-    organizationsCurrentUserIn?: Organization[];
+    organizationsCurrentUserIn?: types.Organization[];
     currentOrganizationId?: string;
-    themes?: Theme[];
+    themes?: types.Theme[];
     newThemeTitle?: string;
     newThemeDetail?: string;
     currentPage?: number;
@@ -41,34 +17,34 @@ interface State {
     isOpen?: boolean;
     isClosed?: boolean;
     showCreate?: boolean;
-    order?: types.ThemeOrderType;
+    order?: types.ThemeOrder;
     requestCount?: number;
 }
 
 interface Self extends types.Self<State> {
     getOrganizationsCurrentUserIn: () => void;
     fetchThemes: (page: number, organizationId?: string) => void;
-    initTheme: (theme: Theme) => void;
-    clickOrganization: (organization: Organization) => void;
+    initTheme: (theme: types.Theme) => void;
+    clickOrganization: (organization: types.Organization) => void;
     createTheme: () => void;
     setThemeTimeText: () => void;
-    watch: (theme: Theme) => void;
-    unwatch: (theme: Theme) => void;
-    close: (theme: Theme) => void;
-    reopen: (theme: Theme) => void;
+    watch: (theme: types.Theme) => void;
+    unwatch: (theme: types.Theme) => void;
+    close: (theme: types.Theme) => void;
+    reopen: (theme: types.Theme) => void;
     getEmails: (users: types.User[]) => string;
-    edit: (theme: Theme) => void;
-    cancel: (theme: Theme) => void;
-    save: (theme: Theme) => void;
+    edit: (theme: types.Theme) => void;
+    cancel: (theme: types.Theme) => void;
+    save: (theme: types.Theme) => void;
     clickOpen: () => void;
     clickClosed: () => void;
     showMoreThemes: () => void;
     clickShowCreate: () => void;
-    clickOrder: (order: types.ThemeOrderType) => void;
+    clickOrder: (order: types.ThemeOrder) => void;
     nextThemeCount: () => number;
     canShowMoreThemes: () => boolean;
-    mouseEnterTheme: (theme: Theme) => void;
-    mouseLeaveTheme: (theme: Theme) => void;
+    mouseEnterTheme: (theme: types.Theme) => void;
+    mouseLeaveTheme: (theme: types.Theme) => void;
     newThemeTitleChanged: (e) => void;
     newThemeDetailChanged: (e) => void;
     qChanged: (e) => void;
@@ -93,17 +69,17 @@ let intervalId;
 let win = $(window);
 let doc = $(document);
 
-let themeCreated: (theme: Theme) => void;
-let themeUpdated: (theme: Theme) => void;
+let themeCreated: (theme: types.Theme) => void;
+let themeUpdated: (theme: types.Theme) => void;
 let scrolled: () => void;
 
-socket.on(types.pushEvents.themeCreated, (theme: Theme) => {
+socket.on(types.themePushEvents.themeCreated, (theme: types.Theme) => {
     if (themeCreated) {
         themeCreated(theme);
     }
 });
 
-socket.on(types.pushEvents.themeUpdated, (theme: Theme) => {
+socket.on(types.themePushEvents.themeUpdated, (theme: types.Theme) => {
     if (themeUpdated) {
         themeUpdated(theme);
     }
@@ -122,7 +98,7 @@ export let ThemesComponent = React.createClass({
         $.ajax({
             url: apiBaseUrl + "/api/user/joined",
             cache: false,
-        }).then((data: OrganizationsResponse) => {
+        }).then((data: types.OrganizationsResponse) => {
             if (data.isSuccess) {
                 self.setState({ organizationsCurrentUserIn: data.organizations });
                 if (data.organizations.length > 0) {
@@ -156,12 +132,12 @@ export let ThemesComponent = React.createClass({
                 page: page,
                 limit: common.itemLimit,
                 q: self.state.q,
-                isOpen: self.state.isOpen ? common.yes : common.no,
-                isClosed: self.state.isClosed ? common.yes : common.no,
+                isOpen: self.state.isOpen ? types.yes : types.no,
+                isClosed: self.state.isClosed ? types.yes : types.no,
                 order: self.state.order,
             },
             cache: false,
-        }).then((data: ThemesResponse) => {
+        }).then((data: types.ThemesResponse) => {
             if (data.isSuccess) {
                 for (let theme of data.themes) {
                     self.initTheme(theme);
@@ -182,7 +158,7 @@ export let ThemesComponent = React.createClass({
             }
         });
     },
-    initTheme: function(theme: Theme) {
+    initTheme: function(theme: types.Theme) {
         let self: Self = this;
 
         theme.isWatching = theme.watchers.some(w => w.id === global.head.state.currentUserId);
@@ -206,7 +182,7 @@ export let ThemesComponent = React.createClass({
             owner.avatar = common.getFullUrl(owner.avatar);
         }
     },
-    clickOrganization: function(organization: Organization) {
+    clickOrganization: function(organization: types.Organization) {
         let self: Self = this;
 
         if (self.state.currentOrganizationId !== organization.id) {
@@ -245,7 +221,7 @@ export let ThemesComponent = React.createClass({
             }
         }
     },
-    watch: function(theme: Theme) {
+    watch: function(theme: types.Theme) {
         $.ajax({
             url: apiBaseUrl + "/api/user/watched/" + theme.id,
             type: "PUT",
@@ -257,7 +233,7 @@ export let ThemesComponent = React.createClass({
             }
         });
     },
-    unwatch: function(theme: Theme) {
+    unwatch: function(theme: types.Theme) {
         $.ajax({
             url: apiBaseUrl + "/api/user/watched/" + theme.id,
             data: {},
@@ -276,7 +252,7 @@ export let ThemesComponent = React.createClass({
         self.setState({ currentPage: self.state.currentPage + 1 });
         self.fetchThemes(self.state.currentPage);
     },
-    close: function(theme: Theme) {
+    close: function(theme: types.Theme) {
         $.ajax({
             url: apiBaseUrl + "/api/themes/" + theme.id,
             data: {
@@ -292,7 +268,7 @@ export let ThemesComponent = React.createClass({
             }
         });
     },
-    reopen: function(theme: Theme) {
+    reopen: function(theme: types.Theme) {
         $.ajax({
             url: apiBaseUrl + "/api/themes/" + theme.id,
             data: {
@@ -308,7 +284,7 @@ export let ThemesComponent = React.createClass({
             }
         });
     },
-    edit: function(theme: Theme) {
+    edit: function(theme: types.Theme) {
         let self: Self = this;
 
         self.setState({
@@ -317,7 +293,7 @@ export let ThemesComponent = React.createClass({
             detailInEditing: theme.detail,
         });
     },
-    cancel: function(theme: Theme) {
+    cancel: function(theme: types.Theme) {
         let self: Self = this;
 
         self.setState({
@@ -326,7 +302,7 @@ export let ThemesComponent = React.createClass({
             detailInEditing: "",
         });
     },
-    save: function(theme: Theme) {
+    save: function(theme: types.Theme) {
         let self: Self = this;
 
         $.ajax({
@@ -362,7 +338,7 @@ export let ThemesComponent = React.createClass({
 
         self.setState({ showCreate: !self.state.showCreate });
     },
-    clickOrder: function(order: types.ThemeOrderType) {
+    clickOrder: function(order: types.ThemeOrder) {
         let self: Self = this;
 
         self.setState({ order: order });
@@ -378,14 +354,14 @@ export let ThemesComponent = React.createClass({
 
         return self.nextThemeCount() > 0 && self.state.requestCount === 0;
     },
-    mouseEnterTheme: function(theme: Theme) {
+    mouseEnterTheme: function(theme: types.Theme) {
         let self: Self = this;
 
         let themes = self.state.themes;
         theme.isHovering = true;
         self.setState({ themes: themes });
     },
-    mouseLeaveTheme: function(theme: Theme) {
+    mouseLeaveTheme: function(theme: types.Theme) {
         let self: Self = this;
 
         let themes = self.state.themes;
@@ -432,14 +408,14 @@ export let ThemesComponent = React.createClass({
             self.getOrganizationsCurrentUserIn();
             intervalId = setInterval(self.setThemeTimeText, 10000);
 
-            themeCreated = (theme: Theme) => {
+            themeCreated = (theme: types.Theme) => {
                 if (theme.organizationId === self.state.currentOrganizationId) {
                     self.initTheme(theme);
                     self.setState({ themes: [theme].concat(self.state.themes) });
                 }
             };
 
-            themeUpdated = (theme: Theme) => {
+            themeUpdated = (theme: types.Theme) => {
                 if (theme.organizationId === self.state.currentOrganizationId) {
                     let index = common.findIndex(self.state.themes, t => t.id === theme.id);
                     if (index > -1) {

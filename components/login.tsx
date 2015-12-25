@@ -1,10 +1,6 @@
-import * as types from "./types";
+import * as types from "../share/types";
 import {HeadComponent, global} from "./head";
 import * as common from "./common";
-
-interface CaptchaResponse extends types.Response {
-    url: string;
-}
 
 interface State {
     emailHead?: string;
@@ -64,7 +60,7 @@ export let LoginComponent = React.createClass({
 
         $.post(apiBaseUrl + "/api/captchas", {
             id: guid
-        }).then((data: CaptchaResponse) => {
+        }).then((data: types.CaptchaResponse) => {
             if (data.isSuccess) {
                 self.setState({ captchaUrl: data.url });
             } else {

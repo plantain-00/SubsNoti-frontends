@@ -1,4 +1,4 @@
-import * as types from "./types";
+import * as types from "../share/types";
 import {HeadComponent, global} from "./head";
 
 interface State {

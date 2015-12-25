@@ -1,10 +1,6 @@
-import * as types from "./types";
+import * as types from "../share/types";
 import {HeadComponent, global} from "./head";
 import * as common from "./common";
-
-interface UploadResponse extends types.Response {
-    names: string[];
-}
 
 interface State {
     name?: string;
@@ -32,7 +28,7 @@ export let UserComponent = React.createClass({
                 processData: false,
                 contentType: false,
                 type: "POST",
-            }).then((data: UploadResponse) => {
+            }).then((data: types.TemperaryResponse) => {
                 if (data.isSuccess) {
                     let name = data.names[0];
 

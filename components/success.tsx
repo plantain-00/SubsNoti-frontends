@@ -1,4 +1,4 @@
-import * as types from "./types";
+import * as types from "../share/types";
 import * as common from "./common";
 
 let Link = ReactRouter.Link;
@@ -13,7 +13,7 @@ export let SuccessComponent = React.createClass({
     getInitialState: function() {
         let willClearPreviousStatus = common.getUrlParameter("clear_previous_status");
 
-        if (willClearPreviousStatus === common.yes) {
+        if (willClearPreviousStatus === types.yes) {
             window.sessionStorage.removeItem(common.sessionStorageNames.loginResult);
         }
 

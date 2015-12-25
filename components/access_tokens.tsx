@@ -1,24 +1,9 @@
-import * as types from "./types";
+import * as types from "../share/types";
 import {HeadComponent, global} from "./head";
 import * as common from "./common";
 
-export interface AccessToken {
-    id: string;
-    description: string;
-    scopes: types.Scope[];
-    lastUsed: string;
-}
-
-export interface AccessTokensResponse extends types.Response {
-    accessTokens: AccessToken[];
-}
-
-export interface AccessTokenResponse extends types.Response {
-    accessToken: string;
-}
-
 interface State {
-    accessTokens?: AccessToken[];
+    accessTokens?: types.AccessToken[];
     idInEditing?: string;
     descriptionInEditing?: string;
     scopes?: types.Scope[];
@@ -27,7 +12,7 @@ interface State {
 }
 
 interface Self extends types.Self<State> {
-    edit: (accessToken: AccessToken) => void;
+    edit: (accessToken: types.AccessToken) => void;
     get: () => void;
     new: () => void;
     save: () => void;
@@ -39,7 +24,7 @@ interface Self extends types.Self<State> {
 }
 
 export let AccessTokensComponent = React.createClass({
-    edit: function(accessToken: AccessToken) {
+    edit: function(accessToken: types.AccessToken) {
         let self: Self = this;
 
         self.setState({
@@ -55,7 +40,7 @@ export let AccessTokensComponent = React.createClass({
         $.ajax({
             url: apiBaseUrl + "/api/user/access_tokens",
             cache: false,
-        }).then((data: AccessTokensResponse) => {
+        }).then((data: types.AccessTokensResponse) => {
             if (data.isSuccess) {
                 for (let token of data.accessTokens) {
                     token.lastUsed = token.lastUsed ? moment(token.lastUsed, moment.ISO_8601).fromNow() : "never used";
@@ -104,7 +89,7 @@ export let AccessTokensComponent = React.createClass({
                     description: self.state.descriptionInEditing,
                     scopes: self.state.scopesInEditing,
                 },
-            }).then((data: AccessTokenResponse) => {
+            }).then((data: types.AccessTokenResponse) => {
                 if (data.isSuccess) {
                     global.head.showAlert(true, "success");
                     self.new();
@@ -138,7 +123,7 @@ export let AccessTokensComponent = React.createClass({
         $.ajax({
             url: apiBaseUrl + `/api/user/access_tokens/${self.state.idInEditing}/value`,
             method: "PUT",
-        }).then((data: AccessTokenResponse) => {
+        }).then((data: types.AccessTokenResponse) => {
             if (data.isSuccess) {
                 global.head.showAlert(true, "success");
                 self.new();

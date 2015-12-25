@@ -1,5 +1,5 @@
 import * as types from "./types";
-import {HeadComponent, events, head} from "./head";
+import {HeadComponent, global} from "./head";
 import * as common from "./common";
 
 interface UploadResponse extends types.Response {
@@ -38,7 +38,7 @@ export let UserComponent = React.createClass({
 
                     self.update(name);
                 } else {
-                    head.showAlert(false, data.errorMessage);
+                    global.head.showAlert(false, data.errorMessage);
                 }
             });
         } else {
@@ -48,7 +48,7 @@ export let UserComponent = React.createClass({
     update: function(avatarFileName: string) {
         let self: Self = this;
 
-        if (self.state.name.trim() !== head.state.currentUserName || avatarFileName) {
+        if (self.state.name.trim() !== global.head.state.currentUserName || avatarFileName) {
             $.ajax({
                 url: apiBaseUrl + "/api/user",
                 data: {
@@ -61,14 +61,14 @@ export let UserComponent = React.createClass({
                 if (data.isSuccess) {
                     window.sessionStorage.removeItem(common.sessionStorageNames.loginResult);
 
-                    head.authenticate(error => { ; });
-                    head.showAlert(true, "success");
+                    global.head.authenticate(error => { ; });
+                    global.head.showAlert(true, "success");
                 } else {
-                    head.showAlert(false, data.errorMessage);
+                    global.head.showAlert(false, data.errorMessage);
                 }
             });
         } else {
-            head.showAlert(false, "nothing changes.");
+            global.head.showAlert(false, "nothing changes.");
         }
     },
     nameChanged: function(e) {
@@ -79,14 +79,14 @@ export let UserComponent = React.createClass({
     componentWillMount: function() {
         let self: Self = this;
 
-        events.authenticated = error => {
+        global.authenticated = error => {
             if (error) {
-                self.setState({ name: head.state.currentUserName });
+                self.setState({ name: global.head.state.currentUserName });
             }
         };
     },
     componentWillUnmount: function() {
-        events.authenticated = undefined;
+        global.authenticated = undefined;
     },
     getInitialState: function() {
         return {

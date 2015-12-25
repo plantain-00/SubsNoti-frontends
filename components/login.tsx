@@ -1,5 +1,5 @@
 import * as types from "./types";
-import {HeadComponent, events, head} from "./head";
+import {HeadComponent, global} from "./head";
 import * as common from "./common";
 
 interface CaptchaResponse extends types.Response {
@@ -14,6 +14,7 @@ interface State {
     captchaUrl?: string;
     code?: string;
     redirectUrl?: string;
+    requestCount?: number;
 }
 
 interface Self extends types.Self<State> {
@@ -37,7 +38,7 @@ export let LoginComponent = React.createClass({
         if (lastSuccessfulEmailTime) {
             let time = new Date().getTime() - parseInt(lastSuccessfulEmailTime, 10);
             if (time < 60 * 1000) {
-                head.showAlert(false, "please do it after " + (60 - time / 1000) + " seconds");
+                global.head.showAlert(false, "please do it after " + (60 - time / 1000) + " seconds");
                 return;
             }
         }
@@ -50,10 +51,10 @@ export let LoginComponent = React.createClass({
             redirectUrl: self.state.redirectUrl,
         }).then((data: types.Response) => {
             if (data.isSuccess) {
-                head.showAlert(true, "success, please check your email.");
+                global.head.showAlert(true, "success, please check your email.");
                 window.localStorage.setItem(common.localStorageNames.lastSuccessfulEmailTime, new Date().getTime().toString());
             } else {
-                head.showAlert(false, data.errorMessage);
+                global.head.showAlert(false, data.errorMessage);
                 self.refreshCaptcha();
             }
         });
@@ -67,7 +68,7 @@ export let LoginComponent = React.createClass({
             if (data.isSuccess) {
                 self.setState({ captchaUrl: data.url });
             } else {
-                head.showAlert(false, data.errorMessage);
+                global.head.showAlert(false, data.errorMessage);
             }
         });
     },
@@ -116,7 +117,8 @@ export let LoginComponent = React.createClass({
     componentWillMount: function() {
         let self: Self = this;
 
-        events.authenticated = error => {
+        global.body = self;
+        global.authenticated = error => {
             if (error) {
                 console.log(error);
 
@@ -134,7 +136,8 @@ export let LoginComponent = React.createClass({
         };
     },
     componentWillUnmount: function() {
-        events.authenticated = undefined;
+        global.authenticated = undefined;
+        global.body = undefined;
     },
     getInitialState: function() {
         return {
@@ -145,13 +148,14 @@ export let LoginComponent = React.createClass({
             captchaUrl: "",
             code: "",
             redirectUrl: "",
+            requestCount: 0,
         } as State;
     },
     render: function() {
         let self: Self = this;
 
         let loginView;
-        if (self.state.emailHead && self.state.emailTail && self.state.code && head.state.requestCount === 0) {
+        if (self.state.emailHead && self.state.emailTail && self.state.code && self.state.requestCount === 0) {
             loginView = (
                 <button type="button" className="btn btn-primary" onClick={self.login}>
                     Login

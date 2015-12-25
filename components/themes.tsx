@@ -1,5 +1,5 @@
 import * as types from "./types";
-import {HeadComponent, events, head} from "./head";
+import {HeadComponent, global} from "./head";
 import * as common from "./common";
 
 interface Organization {
@@ -42,6 +42,7 @@ interface State {
     isClosed?: boolean;
     showCreate?: boolean;
     order?: types.ThemeOrderType;
+    requestCount?: number;
 }
 
 interface Self extends types.Self<State> {
@@ -85,7 +86,7 @@ function changeOrganization(id) {
 let clipboard = new Clipboard(".clip");
 
 clipboard.on("success", e => {
-    head.showAlert(true, "emails copied:" + e.text);
+    global.head.showAlert(true, "emails copied:" + e.text);
 });
 
 let intervalId;
@@ -137,7 +138,7 @@ export let ThemesComponent = React.createClass({
                     self.fetchThemes(1);
                 }
             } else {
-                head.showAlert(false, data.errorMessage);
+                global.head.showAlert(false, data.errorMessage);
             }
         });
     },
@@ -177,15 +178,15 @@ export let ThemesComponent = React.createClass({
                     });
                 }
             } else {
-                head.showAlert(false, data.errorMessage);
+                global.head.showAlert(false, data.errorMessage);
             }
         });
     },
     initTheme: function(theme: Theme) {
         let self: Self = this;
 
-        theme.isWatching = theme.watchers.some(w => w.id === head.state.currentUserId);
-        theme.isOwner = theme.owners.some(o => o.id === head.state.currentUserId);
+        theme.isWatching = theme.watchers.some(w => w.id === global.head.state.currentUserId);
+        theme.isOwner = theme.owners.some(o => o.id === global.head.state.currentUserId);
         theme.createTimeText = moment(theme.createTime, moment.ISO_8601).fromNow();
         if (theme.updateTime) {
             theme.updateTimeText = moment(theme.updateTime, moment.ISO_8601).fromNow();
@@ -226,9 +227,9 @@ export let ThemesComponent = React.createClass({
             organizationId: self.state.currentOrganizationId,
         }).then((data: types.Response) => {
             if (data.isSuccess) {
-                head.showAlert(true, "success");
+                global.head.showAlert(true, "success");
             } else {
-                head.showAlert(false, data.errorMessage);
+                global.head.showAlert(false, data.errorMessage);
             }
         });
     },
@@ -250,9 +251,9 @@ export let ThemesComponent = React.createClass({
             type: "PUT",
         }).then((data: types.Response) => {
             if (data.isSuccess) {
-                head.showAlert(true, "success");
+                global.head.showAlert(true, "success");
             } else {
-                head.showAlert(false, data.errorMessage);
+                global.head.showAlert(false, data.errorMessage);
             }
         });
     },
@@ -263,9 +264,9 @@ export let ThemesComponent = React.createClass({
             type: "DELETE",
         }).then((data: types.Response) => {
             if (data.isSuccess) {
-                head.showAlert(true, "success");
+                global.head.showAlert(true, "success");
             } else {
-                head.showAlert(false, data.errorMessage);
+                global.head.showAlert(false, data.errorMessage);
             }
         });
     },
@@ -285,9 +286,9 @@ export let ThemesComponent = React.createClass({
             type: "PUT",
         }).then((data: types.Response) => {
             if (data.isSuccess) {
-                head.showAlert(true, "success");
+                global.head.showAlert(true, "success");
             } else {
-                head.showAlert(false, data.errorMessage);
+                global.head.showAlert(false, data.errorMessage);
             }
         });
     },
@@ -301,9 +302,9 @@ export let ThemesComponent = React.createClass({
             type: "PUT",
         }).then((data: types.Response) => {
             if (data.isSuccess) {
-                head.showAlert(true, "success");
+                global.head.showAlert(true, "success");
             } else {
-                head.showAlert(false, data.errorMessage);
+                global.head.showAlert(false, data.errorMessage);
             }
         });
     },
@@ -338,11 +339,11 @@ export let ThemesComponent = React.createClass({
             type: "PUT",
         }).then((data: types.Response) => {
             if (data.isSuccess) {
-                head.showAlert(true, "success");
+                global.head.showAlert(true, "success");
 
                 self.cancel(theme);
             } else {
-                head.showAlert(false, data.errorMessage);
+                global.head.showAlert(false, data.errorMessage);
             }
         });
     },
@@ -375,7 +376,7 @@ export let ThemesComponent = React.createClass({
     canShowMoreThemes: function() {
         let self: Self = this;
 
-        return self.nextThemeCount() > 0 && head.state.requestCount === 0;
+        return self.nextThemeCount() > 0 && self.state.requestCount === 0;
     },
     mouseEnterTheme: function(theme: Theme) {
         let self: Self = this;
@@ -426,7 +427,8 @@ export let ThemesComponent = React.createClass({
     componentWillMount: function() {
         let self: Self = this;
 
-        events.authenticated = error => {
+        global.body = self;
+        global.authenticated = error => {
             self.getOrganizationsCurrentUserIn();
             intervalId = setInterval(self.setThemeTimeText, 10000);
 
@@ -457,7 +459,8 @@ export let ThemesComponent = React.createClass({
         };
     },
     componentWillUnmount: function() {
-        events.authenticated = undefined;
+        global.authenticated = undefined;
+        global.body = undefined;
         if (intervalId) {
             clearInterval(intervalId);
         }
@@ -482,12 +485,13 @@ export let ThemesComponent = React.createClass({
             isClosed: false,
             showCreate: false,
             order: types.themeOrder.newest,
+            requestCount: 0,
         } as State;
     },
     render: function() {
         let self: Self = this;
 
-        let canSave = self.state.titleInEditing.trim() && head.state.requestCount === 0;
+        let canSave = self.state.titleInEditing.trim() && self.state.requestCount === 0;
 
         let showMoreThemesView;
         if (self.canShowMoreThemes()) {
@@ -687,9 +691,9 @@ export let ThemesComponent = React.createClass({
         });
 
         let currentOrganizationView;
-        if (self.state.currentOrganizationId !== "" && head.state.loginStatus === types.loginStatus.success) {
+        if (self.state.currentOrganizationId !== "" && global.head.state.loginStatus === types.loginStatus.success) {
             let createButton;
-            if (self.state.newThemeTitle.trim() && head.state.requestCount === 0) {
+            if (self.state.newThemeTitle.trim() && self.state.requestCount === 0) {
                 createButton = (
                     <button type="button" className="btn btn-primary"
                         onClick={self.createTheme}>Create</button>

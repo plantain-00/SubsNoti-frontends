@@ -35,23 +35,29 @@ $.ajaxSetup({
     },
 });
 
-export let head: Self;
-
-export let events: {
+export let global: {
     authenticated?: (error: Error) => void;
+    body?: types.Self<{ requestCount?: number }>;
+    head?: Self;
 } = new Object();
 
 $(document).ajaxSend(() => {
-    if (head) {
-        head.setState({ requestCount: head.state.requestCount + 1 });
+    if (global.head) {
+        global.head.setState({ requestCount: global.head.state.requestCount + 1 });
+    }
+    if (global.body) {
+        global.body.setState({ requestCount: global.body.state.requestCount + 1 });
     }
 }).ajaxComplete(() => {
-    if (head) {
-        head.setState({ requestCount: head.state.requestCount - 1 });
+    if (global.head) {
+        global.head.setState({ requestCount: global.head.state.requestCount - 1 });
+    }
+    if (global.body) {
+        global.body.setState({ requestCount: global.body.state.requestCount - 1 });
     }
 }).ajaxError(() => {
-    if (head) {
-        head.showAlert(false, "something happens unexpectedly, see console to get more details.");
+    if (global.head) {
+        global.head.showAlert(false, "something happens unexpectedly, see console to get more details.");
     }
 });
 
@@ -148,7 +154,7 @@ export let HeadComponent = React.createClass({
     componentWillMount: function() {
         let self: Self = this;
 
-        head = self;
+        global.head = self;
 
         $(document).ready(function() {
             self.authenticate(error => {
@@ -156,15 +162,15 @@ export let HeadComponent = React.createClass({
                     console.log(error);
                 }
 
-                if (events.authenticated) {
-                    events.authenticated(error);
+                if (global.authenticated) {
+                    global.authenticated(error);
                 }
             });
         });
     },
     componentWillUnmount: function() {
-        head = undefined;
-        events.authenticated = undefined;
+        global.head = undefined;
+        global.authenticated = undefined;
         clearTimeout(timeoutId);
         timeoutId = null;
     },

@@ -1,5 +1,5 @@
 import * as types from "./types";
-import {HeadComponent, events, head} from "./head";
+import {HeadComponent, global} from "./head";
 import * as common from "./common";
 
 export interface AccessToken {
@@ -62,7 +62,7 @@ export let AccessTokensComponent = React.createClass({
                 }
                 self.setState({ accessTokens: data.accessTokens });
             } else {
-                head.showAlert(false, data.errorMessage);
+                global.head.showAlert(false, data.errorMessage);
             }
         });
     },
@@ -89,11 +89,11 @@ export let AccessTokensComponent = React.createClass({
                 },
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
-                    head.showAlert(true, "success");
+                    global.head.showAlert(true, "success");
                     self.new();
                     self.get();
                 } else {
-                    head.showAlert(false, data.errorMessage);
+                    global.head.showAlert(false, data.errorMessage);
                 }
             });
         } else {
@@ -106,12 +106,12 @@ export let AccessTokensComponent = React.createClass({
                 },
             }).then((data: AccessTokenResponse) => {
                 if (data.isSuccess) {
-                    head.showAlert(true, "success");
+                    global.head.showAlert(true, "success");
                     self.new();
                     self.get();
                     self.setState({ newAccessToken: data.accessToken });
                 } else {
-                    head.showAlert(false, data.errorMessage);
+                    global.head.showAlert(false, data.errorMessage);
                 }
             });
         }
@@ -124,11 +124,11 @@ export let AccessTokensComponent = React.createClass({
             method: "DELETE",
         }).then((data: types.Response) => {
             if (data.isSuccess) {
-                head.showAlert(true, "success");
+                global.head.showAlert(true, "success");
                 self.new();
                 self.get();
             } else {
-                head.showAlert(false, data.errorMessage);
+                global.head.showAlert(false, data.errorMessage);
             }
         });
     },
@@ -140,12 +140,12 @@ export let AccessTokensComponent = React.createClass({
             method: "PUT",
         }).then((data: AccessTokenResponse) => {
             if (data.isSuccess) {
-                head.showAlert(true, "success");
+                global.head.showAlert(true, "success");
                 self.new();
                 self.get();
                 self.setState({ newAccessToken: data.accessToken });
             } else {
-                head.showAlert(false, data.errorMessage);
+                global.head.showAlert(false, data.errorMessage);
             }
         });
     },
@@ -168,7 +168,7 @@ export let AccessTokensComponent = React.createClass({
     componentWillMount: function() {
         let self: Self = this;
 
-        events.authenticated = error => {
+        global.authenticated = error => {
             self.get();
 
             $.ajax({
@@ -177,13 +177,13 @@ export let AccessTokensComponent = React.createClass({
                 if (data.isSuccess) {
                     self.setState({ scopes: data.scopes });
                 } else {
-                    head.showAlert(false, data.errorMessage);
+                    global.head.showAlert(false, data.errorMessage);
                 }
             });
         };
     },
     componentWillUnmount: function() {
-        events.authenticated = undefined;
+        global.authenticated = undefined;
     },
     getInitialState: function() {
         return {

@@ -1,5 +1,5 @@
 import * as types from "./types";
-import {HeadComponent, events, head} from "./head";
+import {HeadComponent, global} from "./head";
 import * as common from "./common";
 
 interface State {
@@ -26,14 +26,14 @@ export let AuthorizationComponent = React.createClass({
                 alert("success");
                 location.href = self.state.redirectUrl;
             } else {
-                head.showAlert(false, data.errorMessage);
+                global.head.showAlert(false, data.errorMessage);
             }
         });
     },
     componentWillMount: function() {
         let self: Self = this;
 
-        events.authenticated = error => {
+        global.authenticated = error => {
             let scopes = decodeURIComponent(common.getUrlParameter("scopes"));
             self.setState({
                 redirectUrl: decodeURIComponent(common.getUrlParameter("redirect_url")),
@@ -49,7 +49,7 @@ export let AuthorizationComponent = React.createClass({
                     if (data.isSuccess) {
                         self.setState({ application: data.application });
                     } else {
-                        head.showAlert(false, data.errorMessage);
+                        global.head.showAlert(false, data.errorMessage);
                     }
                 });
             }
@@ -60,13 +60,13 @@ export let AuthorizationComponent = React.createClass({
                 if (data.isSuccess) {
                     self.setState({ allScopes: data.scopes });
                 } else {
-                    head.showAlert(false, data.errorMessage);
+                    global.head.showAlert(false, data.errorMessage);
                 }
             });
         };
     },
     componentWillUnmount: function() {
-        events.authenticated = undefined;
+        global.authenticated = undefined;
     },
     getInitialState: function() {
         return {

@@ -1,5 +1,5 @@
 import * as types from "./types";
-import {HeadComponent, events, head} from "./head";
+import {HeadComponent, global} from "./head";
 
 interface State {
     organizationName?: string;
@@ -19,10 +19,10 @@ export let NewOrganizationComponent = React.createClass({
             organizationName: self.state.organizationName
         }).then((data: types.Response) => {
             if (data.isSuccess) {
-                head.setState({ createdOrganizationCount: head.state.createdOrganizationCount + 1 });
-                head.showAlert(true, "success");
+                global.head.setState({ createdOrganizationCount: global.head.state.createdOrganizationCount + 1 });
+                global.head.showAlert(true, "success");
             } else {
-                head.showAlert(false, data.errorMessage);
+                global.head.showAlert(false, data.errorMessage);
             }
         });
     },

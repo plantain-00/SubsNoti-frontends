@@ -1,5 +1,5 @@
 import * as types from "./types";
-import {HeadComponent, events, head} from "./head";
+import {HeadComponent, global} from "./head";
 import * as common from "./common";
 
 interface State {
@@ -32,7 +32,7 @@ export let AuthorizedComponent = React.createClass({
                 }
                 self.setState({ applications: data.applications });
             } else {
-                head.showAlert(false, data.errorMessage);
+                global.head.showAlert(false, data.errorMessage);
             }
         });
     },
@@ -44,23 +44,23 @@ export let AuthorizedComponent = React.createClass({
             method: "DELETE",
         }).then((data: types.Response) => {
             if (data.isSuccess) {
-                head.showAlert(true, "success");
+                global.head.showAlert(true, "success");
                 self.setState({ application: null });
                 self.get();
             } else {
-                head.showAlert(false, data.errorMessage);
+                global.head.showAlert(false, data.errorMessage);
             }
         });
     },
     componentWillMount: function() {
         let self: Self = this;
 
-        events.authenticated = error => {
+        global.authenticated = error => {
             self.get();
         };
     },
     componentWillUnmount: function() {
-        events.authenticated = undefined;
+        global.authenticated = undefined;
     },
     getInitialState: function() {
         return {

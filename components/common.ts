@@ -64,7 +64,8 @@ import * as ReactDOM from "react-dom";
 export {React, ReactDOM};
 
 export let History = require("history");
-export let ReactRouter = require("react-router");
+let ReactRouter = require("react-router");
+
 export let match = ReactRouter.match;
 export let RouterContext = ReactRouter.RouterContext;
 export let Route = ReactRouter.Route;

@@ -6,9 +6,4 @@ declare let imageUploaderBaseUrl: string;
 declare let apiBaseUrl: string;
 declare let socket;
 declare let Clipboard;
-
-declare let ReactRouter: {
-    Router: any;
-    Route: any;
-    Link: any;
-};
+declare let require;

@@ -1,15 +1,13 @@
 import * as types from "../share/types";
 import * as common from "./common";
 
-let Link = ReactRouter.Link;
-
 interface State {
     redirectUrl?: string;
 }
 
 interface Self extends types.Self<State> { }
 
-export let SuccessComponent = React.createClass({
+export let SuccessComponent = common.React.createClass({
     getInitialState: function() {
         let willClearPreviousStatus = common.getUrlParameter("clear_previous_status");
 
@@ -40,7 +38,7 @@ export let SuccessComponent = React.createClass({
                     <div className="panel panel-default">
                         <div className="panel-body">
                             <div className="alert alert-success" role="alert">
-                                success! go to <Link to="/" className="alert-link">Home page</Link> now.
+                                success! go to <common.Link to="/" className="alert-link">Home page</common.Link> now.
                                 {redirectUrlView}
                             </div>
                         </div>

@@ -101,7 +101,14 @@ function uglifyCss(name, isDevelopment) {
 function bundleAndUglifyJs(name, isDevelopment) {
     if (isDevelopment) {
         return gulp.src("build/components/" + name + ".js")
-            .pipe(webpack())
+            .pipe(webpack({
+                externals: {
+                    "react": "React",
+                    "react-dom": "ReactDOM",
+                    "history": "History",
+                    "react-router": "ReactRouter",
+                },
+            }))
             .pipe(rename(name + ".js"))
             .pipe(gulp.dest("build/scripts/"));
     }
@@ -114,6 +121,12 @@ function bundleAndUglifyJs(name, isDevelopment) {
                 devtool: "source-map",
                 output: {
                     filename: name + ".min.js"
+                },
+                externals: {
+                    "react": "React",
+                    "react-dom": "ReactDOM",
+                    "history": "History",
+                    "react-router": "ReactRouter",
                 },
             }))
             .pipe(gulp.dest("build/scripts/"));

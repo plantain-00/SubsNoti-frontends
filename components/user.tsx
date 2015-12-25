@@ -13,7 +13,7 @@ interface Self extends types.Self<State> {
     nameChanged: (e) => void;
 }
 
-export let UserComponent = React.createClass({
+export let UserComponent = common.React.createClass({
     save: function() {
         let self: Self = this;
 

@@ -1,10 +1,8 @@
 /// <reference path="./common.d.ts" />
 
-let Router = ReactRouter.Router;
-let Route = ReactRouter.Route;
+import * as common from "./common";
 
-let createHistory: () => any = (window as any).History.createHistory;
-let history = createHistory();
+let history = common.History.createHistory();
 
 import {SuccessComponent} from "./success";
 import {ErrorComponent} from "./error";
@@ -19,19 +17,19 @@ import {UserComponent} from "./user";
 import {ThemesComponent} from "./themes";
 
 ReactDOM.render(
-    <Router history={history}>
-        <Route path="/" component={ThemesComponent}/>
-        <Route path="/themes.html" component={ThemesComponent}/>
-        <Route path="/success.html" component={SuccessComponent}/>
-        <Route path="/error.html" component={ErrorComponent}/>
-        <Route path="/new_organization.html" component={NewOrganizationComponent}/>
-        <Route path="/invite.html" component={InviteComponent}/>
-        <Route path="/access_tokens.html" component={AccessTokensComponent}/>
-        <Route path="/authorized.html" component={AuthorizedComponent}/>
-        <Route path="/registered.html" component={RegisteredComponent}/>
-        <Route path="/authorization.html" component={AuthorizationComponent}/>
-        <Route path="/login.html" component={LoginComponent}/>
-        <Route path="/user.html" component={UserComponent}/>
-    </Router>,
+    <common.Router history={history}>
+        <common.Route path="/" component={ThemesComponent}/>
+        <common.Route path="/themes.html" component={ThemesComponent}/>
+        <common.Route path="/success.html" component={SuccessComponent}/>
+        <common.Route path="/error.html" component={ErrorComponent}/>
+        <common.Route path="/new_organization.html" component={NewOrganizationComponent}/>
+        <common.Route path="/invite.html" component={InviteComponent}/>
+        <common.Route path="/access_tokens.html" component={AccessTokensComponent}/>
+        <common.Route path="/authorized.html" component={AuthorizedComponent}/>
+        <common.Route path="/registered.html" component={RegisteredComponent}/>
+        <common.Route path="/authorization.html" component={AuthorizationComponent}/>
+        <common.Route path="/login.html" component={LoginComponent}/>
+        <common.Route path="/user.html" component={UserComponent}/>
+    </common.Router>,
     document.getElementById("container")
 );

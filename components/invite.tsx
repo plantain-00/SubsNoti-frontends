@@ -17,7 +17,7 @@ interface Self extends types.Self<State> {
     emailChanged: (e) => void;
 }
 
-export let InviteComponent = React.createClass({
+export let InviteComponent = common.React.createClass({
     getOrganizationsCurrentUserCreated: function() {
         let self: Self = this;
 

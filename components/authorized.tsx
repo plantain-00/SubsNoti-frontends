@@ -13,7 +13,7 @@ interface Self extends types.Self<State> {
     revoke: (application: types.Application) => void;
 }
 
-export let AuthorizedComponent = React.createClass({
+export let AuthorizedComponent = common.React.createClass({
     show: function(application: types.Application) {
         let self: Self = this;
 

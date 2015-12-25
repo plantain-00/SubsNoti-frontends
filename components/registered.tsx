@@ -26,7 +26,7 @@ interface Self extends types.Self<State> {
     authorizationCallbackUrlInEditingChanged: (e) => void;
 }
 
-export let RegisteredComponent = React.createClass({
+export let RegisteredComponent = common.React.createClass({
     edit: function(application: types.Application) {
         let self: Self = this;
 

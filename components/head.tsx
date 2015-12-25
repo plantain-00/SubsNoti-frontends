@@ -1,8 +1,6 @@
 import * as types from "../share/types";
 import * as common from "./common";
 
-let Link = ReactRouter.Link;
-
 function getCurrentUser(next: (data: types.CurrentUserResponse) => void) {
     let loginResult = window.sessionStorage.getItem(common.sessionStorageNames.loginResult);
 
@@ -79,7 +77,7 @@ interface Self extends types.Self<State> {
     exit: () => void;
 }
 
-export let HeadComponent = React.createClass({
+export let HeadComponent = common.React.createClass({
     exit: function() {
         let self: Self = this;
 
@@ -192,7 +190,7 @@ export let HeadComponent = React.createClass({
         if (self.state.createdOrganizationCount < common.maxOrganizationNumberUserCanCreate) {
             createOrganizationView = (
                 <li>
-                    <Link to="/new_organization.html">New Organization</Link>
+                    <common.Link to="/new_organization.html">New Organization</common.Link>
                 </li>
             );
         }
@@ -200,7 +198,7 @@ export let HeadComponent = React.createClass({
         if (self.state.joinedOrganizationCount > 0) {
             inviteView = (
                 <li>
-                    <Link to="/invite.html">Invite</Link>
+                    <common.Link to="/invite.html">Invite</common.Link>
                 </li>
             );
         }
@@ -211,17 +209,17 @@ export let HeadComponent = React.createClass({
         if (self.state.loginStatus === types.loginStatus.success) {
             registeredView = (
                 <li>
-                    <Link to="/registered.html">Registered</Link>
+                    <common.Link to="/registered.html">Registered</common.Link>
                 </li>
             );
             authorizedView = (
                 <li>
-                    <Link to="/authorized.html">Authorized</Link>
+                    <common.Link to="/authorized.html">Authorized</common.Link>
                 </li>
             );
             sccessTokenView = (
                 <li>
-                    <Link to="/access_tokens.html">Access tokens</Link>
+                    <common.Link to="/access_tokens.html">Access tokens</common.Link>
                 </li>
             );
             logoutView = (
@@ -244,20 +242,20 @@ export let HeadComponent = React.createClass({
                 break;
             case types.loginStatus.success:
                 loginView = (
-                    <Link to="/user.html">
+                    <common.Link to="/user.html">
                         <span className="glyphicon glyphicon-user" style={{ top: 2 + "px" }}></span> &nbsp;
                         <span>{self.state.currentUserName}</span>
                         <span className="glyphicon glyphicon-envelope" style={{ top: 2 + "px" }}></span> &nbsp;
                         <span>{self.state.currentUserEmail}</span>
                         <img src={self.state.currentAvatar} style={{ height: 20 + "px", width: 20 + "px" }}/>
-                    </Link>
+                    </common.Link>
                 );
                 break;
             case types.loginStatus.fail:
                 loginView = (
-                    <Link to="/login.html">
+                    <common.Link to="/login.html">
                         <span className="glyphicon glyphicon-user" style={{ top: 2 + "px" }}></span> &nbsp;Login
-                    </Link>
+                    </common.Link>
                 );
                 break;
             default:
@@ -299,12 +297,12 @@ export let HeadComponent = React.createClass({
                             <span className="icon-bar"></span>
                             <span className="icon-bar"></span>
                         </button>
-                        <Link className="navbar-brand hidden-sm" to="/">Home</Link>
+                        <common.Link className="navbar-brand hidden-sm" to="/">Home</common.Link>
                     </div>
                     <div className="collapse navbar-collapse" role="navigation" id="navbar-collapse-1">
                         <ul className="nav navbar-nav">
                             <li>
-                                <Link to="/">Themes</Link>
+                                <common.Link to="/">Themes</common.Link>
                             </li>
                             {createOrganizationView}
                             {inviteView}

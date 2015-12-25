@@ -1,5 +1,6 @@
 import * as types from "../share/types";
 import {HeadComponent, global} from "./head";
+import * as common from "./common";
 
 interface State {
     organizationName?: string;
@@ -11,7 +12,7 @@ interface Self extends types.Self<State> {
     organizationNameChanged: () => void;
 }
 
-export let NewOrganizationComponent = React.createClass({
+export let NewOrganizationComponent = common.React.createClass({
     add: function() {
         let self: Self = this;
 

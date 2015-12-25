@@ -91,7 +91,7 @@ win.scroll(() => {
     }
 });
 
-export let ThemesComponent = React.createClass({
+export let ThemesComponent = common.React.createClass({
     getOrganizationsCurrentUserIn: function() {
         let self: Self = this;
 

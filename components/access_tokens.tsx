@@ -23,7 +23,7 @@ interface Self extends types.Self<State> {
     scopesInEditingChanged: (e) => void;
 }
 
-export let AccessTokensComponent = React.createClass({
+export let AccessTokensComponent = common.React.createClass({
     edit: function(accessToken: types.AccessToken) {
         let self: Self = this;
 

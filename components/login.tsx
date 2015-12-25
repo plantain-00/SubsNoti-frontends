@@ -26,7 +26,7 @@ interface Self extends types.Self<State> {
 
 let guid = common.guid();
 
-export let LoginComponent = React.createClass({
+export let LoginComponent = common.React.createClass({
     login: function() {
         let self: Self = this;
 

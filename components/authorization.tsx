@@ -14,7 +14,7 @@ interface Self extends types.Self<State> {
     confirm: () => void;
 }
 
-export let AuthorizationComponent = React.createClass({
+export let AuthorizationComponent = common.React.createClass({
     confirm: function() {
         let self: Self = this;
 

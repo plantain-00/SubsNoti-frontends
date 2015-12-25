@@ -1,15 +1,13 @@
 import * as types from "../share/types";
 import * as common from "./common";
 
-let Link = ReactRouter.Link;
-
 interface State {
     message?: string;
 }
 
 interface Self extends types.Self<State> { }
 
-export let ErrorComponent = React.createClass({
+export let ErrorComponent = common.React.createClass({
     getInitialState: function() {
         return {
             message: decodeURIComponent(common.getUrlParameter("message"))
@@ -24,7 +22,7 @@ export let ErrorComponent = React.createClass({
                         <div className="panel-body">
                             <div className="alert alert-danger" role="alert">
                                 <span>{self.state.message}</span>
-                                go to <Link to="/" className="alert-link">Home page</Link> now.
+                                go to <common.Link to="/" className="alert-link">Home page</common.Link> now.
                             </div>
                         </div>
                     </div>

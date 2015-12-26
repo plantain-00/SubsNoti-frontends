@@ -153,22 +153,17 @@ export let AccessTokensComponent = common.React.createClass({
     componentWillMount: function() {
         let self: Self = this;
 
-        global.authenticated = error => {
-            self.get();
+        self.get();
 
-            $.ajax({
-                url: apiBaseUrl + "/api/scopes"
-            }).then((data: types.ScopesResponse) => {
-                if (data.isSuccess) {
-                    self.setState({ scopes: data.scopes });
-                } else {
-                    global.head.showAlert(false, data.errorMessage);
-                }
-            });
-        };
-    },
-    componentWillUnmount: function() {
-        global.authenticated = undefined;
+        $.ajax({
+            url: apiBaseUrl + "/api/scopes"
+        }).then((data: types.ScopesResponse) => {
+            if (data.isSuccess) {
+                self.setState({ scopes: data.scopes });
+            } else {
+                global.head.showAlert(false, data.errorMessage);
+            }
+        });
     },
     getInitialState: function() {
         return {

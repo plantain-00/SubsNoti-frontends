@@ -116,8 +116,6 @@ export let LoginComponent = common.React.createClass({
         global.body = self;
         global.authenticated = error => {
             if (error) {
-                console.log(error);
-
                 self.setRawEmail(window.localStorage.getItem(common.localStorageNames.lastLoginEmail));
                 self.setState({
                     innerName: window.localStorage.getItem(common.localStorageNames.lastLoginName),

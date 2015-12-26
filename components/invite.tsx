@@ -72,12 +72,9 @@ export let InviteComponent = common.React.createClass({
         let self: Self = this;
 
         global.body = self;
-        global.authenticated = error => {
-            self.getOrganizationsCurrentUserCreated();
-        };
+        self.getOrganizationsCurrentUserCreated();
     },
     componentWillUnmount: function() {
-        global.authenticated = undefined;
         global.body = undefined;
     },
     getInitialState: function() {

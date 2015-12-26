@@ -404,38 +404,35 @@ export let ThemesComponent = common.React.createClass({
         let self: Self = this;
 
         global.body = self;
-        global.authenticated = error => {
-            self.getOrganizationsCurrentUserIn();
-            intervalId = setInterval(self.setThemeTimeText, 10000);
+        self.getOrganizationsCurrentUserIn();
+        intervalId = setInterval(self.setThemeTimeText, 10000);
 
-            themeCreated = (theme: types.Theme) => {
-                if (theme.organizationId === self.state.currentOrganizationId) {
+        themeCreated = (theme: types.Theme) => {
+            if (theme.organizationId === self.state.currentOrganizationId) {
+                self.initTheme(theme);
+                self.setState({ themes: [theme].concat(self.state.themes) });
+            }
+        };
+
+        themeUpdated = (theme: types.Theme) => {
+            if (theme.organizationId === self.state.currentOrganizationId) {
+                let index = common.findIndex(self.state.themes, t => t.id === theme.id);
+                if (index > -1) {
                     self.initTheme(theme);
-                    self.setState({ themes: [theme].concat(self.state.themes) });
+                    let themes = self.state.themes;
+                    themes[index] = theme;
+                    self.setState({ themes: themes });
                 }
-            };
+            }
+        };
 
-            themeUpdated = (theme: types.Theme) => {
-                if (theme.organizationId === self.state.currentOrganizationId) {
-                    let index = common.findIndex(self.state.themes, t => t.id === theme.id);
-                    if (index > -1) {
-                        self.initTheme(theme);
-                        let themes = self.state.themes;
-                        themes[index] = theme;
-                        self.setState({ themes: themes });
-                    }
-                }
-            };
-
-            scrolled = () => {
-                if (self.canShowMoreThemes()) {
-                    self.showMoreThemes();
-                }
-            };
+        scrolled = () => {
+            if (self.canShowMoreThemes()) {
+                self.showMoreThemes();
+            }
         };
     },
     componentWillUnmount: function() {
-        global.authenticated = undefined;
         global.body = undefined;
         if (intervalId) {
             clearInterval(intervalId);

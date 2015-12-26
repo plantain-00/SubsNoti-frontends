@@ -33,40 +33,35 @@ export let AuthorizationComponent = common.React.createClass({
     componentWillMount: function() {
         let self: Self = this;
 
-        global.authenticated = error => {
-            let scopes = decodeURIComponent(common.getUrlParameter("scopes"));
-            self.setState({
-                redirectUrl: decodeURIComponent(common.getUrlParameter("redirect_url")),
-                scopes: scopes.split(","),
-                code: decodeURIComponent(common.getUrlParameter("code")),
-            });
+        let scopes = decodeURIComponent(common.getUrlParameter("scopes"));
+        self.setState({
+            redirectUrl: decodeURIComponent(common.getUrlParameter("redirect_url")),
+            scopes: scopes.split(","),
+            code: decodeURIComponent(common.getUrlParameter("code")),
+        });
 
-            let applicationId = common.getUrlParameter("application_id");
-            if (applicationId) {
-                $.ajax({
-                    url: apiBaseUrl + `/api/applications/${decodeURIComponent(applicationId)}`
-                }).then((data: types.ApplicationResponse) => {
-                    if (data.isSuccess) {
-                        self.setState({ application: data.application });
-                    } else {
-                        global.head.showAlert(false, data.errorMessage);
-                    }
-                });
-            }
-
+        let applicationId = common.getUrlParameter("application_id");
+        if (applicationId) {
             $.ajax({
-                url: apiBaseUrl + "/api/scopes"
-            }).then((data: types.ScopesResponse) => {
+                url: apiBaseUrl + `/api/applications/${decodeURIComponent(applicationId)}`
+            }).then((data: types.ApplicationResponse) => {
                 if (data.isSuccess) {
-                    self.setState({ allScopes: data.scopes });
+                    self.setState({ application: data.application });
                 } else {
                     global.head.showAlert(false, data.errorMessage);
                 }
             });
-        };
-    },
-    componentWillUnmount: function() {
-        global.authenticated = undefined;
+        }
+
+        $.ajax({
+            url: apiBaseUrl + "/api/scopes"
+        }).then((data: types.ScopesResponse) => {
+            if (data.isSuccess) {
+                self.setState({ allScopes: data.scopes });
+            } else {
+                global.head.showAlert(false, data.errorMessage);
+            }
+        });
     },
     getInitialState: function() {
         return {

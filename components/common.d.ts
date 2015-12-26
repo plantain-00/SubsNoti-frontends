@@ -6,4 +6,3 @@ declare let imageUploaderBaseUrl: string;
 declare let apiBaseUrl: string;
 declare let socket;
 declare let Clipboard;
-declare let require;

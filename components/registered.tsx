@@ -163,12 +163,7 @@ export let RegisteredComponent = common.React.createClass({
     componentWillMount: function() {
         let self: Self = this;
 
-        global.authenticated = error => {
-            self.get();
-        };
-    },
-    componentWillUnmount: function() {
-        global.authenticated = undefined;
+        self.get();
     },
     getInitialState: function() {
         return {

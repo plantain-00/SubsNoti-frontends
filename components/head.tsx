@@ -1,5 +1,6 @@
 import * as types from "../share/types";
 import * as common from "./common";
+import * as React from "react";
 
 function getCurrentUser(next: (data: types.CurrentUserResponse) => void) {
     let loginResult = window.sessionStorage.getItem(common.sessionStorageNames.loginResult);
@@ -20,40 +21,14 @@ function getCurrentUser(next: (data: types.CurrentUserResponse) => void) {
     }
 }
 
-$.ajaxSetup({
-    headers: {
-        "X-Version": version
-    },
-    xhrFields: {
-        withCredentials: true
-    },
-});
-
 export let global: {
     authenticated?: (error: Error) => void;
     body?: types.Self<{ requestCount?: number }>;
     head?: Self;
+    scrolled?: () => void;
+    themeCreated?: (theme: types.Theme) => void;
+    themeUpdated?: (theme: types.Theme) => void;
 } = new Object();
-
-$(document).ajaxSend(() => {
-    if (global.head) {
-        global.head.setState({ requestCount: global.head.state.requestCount + 1 });
-    }
-    if (global.body) {
-        global.body.setState({ requestCount: global.body.state.requestCount + 1 });
-    }
-}).ajaxComplete(() => {
-    if (global.head) {
-        global.head.setState({ requestCount: global.head.state.requestCount - 1 });
-    }
-    if (global.body) {
-        global.body.setState({ requestCount: global.body.state.requestCount - 1 });
-    }
-}).ajaxError(() => {
-    if (global.head) {
-        global.head.showAlert(false, "something happens unexpectedly, see console to get more details.");
-    }
-});
 
 let timeoutId;
 
@@ -77,7 +52,7 @@ interface Self extends types.Self<State> {
     exit: () => void;
 }
 
-export let HeadComponent = common.React.createClass({
+export let HeadComponent = React.createClass({
     exit: function() {
         let self: Self = this;
 
@@ -145,7 +120,7 @@ export let HeadComponent = common.React.createClass({
             }
         });
     },
-    componentWillMount: function() {
+    componentDidMount: function() {
         let self: Self = this;
 
         global.head = self;

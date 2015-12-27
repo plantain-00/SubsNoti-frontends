@@ -1,6 +1,7 @@
 import * as types from "../share/types";
 import {HeadComponent, global} from "./head";
 import * as common from "./common";
+import * as React from "react";
 
 interface State {
     accessTokens?: types.AccessToken[];
@@ -23,7 +24,7 @@ interface Self extends types.Self<State> {
     scopesInEditingChanged: (e) => void;
 }
 
-export let AccessTokensComponent = common.React.createClass({
+export let AccessTokensComponent = React.createClass({
     edit: function(accessToken: types.AccessToken) {
         let self: Self = this;
 
@@ -150,7 +151,7 @@ export let AccessTokensComponent = common.React.createClass({
             self.setState({ scopesInEditing: self.state.scopesInEditing.concat([value]) });
         }
     },
-    componentWillMount: function() {
+    componentDidMount: function() {
         let self: Self = this;
 
         self.get();

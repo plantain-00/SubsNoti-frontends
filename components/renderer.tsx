@@ -32,6 +32,13 @@ let routes = [
     <common.Route path="/user.html" component={UserComponent}/>,
 ];
 
+/**
+ * tips:
+ * 1. change configuration nginx to let `*.html` handled by backends
+ * 2. use a template engine, like `ejs`, the template should be the generated html(extension name changed, and delimiters changed)
+ * 3. backends add modules of `react`, `react-dom`, `history` and `react-router`
+ * 4. for requests of `*.html`, handle them like below
+ */
 common.match({ routes, location: "/" }, (error, redirectLocation, renderProps) => {
     if (error) {
         console.log(error);

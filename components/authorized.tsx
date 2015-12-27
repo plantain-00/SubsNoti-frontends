@@ -1,6 +1,7 @@
 import * as types from "../share/types";
 import {HeadComponent, global} from "./head";
 import * as common from "./common";
+import * as React from "react";
 
 interface State {
     applications?: types.Application[];
@@ -13,7 +14,7 @@ interface Self extends types.Self<State> {
     revoke: (application: types.Application) => void;
 }
 
-export let AuthorizedComponent = common.React.createClass({
+export let AuthorizedComponent = React.createClass({
     show: function(application: types.Application) {
         let self: Self = this;
 
@@ -52,7 +53,7 @@ export let AuthorizedComponent = common.React.createClass({
             }
         });
     },
-    componentWillMount: function() {
+    componentDidMount: function() {
         let self: Self = this;
 
         self.get();

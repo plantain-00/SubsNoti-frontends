@@ -1,6 +1,7 @@
 import * as types from "../share/types";
 import {HeadComponent, global} from "./head";
 import * as common from "./common";
+import * as React from "react";
 
 interface State {
     applications?: types.Application[];
@@ -26,7 +27,7 @@ interface Self extends types.Self<State> {
     authorizationCallbackUrlInEditingChanged: (e) => void;
 }
 
-export let RegisteredComponent = common.React.createClass({
+export let RegisteredComponent = React.createClass({
     edit: function(application: types.Application) {
         let self: Self = this;
 
@@ -160,7 +161,7 @@ export let RegisteredComponent = common.React.createClass({
 
         self.setState({ authorizationCallbackUrlInEditing: e.target.value });
     },
-    componentWillMount: function() {
+    componentDidMount: function() {
         let self: Self = this;
 
         self.get();

@@ -1,8 +1,12 @@
 /// <reference path="./common.d.ts" />
 
+import * as types from "../share/types";
 import * as common from "./common";
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+let History = require("history");
 
-let history = common.History.createHistory();
+let history = History.createHistory();
 
 import {SuccessComponent} from "./success";
 import {ErrorComponent} from "./error";
@@ -15,6 +19,64 @@ import {AuthorizationComponent} from "./authorization";
 import {LoginComponent} from "./login";
 import {UserComponent} from "./user";
 import {ThemesComponent} from "./themes";
+
+import {global} from "./head";
+
+$.ajaxSetup({
+    headers: {
+        "X-Version": version
+    },
+    xhrFields: {
+        withCredentials: true
+    },
+});
+
+$(document).ajaxSend(() => {
+    if (global.head) {
+        global.head.setState({ requestCount: global.head.state.requestCount + 1 });
+    }
+    if (global.body) {
+        global.body.setState({ requestCount: global.body.state.requestCount + 1 });
+    }
+}).ajaxComplete(() => {
+    if (global.head) {
+        global.head.setState({ requestCount: global.head.state.requestCount - 1 });
+    }
+    if (global.body) {
+        global.body.setState({ requestCount: global.body.state.requestCount - 1 });
+    }
+}).ajaxError(() => {
+    if (global.head) {
+        global.head.showAlert(false, "something happens unexpectedly, see console to get more details.");
+    }
+});
+
+let clipboard = new Clipboard(".clip");
+
+clipboard.on("success", e => {
+    global.head.showAlert(true, "emails copied:" + e.text);
+});
+
+let win = $(window);
+let doc = $(document);
+
+win.scroll(() => {
+    if (global.scrolled && win.scrollTop() >= doc.height() - win.height()) {
+        global.scrolled();
+    }
+});
+
+socket.on(types.themePushEvents.themeCreated, (theme: types.Theme) => {
+    if (global.themeCreated) {
+        global.themeCreated(theme);
+    }
+});
+
+socket.on(types.themePushEvents.themeUpdated, (theme: types.Theme) => {
+    if (global.themeUpdated) {
+        global.themeUpdated(theme);
+    }
+});
 
 ReactDOM.render(
     <common.Router history={history}>

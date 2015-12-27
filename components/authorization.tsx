@@ -1,6 +1,7 @@
 import * as types from "../share/types";
 import {HeadComponent, global} from "./head";
 import * as common from "./common";
+import * as React from "react";
 
 interface State {
     allScopes?: types.Scope[];
@@ -14,7 +15,7 @@ interface Self extends types.Self<State> {
     confirm: () => void;
 }
 
-export let AuthorizationComponent = common.React.createClass({
+export let AuthorizationComponent = React.createClass({
     confirm: function() {
         let self: Self = this;
 
@@ -30,7 +31,7 @@ export let AuthorizationComponent = common.React.createClass({
             }
         });
     },
-    componentWillMount: function() {
+    componentDidMount: function() {
         let self: Self = this;
 
         let scopes = decodeURIComponent(common.getUrlParameter("scopes"));

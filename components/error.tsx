@@ -1,5 +1,6 @@
 import * as types from "../share/types";
 import * as common from "./common";
+import * as React from "react";
 
 interface State {
     message?: string;
@@ -7,7 +8,7 @@ interface State {
 
 interface Self extends types.Self<State> { }
 
-export let ErrorComponent = common.React.createClass({
+export let ErrorComponent = React.createClass({
     getInitialState: function() {
         return {
             message: decodeURIComponent(common.getUrlParameter("message"))

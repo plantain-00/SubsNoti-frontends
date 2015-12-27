@@ -1,6 +1,7 @@
 import * as types from "../share/types";
 import {HeadComponent, global} from "./head";
 import * as common from "./common";
+import * as React from "react";
 
 interface State {
     email?: string;
@@ -17,7 +18,7 @@ interface Self extends types.Self<State> {
     emailChanged: (e) => void;
 }
 
-export let InviteComponent = common.React.createClass({
+export let InviteComponent = React.createClass({
     getOrganizationsCurrentUserCreated: function() {
         let self: Self = this;
 
@@ -68,7 +69,7 @@ export let InviteComponent = common.React.createClass({
 
         self.setState({ email: e.target.value });
     },
-    componentWillMount: function() {
+    componentDidMount: function() {
         let self: Self = this;
 
         global.body = self;

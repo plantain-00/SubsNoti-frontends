@@ -59,15 +59,10 @@ export function findIndex<T>(array: T[], predicate: (t: T) => boolean) {
     return -1;
 }
 
-import * as React from "react";
-import * as ReactDOM from "react-dom";
-export {React, ReactDOM};
-
-export let History = require("history");
 let ReactRouter = require("react-router");
 
 export let match = ReactRouter.match;
-export let RouterContext = ReactRouter.RouterContext;
+export let RoutingContext = ReactRouter.RoutingContext;
 export let Route = ReactRouter.Route;
 export let Router = ReactRouter.Router;
 export let Link = ReactRouter.Link;

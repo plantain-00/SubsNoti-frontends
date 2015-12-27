@@ -1,5 +1,6 @@
 import * as types from "../share/types";
 import * as common from "./common";
+import * as React from "react";
 
 interface State {
     redirectUrl?: string;
@@ -7,7 +8,7 @@ interface State {
 
 interface Self extends types.Self<State> { }
 
-export let SuccessComponent = common.React.createClass({
+export let SuccessComponent = React.createClass({
     getInitialState: function() {
         let willClearPreviousStatus = common.getUrlParameter("clear_previous_status");
 

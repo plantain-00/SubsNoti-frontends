@@ -1,6 +1,7 @@
 import * as types from "../share/types";
 import {HeadComponent, global} from "./head";
 import * as common from "./common";
+import * as React from "react";
 
 interface State {
     organizationsCurrentUserIn?: types.Organization[];
@@ -59,39 +60,9 @@ function changeOrganization(id) {
     });
 }
 
-let clipboard = new Clipboard(".clip");
-
-clipboard.on("success", e => {
-    global.head.showAlert(true, "emails copied:" + e.text);
-});
-
 let intervalId;
-let win = $(window);
-let doc = $(document);
 
-let themeCreated: (theme: types.Theme) => void;
-let themeUpdated: (theme: types.Theme) => void;
-let scrolled: () => void;
-
-socket.on(types.themePushEvents.themeCreated, (theme: types.Theme) => {
-    if (themeCreated) {
-        themeCreated(theme);
-    }
-});
-
-socket.on(types.themePushEvents.themeUpdated, (theme: types.Theme) => {
-    if (themeUpdated) {
-        themeUpdated(theme);
-    }
-});
-
-win.scroll(() => {
-    if (win.scrollTop() >= doc.height() - win.height() && scrolled) {
-        scrolled();
-    }
-});
-
-export let ThemesComponent = common.React.createClass({
+export let ThemesComponent = React.createClass({
     getOrganizationsCurrentUserIn: function() {
         let self: Self = this;
 
@@ -400,21 +371,21 @@ export let ThemesComponent = common.React.createClass({
             self.fetchThemes(1);
         }
     },
-    componentWillMount: function() {
+    componentDidMount: function() {
         let self: Self = this;
 
         global.body = self;
         self.getOrganizationsCurrentUserIn();
         intervalId = setInterval(self.setThemeTimeText, 10000);
 
-        themeCreated = (theme: types.Theme) => {
+        global.themeCreated = (theme: types.Theme) => {
             if (theme.organizationId === self.state.currentOrganizationId) {
                 self.initTheme(theme);
                 self.setState({ themes: [theme].concat(self.state.themes) });
             }
         };
 
-        themeUpdated = (theme: types.Theme) => {
+        global.themeUpdated = (theme: types.Theme) => {
             if (theme.organizationId === self.state.currentOrganizationId) {
                 let index = common.findIndex(self.state.themes, t => t.id === theme.id);
                 if (index > -1) {
@@ -426,7 +397,7 @@ export let ThemesComponent = common.React.createClass({
             }
         };
 
-        scrolled = () => {
+        global.scrolled = () => {
             if (self.canShowMoreThemes()) {
                 self.showMoreThemes();
             }
@@ -437,9 +408,9 @@ export let ThemesComponent = common.React.createClass({
         if (intervalId) {
             clearInterval(intervalId);
         }
-        themeCreated = undefined;
-        themeUpdated = undefined;
-        scrolled = undefined;
+        global.themeCreated = undefined;
+        global.themeUpdated = undefined;
+        global.scrolled = undefined;
     },
     getInitialState: function() {
         return {

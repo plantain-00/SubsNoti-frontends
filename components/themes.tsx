@@ -14,6 +14,7 @@ interface State {
     themeIdInEditing?: string;
     titleInEditing?: string;
     detailInEditing?: string;
+    imageNamesInEditing?: string[];
     q?: string;
     isOpen?: boolean;
     isClosed?: boolean;
@@ -52,6 +53,10 @@ interface Self extends types.Self<State> {
     titleInEditingChanged: (e) => void;
     detailInEditingChanged: (e) => void;
     qKeyUp: (e) => void;
+    onDragEnter: (e) => void;
+    onDragOver: (e) => void;
+    onDragLeave: (e) => void;
+    onDrop: (e) => void;
 }
 
 function changeOrganization(id) {
@@ -282,12 +287,14 @@ let spec: Self = {
             data: {
                 title: self.state.titleInEditing,
                 detail: self.state.detailInEditing,
+                imageNames: self.state.imageNamesInEditing,
             },
             cache: false,
             type: "PUT",
         }).then((data: types.Response) => {
             if (data.isSuccess) {
                 global.head.showAlert(true, "success");
+                self.setState({ imageNamesInEditing: [] });
 
                 self.cancel(theme);
             } else {
@@ -372,6 +379,46 @@ let spec: Self = {
             self.fetchThemes(1);
         }
     },
+    onDragEnter(e) {
+        e.preventDefault();
+    },
+    onDragOver(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    },
+    onDragLeave(e) {
+        e.preventDefault();
+    },
+    onDrop(e) {
+        let self: Self = this;
+        e.preventDefault();
+
+        let file = e.dataTransfer.files[0];
+        if (file) {
+            let formData = new FormData();
+            formData.append("file", file);
+
+            $.ajax({
+                url: imageUploaderBaseUrl + "/api/temperary",
+                data: formData,
+                processData: false,
+                contentType: false,
+                type: "POST",
+            }).then((data: types.TemperaryResponse) => {
+                if (data.isSuccess) {
+                    let name = data.names[0];
+                    let fileName = `${imageServerBaseUrl}/${name}`;
+                    let names = self.state.imageNamesInEditing;
+                    names.push(name);
+                    self.setState({ imageNamesInEditing: names });
+                    self.setState({ detailInEditing: self.state.detailInEditing + `\n![](${fileName})` });
+                } else {
+                    global.head.showAlert(false, data.errorMessage);
+                }
+            });
+        }
+    },
     componentDidMount: function() {
         let self: Self = this;
 
@@ -447,6 +494,7 @@ let spec: Self = {
             themeIdInEditing: null,
             titleInEditing: "",
             detailInEditing: "",
+            imageNamesInEditing: [],
             q: "",
             isOpen: true,
             isClosed: false,
@@ -494,7 +542,7 @@ let spec: Self = {
                     <input className="form-control" onChange={self.titleInEditingChanged} value={self.state.titleInEditing}/>
                 );
                 themeDetailView = (
-                    <textarea rows={10} className="form-control" onChange={self.detailInEditingChanged} value={self.state.detailInEditing}></textarea>
+                    <textarea rows={10} className="form-control" onDragEnter={self.onDragEnter} onDragOver={self.onDragOver} onDragLeave={self.onDragLeave} onDrop={self.onDrop} onChange={self.detailInEditingChanged} value={self.state.detailInEditing}></textarea>
                 );
             }
 

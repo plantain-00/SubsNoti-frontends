@@ -220,8 +220,7 @@ export let ThemesComponent = React.createClass({
     showMoreThemes: function() {
         let self: Self = this;
 
-        self.setState({ currentPage: self.state.currentPage + 1 });
-        self.fetchThemes(self.state.currentPage);
+        self.fetchThemes(self.state.currentPage + 1);
     },
     close: function(theme: types.Theme) {
         $.ajax({
@@ -635,7 +634,7 @@ export let ThemesComponent = React.createClass({
         });
 
         let currentOrganizationView;
-        if (self.state.currentOrganizationId !== "" && global.head.state.loginStatus === types.loginStatus.success) {
+        if (self.state.currentOrganizationId !== "") {
             let createButton;
             if (self.state.newThemeTitle.trim() && self.state.requestCount === 0) {
                 createButton = (

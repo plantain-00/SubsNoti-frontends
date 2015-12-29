@@ -62,6 +62,8 @@ function changeOrganization(id) {
 
 let intervalId;
 
+let md;
+
 export let ThemesComponent = React.createClass({
     getOrganizationsCurrentUserIn: function() {
         let self: Self = this;
@@ -401,6 +403,26 @@ export let ThemesComponent = React.createClass({
                 self.showMoreThemes();
             }
         };
+
+        md = markdownit({
+            highlight: function(str, lang) {
+                if (lang && hljs.getLanguage(lang)) {
+                    try {
+                        return hljs.highlight(lang, str).value;
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+
+                try {
+                    return hljs.highlightAuto(str).value;
+                } catch (error) {
+                    console.log(error);
+                }
+
+                return "";
+            },
+        });
     },
     componentWillUnmount: function() {
         global.body = undefined;
@@ -410,6 +432,7 @@ export let ThemesComponent = React.createClass({
         global.themeCreated = undefined;
         global.themeUpdated = undefined;
         global.scrolled = undefined;
+        md = undefined;
     },
     getInitialState: function() {
         return {
@@ -454,6 +477,7 @@ export let ThemesComponent = React.createClass({
         let themesView = self.state.themes.map(theme => {
             let themeTitleView;
             let themeDetailView;
+            let html = md.render(theme.detail);
             if (self.state.themeIdInEditing !== theme.id) {
                 themeTitleView = (
                     <span>
@@ -462,7 +486,7 @@ export let ThemesComponent = React.createClass({
                     </span>
                 );
                 themeDetailView = (
-                    <span>{theme.detail}</span>
+                    <div dangerouslySetInnerHTML={{ __html: html }}></div>
                 );
             } else {
                 themeTitleView = (

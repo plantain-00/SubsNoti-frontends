@@ -64,7 +64,7 @@ let intervalId;
 
 let md;
 
-export let ThemesComponent = React.createClass({
+let spec: Self = {
     getOrganizationsCurrentUserIn: function() {
         let self: Self = this;
 
@@ -405,6 +405,7 @@ export let ThemesComponent = React.createClass({
         };
 
         md = markdownit({
+            linkify: true,
             highlight: function(str, lang) {
                 if (lang && hljs.getLanguage(lang)) {
                     try {
@@ -493,7 +494,7 @@ export let ThemesComponent = React.createClass({
                     <input className="form-control" onChange={self.titleInEditingChanged} value={self.state.titleInEditing}/>
                 );
                 themeDetailView = (
-                    <textarea className="form-control" onChange={self.detailInEditingChanged} value={self.state.detailInEditing}></textarea>
+                    <textarea rows={10} className="form-control" onChange={self.detailInEditingChanged} value={self.state.detailInEditing}></textarea>
                 );
             }
 
@@ -775,4 +776,6 @@ export let ThemesComponent = React.createClass({
             </div>
         );
     },
-});
+};
+
+export let ThemesComponent = React.createClass(spec);

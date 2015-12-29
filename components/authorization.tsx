@@ -15,7 +15,7 @@ interface Self extends types.Self<State> {
     confirm: () => void;
 }
 
-export let AuthorizationComponent = React.createClass({
+let spec: Self = {
     confirm: function() {
         let self: Self = this;
 
@@ -123,4 +123,6 @@ export let AuthorizationComponent = React.createClass({
             </div>
         );
     },
-});
+};
+
+export let AuthorizationComponent = React.createClass(spec);

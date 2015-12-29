@@ -12,13 +12,13 @@ interface State {
 
 interface Self extends types.Self<State> {
     getOrganizationsCurrentUserCreated: () => void;
-    invite: () => void;
+    invite: (e) => void;
     clickOrganization: (organization: types.Organization) => void;
 
     emailChanged: (e) => void;
 }
 
-export let InviteComponent = React.createClass({
+let spec: Self = {
     getOrganizationsCurrentUserCreated: function() {
         let self: Self = this;
 
@@ -144,4 +144,6 @@ export let InviteComponent = React.createClass({
             </div>
         );
     },
-});
+};
+
+export let InviteComponent = React.createClass(spec);

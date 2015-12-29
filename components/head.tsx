@@ -52,7 +52,7 @@ interface Self extends types.Self<State> {
     exit: () => void;
 }
 
-export let HeadComponent = React.createClass({
+let spec: Self = {
     exit: function() {
         let self: Self = this;
 
@@ -299,4 +299,6 @@ export let HeadComponent = React.createClass({
             </header>
         );
     },
-});
+};
+
+export let HeadComponent = React.createClass(spec);

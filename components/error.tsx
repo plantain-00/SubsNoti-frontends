@@ -8,7 +8,7 @@ interface State {
 
 interface Self extends types.Self<State> { }
 
-export let ErrorComponent = React.createClass({
+let spec: Self = {
     getInitialState: function() {
         return {
             message: decodeURIComponent(common.getUrlParameter("message"))
@@ -31,4 +31,6 @@ export let ErrorComponent = React.createClass({
             </div>
         );
     },
-});
+};
+
+export let ErrorComponent = React.createClass(spec);

@@ -10,10 +10,10 @@ interface State {
 interface Self extends types.Self<State> {
     add: () => void;
 
-    organizationNameChanged: () => void;
+    organizationNameChanged: (e) => void;
 }
 
-export let NewOrganizationComponent = React.createClass({
+let spec: Self = {
     add: function() {
         let self: Self = this;
 
@@ -81,4 +81,6 @@ export let NewOrganizationComponent = React.createClass({
             </div>
         );
     },
-});
+};
+
+export let NewOrganizationComponent = React.createClass(spec);

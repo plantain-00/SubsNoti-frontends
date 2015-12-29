@@ -27,7 +27,7 @@ interface Self extends types.Self<State> {
     authorizationCallbackUrlInEditingChanged: (e) => void;
 }
 
-export let RegisteredComponent = React.createClass({
+let spec: Self = {
     edit: function(application: types.Application) {
         let self: Self = this;
 
@@ -277,4 +277,6 @@ export let RegisteredComponent = React.createClass({
             </div>
         );
     },
-});
+};
+
+export let RegisteredComponent = React.createClass(spec);

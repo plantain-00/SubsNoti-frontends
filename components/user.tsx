@@ -14,7 +14,7 @@ interface Self extends types.Self<State> {
     nameChanged: (e) => void;
 }
 
-export let UserComponent = React.createClass({
+let spec: Self = {
     save: function() {
         let self: Self = this;
 
@@ -136,4 +136,6 @@ export let UserComponent = React.createClass({
             </div>
         );
     },
-});
+};
+
+export let UserComponent = React.createClass(spec);

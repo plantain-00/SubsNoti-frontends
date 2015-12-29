@@ -73,7 +73,10 @@ export let UserComponent = React.createClass({
 
         self.setState({ name: e.target.value });
     },
-    componentDidMount: function() {
+    componentWillUnmount: function() {
+        global.authenticated = undefined;
+    },
+    getInitialState: function() {
         let self: Self = this;
 
         global.authenticated = error => {
@@ -81,11 +84,7 @@ export let UserComponent = React.createClass({
                 self.setState({ name: global.head.state.currentUserName });
             }
         };
-    },
-    componentWillUnmount: function() {
-        global.authenticated = undefined;
-    },
-    getInitialState: function() {
+
         return {
             name: ""
         } as State;

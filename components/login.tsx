@@ -111,7 +111,11 @@ export let LoginComponent = React.createClass({
 
         self.setState({ code: e.target.value });
     },
-    componentDidMount: function() {
+    componentWillUnmount: function() {
+        global.authenticated = undefined;
+        global.body = undefined;
+    },
+    getInitialState: function() {
         let self: Self = this;
 
         global.body = self;
@@ -129,12 +133,7 @@ export let LoginComponent = React.createClass({
             alert("You are already logged in, will be redirect to home page now.");
             location.href = "/";
         };
-    },
-    componentWillUnmount: function() {
-        global.authenticated = undefined;
-        global.body = undefined;
-    },
-    getInitialState: function() {
+
         return {
             emailHead: "",
             emailTail: "",

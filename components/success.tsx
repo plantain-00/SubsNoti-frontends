@@ -8,7 +8,7 @@ interface State {
 
 interface Self extends types.Self<State> { }
 
-export let SuccessComponent = React.createClass({
+let spec: Self = {
     getInitialState: function() {
         let willClearPreviousStatus = common.getUrlParameter("clear_previous_status");
 
@@ -48,4 +48,6 @@ export let SuccessComponent = React.createClass({
             </div>
         );
     },
-});
+};
+
+export let SuccessComponent = React.createClass(spec);

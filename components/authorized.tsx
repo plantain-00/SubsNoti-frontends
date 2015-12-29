@@ -14,7 +14,7 @@ interface Self extends types.Self<State> {
     revoke: (application: types.Application) => void;
 }
 
-export let AuthorizedComponent = React.createClass({
+let spec: Self = {
     show: function(application: types.Application) {
         let self: Self = this;
 
@@ -150,4 +150,6 @@ export let AuthorizedComponent = React.createClass({
             </div>
         );
     },
-});
+};
+
+export let AuthorizedComponent = React.createClass(spec);

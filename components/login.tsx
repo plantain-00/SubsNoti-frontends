@@ -27,7 +27,7 @@ interface Self extends types.Self<State> {
 
 let guid = common.guid();
 
-export let LoginComponent = React.createClass({
+let spec: Self = {
     login: function() {
         let self: Self = this;
 
@@ -216,4 +216,6 @@ export let LoginComponent = React.createClass({
             </div>
         );
     },
-});
+};
+
+export let LoginComponent = React.createClass(spec);

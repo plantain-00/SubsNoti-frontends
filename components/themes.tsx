@@ -3,10 +3,21 @@ import {HeadComponent, global} from "./head";
 import * as common from "./common";
 import * as React from "react";
 
+interface Theme extends types.Theme {
+    createTimeText?: string;
+    updateTimeText?: string;
+    isWatching?: boolean;
+    isHovering?: boolean;
+    watchersEmails?: string;
+    ownersEmails?: string;
+    isOwner?: boolean;
+    expanded?: boolean;
+}
+
 interface State {
     organizationsCurrentUserIn?: types.Organization[];
     currentOrganizationId?: string;
-    themes?: types.Theme[];
+    themes?: Theme[];
     newThemeTitle?: string;
     newThemeDetail?: string;
     currentPage?: number;
@@ -26,18 +37,18 @@ interface State {
 interface Self extends types.Self<State> {
     getOrganizationsCurrentUserIn: () => void;
     fetchThemes: (page: number, organizationId?: string) => void;
-    initTheme: (theme: types.Theme) => void;
+    initTheme: (theme: Theme) => void;
     clickOrganization: (organization: types.Organization) => void;
     createTheme: () => void;
     setThemeTimeText: () => void;
-    watch: (theme: types.Theme) => void;
-    unwatch: (theme: types.Theme) => void;
-    close: (theme: types.Theme) => void;
-    reopen: (theme: types.Theme) => void;
+    watch: (theme: Theme) => void;
+    unwatch: (theme: Theme) => void;
+    close: (theme: Theme) => void;
+    reopen: (theme: Theme) => void;
     getEmails: (users: types.User[]) => string;
-    edit: (theme: types.Theme) => void;
-    cancel: (theme: types.Theme) => void;
-    save: (theme: types.Theme) => void;
+    edit: (theme: Theme) => void;
+    cancel: (theme: Theme) => void;
+    save: (theme: Theme) => void;
     clickOpen: () => void;
     clickClosed: () => void;
     showMoreThemes: () => void;
@@ -45,8 +56,8 @@ interface Self extends types.Self<State> {
     clickOrder: (order: types.ThemeOrder) => void;
     nextThemeCount: () => number;
     canShowMoreThemes: () => boolean;
-    mouseEnterTheme: (theme: types.Theme) => void;
-    mouseLeaveTheme: (theme: types.Theme) => void;
+    mouseEnterTheme: (theme: Theme) => void;
+    mouseLeaveTheme: (theme: Theme) => void;
     newThemeTitleChanged: (e) => void;
     newThemeDetailChanged: (e) => void;
     qChanged: (e) => void;
@@ -57,6 +68,8 @@ interface Self extends types.Self<State> {
     onDragOver: (e) => void;
     onDragLeave: (e) => void;
     onDrop: (e) => void;
+    expand: (theme: Theme) => void;
+    collapse: (theme: Theme) => void;
 }
 
 function changeOrganization(id) {
@@ -68,6 +81,76 @@ function changeOrganization(id) {
 let intervalId;
 
 let md;
+
+interface LinkTag {
+    href: string;
+    content: string;
+}
+
+function extractSummary(markdown: string) {
+    interface Token {
+        tag: string;
+        content: string;
+        children: Token[];
+        type: string;
+        attrs: string[][];
+    }
+    let tokens: Token[] = md.parse(markdown);
+    let image = undefined;
+    let text: (LinkTag | string) [] = [];
+    const maxSize = 80;
+    let size = 0;
+
+    function limitSize(content: string) {
+        if (content.length > maxSize - size) {
+            content = content.substr(0, maxSize - size) + "...";
+            size = maxSize;
+        }
+        return content;
+    }
+
+    function pushText(content: string) {
+        content = limitSize(content);
+        if (text.length > 0 && typeof text[text.length - 1] === "string") {
+            text[text.length - 1] += content;
+        } else {
+            text.push(content);
+        }
+    }
+
+    for (let token of tokens) {
+        if (size >= maxSize) {
+            break;
+        }
+        if (token.tag === "") {
+            if (token.children && token.children.length > 0
+                && token.children[0].tag === "a"
+                && token.children[0].attrs && token.children[0].attrs.length > 0
+                && token.children[0].attrs[0].length > 1) {
+                let content = limitSize(token.children[1].content);
+                text.push({
+                    content: content,
+                    href: token.children[0].attrs[0][1],
+                });
+            } else if (token.children && token.children.length > 0
+                && token.children[0].tag === "img"
+                && token.children[0].attrs && token.children[0].attrs.length > 0
+                && token.children[0].attrs[0].length > 1) {
+                if (!image) {
+                    image = token.children[0].attrs[0][1];
+                }
+            } else {
+                pushText(token.content);
+            }
+        } else if (token.tag === "code") {
+            pushText(token.content);
+        }
+    }
+    return {
+        image: image,
+        text: text,
+    };
+}
 
 let spec: Self = {
     getOrganizationsCurrentUserIn: function() {
@@ -136,7 +219,7 @@ let spec: Self = {
             }
         });
     },
-    initTheme: function(theme: types.Theme) {
+    initTheme: function(theme: Theme) {
         let self: Self = this;
 
         theme.isWatching = theme.watchers.some(w => w.id === global.head.state.currentUserId);
@@ -148,6 +231,7 @@ let spec: Self = {
             theme.updateTimeText = theme.createTimeText;
         }
         theme.isHovering = false;
+        theme.expanded = false;
         theme.watchersEmails = self.getEmails(theme.watchers);
         theme.ownersEmails = self.getEmails(theme.owners);
         theme.creator.avatar = common.getFullUrl(theme.creator.avatar);
@@ -199,7 +283,7 @@ let spec: Self = {
             }
         }
     },
-    watch: function(theme: types.Theme) {
+    watch: function(theme: Theme) {
         $.ajax({
             url: apiBaseUrl + "/api/user/watched/" + theme.id,
             type: "PUT",
@@ -211,7 +295,7 @@ let spec: Self = {
             }
         });
     },
-    unwatch: function(theme: types.Theme) {
+    unwatch: function(theme: Theme) {
         $.ajax({
             url: apiBaseUrl + "/api/user/watched/" + theme.id,
             data: {},
@@ -229,7 +313,7 @@ let spec: Self = {
 
         self.fetchThemes(self.state.currentPage + 1);
     },
-    close: function(theme: types.Theme) {
+    close: function(theme: Theme) {
         $.ajax({
             url: apiBaseUrl + "/api/themes/" + theme.id,
             data: {
@@ -245,7 +329,7 @@ let spec: Self = {
             }
         });
     },
-    reopen: function(theme: types.Theme) {
+    reopen: function(theme: Theme) {
         $.ajax({
             url: apiBaseUrl + "/api/themes/" + theme.id,
             data: {
@@ -261,7 +345,7 @@ let spec: Self = {
             }
         });
     },
-    edit: function(theme: types.Theme) {
+    edit: function(theme: Theme) {
         let self: Self = this;
 
         self.setState({
@@ -270,7 +354,7 @@ let spec: Self = {
             detailInEditing: theme.detail,
         });
     },
-    cancel: function(theme: types.Theme) {
+    cancel: function(theme: Theme) {
         let self: Self = this;
 
         self.setState({
@@ -279,7 +363,7 @@ let spec: Self = {
             detailInEditing: "",
         });
     },
-    save: function(theme: types.Theme) {
+    save: function(theme: Theme) {
         let self: Self = this;
 
         $.ajax({
@@ -333,14 +417,14 @@ let spec: Self = {
 
         return self.nextThemeCount() > 0 && self.state.requestCount === 0;
     },
-    mouseEnterTheme: function(theme: types.Theme) {
+    mouseEnterTheme: function(theme: Theme) {
         let self: Self = this;
 
         let themes = self.state.themes;
         theme.isHovering = true;
         self.setState({ themes: themes });
     },
-    mouseLeaveTheme: function(theme: types.Theme) {
+    mouseLeaveTheme: function(theme: Theme) {
         let self: Self = this;
 
         let themes = self.state.themes;
@@ -421,6 +505,20 @@ let spec: Self = {
             });
         }
     },
+    expand: function(theme: Theme) {
+        let self: Self = this;
+
+        let themes = self.state.themes;
+        theme.expanded = true;
+        self.setState({ themes: themes });
+    },
+    collapse: function(theme: Theme) {
+        let self: Self = this;
+
+        let themes = self.state.themes;
+        theme.expanded = false;
+        self.setState({ themes: themes });
+    },
     componentDidMount: function() {
         let self: Self = this;
 
@@ -428,19 +526,20 @@ let spec: Self = {
         self.getOrganizationsCurrentUserIn();
         intervalId = setInterval(self.setThemeTimeText, 10000);
 
-        global.themeCreated = (theme: types.Theme) => {
+        global.themeCreated = (theme: Theme) => {
             if (theme.organizationId === self.state.currentOrganizationId) {
                 self.initTheme(theme);
                 self.setState({ themes: [theme].concat(self.state.themes) });
             }
         };
 
-        global.themeUpdated = (theme: types.Theme) => {
+        global.themeUpdated = (theme: Theme) => {
             if (theme.organizationId === self.state.currentOrganizationId) {
                 let index = common.findIndex(self.state.themes, t => t.id === theme.id);
                 if (index > -1) {
                     self.initTheme(theme);
                     let themes = self.state.themes;
+                    theme.expanded = themes[index].expanded;
                     themes[index] = theme;
                     self.setState({ themes: themes });
                 }
@@ -528,17 +627,46 @@ let spec: Self = {
         let themesView = self.state.themes.map(theme => {
             let themeTitleView;
             let themeDetailView;
-            let html = md.render(theme.detail);
             if (self.state.themeIdInEditing !== theme.id) {
                 themeTitleView = (
                     <span>
                         {theme.title}
-                        <span className={ "label label-" + (theme.status === "open" ? "success" : "danger") }>{theme.status}</span>
+                        <span className={ "label label-" + (theme.status === types.themeStatus.open ? "success" : "danger") }>{theme.status}</span>
                     </span>
                 );
-                themeDetailView = (
-                    <div dangerouslySetInnerHTML={{ __html: html }}></div>
-                );
+                if (theme.detail) {
+                    if (theme.expanded) {
+                        let html = md.render(theme.detail);
+                        themeDetailView = (
+                            <div dangerouslySetInnerHTML={{ __html: html }}></div>
+                        );
+                    } else {
+                        let summary = extractSummary(theme.detail);
+                        let imageView;
+                        let textView = summary.text.map((t, i) => {
+                            if (typeof t === "string") {
+                                return (
+                                    <span key={i}>{t}</span>
+                                );
+                            } else {
+                                return (
+                                    <a key={i} href={t.href} target="_blank" rel="nofollow">{t.content}</a>
+                                );
+                            }
+                        });
+                        if (summary.image) {
+                            imageView = (
+                                <img src={summary.image} style={{ maxWidth: 180 + "px", maxHeight: 100 + "px" }} className="float-left"/>
+                            );
+                        }
+                        themeDetailView = (
+                            <div onClick={self.expand.bind(this, theme)} style={{ cursor: "pointer" }} className="clearfix">
+                                {imageView}
+                                {textView}
+                            </div>
+                        );
+                    }
+                }
             } else {
                 themeTitleView = (
                     <input className="form-control" onChange={self.titleInEditingChanged} value={self.state.titleInEditing}/>
@@ -590,7 +718,7 @@ let spec: Self = {
             }
 
             let hoveringView;
-            if (theme.isHovering) {
+            if (theme.isHovering || theme.expanded || self.state.themeIdInEditing === theme.id) {
                 let ownerView;
                 if (theme.isOwner) {
                     let openButton;
@@ -655,11 +783,24 @@ let spec: Self = {
                         </div>
                     );
                 }
+                let collapseButton;
+                if (theme.expanded) {
+                    collapseButton = (
+                        <div style={{ display: "inline" }}>
+                            •
+                            <button type="button" className="btn btn-xs btn-link"
+                                onClick={self.collapse.bind(this, theme)}>
+                                collapse
+                            </button>
+                        </div>
+                    );
+                }
                 hoveringView = (
                     <div style={{ display: "inline" }}>
                         •
                         {watchButton}
                         {ownerView}
+                        {collapseButton}
                     </div>
                 );
             }

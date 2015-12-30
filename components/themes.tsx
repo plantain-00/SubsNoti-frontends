@@ -412,7 +412,9 @@ let spec: Self = {
                     let names = self.state.imageNamesInEditing;
                     names.push(name);
                     self.setState({ imageNamesInEditing: names });
-                    self.setState({ detailInEditing: self.state.detailInEditing + `\n![](${fileName})` });
+                    let index = e.target.selectionStart;
+                    let result = `${self.state.detailInEditing.substring(0,index)}\n![](${fileName})\n${self.state.detailInEditing.substring(index)}`;
+                    self.setState({ detailInEditing: result });
                 } else {
                     global.head.showAlert(false, data.errorMessage);
                 }
@@ -575,15 +577,13 @@ let spec: Self = {
             let watchButton;
             if (theme.isWatching) {
                 watchButton = (
-                    <button type="button" className="btn btn-xs btn-link"
-                        onClick={self.unwatch.bind(this, theme)}>
+                    <button type="button" className="btn btn-xs btn-link" onClick={self.unwatch.bind(this, theme)}>
                         unwatch
                     </button>
                 );
             } else {
                 watchButton = (
-                    <button type="button" className="btn btn-xs btn-link"
-                        onClick={self.watch.bind(this, theme)}>
+                    <button type="button" className="btn btn-xs btn-link" onClick={self.watch.bind(this, theme)}>
                         watch
                     </button>
                 );
@@ -711,8 +711,7 @@ let spec: Self = {
             let createButton;
             if (self.state.newThemeTitle.trim() && self.state.requestCount === 0) {
                 createButton = (
-                    <button type="button" className="btn btn-primary"
-                        onClick={self.createTheme}>Create</button>
+                    <button type="button" className="btn btn-primary" onClick={self.createTheme}>Create</button>
                 );
             } else {
                 createButton = (
@@ -721,8 +720,7 @@ let spec: Self = {
             }
 
             let showCreateView = (
-                <span className={ "btn btn-primary glyphicon glyphicon-" + (self.state.showCreate ? "minus" : "plus") } aria-hidden="true"
-                    onClick={self.clickShowCreate}></span>
+                <span className={ "btn btn-primary glyphicon glyphicon-" + (self.state.showCreate ? "minus" : "plus") } aria-hidden="true" onClick={self.clickShowCreate}></span>
             );
 
             let newThemeTitleView;
@@ -741,7 +739,7 @@ let spec: Self = {
                     <div className="form-group">
                         <label className="col-sm-2 control-label">detail</label>
                         <div className="col-sm-10">
-                            <textarea className="form-control" onChange={self.newThemeDetailChanged} value={self.state.newThemeDetail}></textarea>
+                            <textarea className="form-control" rows={10} onChange={self.newThemeDetailChanged} value={self.state.newThemeDetail}></textarea>
                         </div>
                     </div>
                 );
@@ -766,21 +764,17 @@ let spec: Self = {
                             <input className="form-control" onChange={self.qChanged} value={self.state.q} onKeyUp={self.qKeyUp}/>
                         </div>
                         <div className="col-sm-8">
-                            <label className={ "the-label " + (self.state.isOpen ? "label-active" : "") }
-                                onClick={self.clickOpen}>
+                            <label className={ "the-label " + (self.state.isOpen ? "label-active" : "") } onClick={self.clickOpen}>
                                 open
                             </label>
-                            <label className={ "the-label " + (self.state.isClosed ? "label-active" : "") }
-                                onClick={self.clickClosed}>
+                            <label className={ "the-label " + (self.state.isClosed ? "label-active" : "") } onClick={self.clickClosed}>
                                 closed
                             </label>
                             order by
-                            <label className={ "the-label " + (self.state.order === "newest" ? "label-active" : "") }
-                                onClick={self.clickOrder.bind(this, "newest")}>
+                            <label className={ "the-label " + (self.state.order === "newest" ? "label-active" : "") } onClick={self.clickOrder.bind(this, "newest")}>
                                 newest
                             </label>
-                            <label className={ "the-label " + (self.state.order === "recently updated" ? "label-active" : "") }
-                                onClick={self.clickOrder.bind(this, "recently updated")}>
+                            <label className={ "the-label " + (self.state.order === "recently updated" ? "label-active" : "") } onClick={self.clickOrder.bind(this, "recently updated")}>
                                 recently updated
                             </label>
                             <span className="glyphicon glyphicon-search btn btn-primary" aria-hidden="true" onClick={self.fetchThemes.bind(this, 1, undefined)}></span>

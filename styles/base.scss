@@ -26,3 +26,18 @@ $background-color: #fff;
     background-color: $border-and-word-color;
     color: $background-color;
 }
+
+.float-left {
+    float: left;
+}
+
+.clearfix::before {
+    content: ' ';
+    display: table;
+}
+
+.clearfix::after {
+    clear: both;
+    content: ' ';
+    display: table;
+}

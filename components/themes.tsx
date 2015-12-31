@@ -12,6 +12,8 @@ interface Theme extends types.Theme {
     ownersEmails?: string;
     isOwner?: boolean;
     expanded?: boolean;
+    htmlDetail?: string;
+    summaryDetail?: Summary;
 }
 
 interface State {
@@ -87,7 +89,12 @@ interface LinkTag {
     content: string;
 }
 
-function extractSummary(markdown: string) {
+interface Summary {
+    image: string;
+    text: (LinkTag | string) [];
+}
+
+function extractSummary(markdown: string): Summary {
     interface Token {
         tag: string;
         content: string;
@@ -242,6 +249,11 @@ let spec: Self = {
 
         for (let owner of theme.owners) {
             owner.avatar = common.getFullUrl(owner.avatar);
+        }
+
+        if (theme.detail) {
+            theme.htmlDetail = md.render(theme.detail);
+            theme.summaryDetail = extractSummary(theme.detail);
         }
     },
     clickOrganization: function(organization: types.Organization) {
@@ -636,14 +648,12 @@ let spec: Self = {
                 );
                 if (theme.detail) {
                     if (theme.expanded) {
-                        let html = md.render(theme.detail);
                         themeDetailView = (
-                            <div dangerouslySetInnerHTML={{ __html: html }}></div>
+                            <div dangerouslySetInnerHTML={{ __html: theme.htmlDetail }}></div>
                         );
                     } else {
-                        let summary = extractSummary(theme.detail);
                         let imageView;
-                        let textView = summary.text.map((t, i) => {
+                        let textView = theme.summaryDetail.text.map((t, i) => {
                             if (typeof t === "string") {
                                 return (
                                     <span key={i}>{t}</span>
@@ -654,9 +664,9 @@ let spec: Self = {
                                 );
                             }
                         });
-                        if (summary.image) {
+                        if (theme.summaryDetail.image) {
                             imageView = (
-                                <img src={summary.image} style={{ maxWidth: 180 + "px", maxHeight: 100 + "px" }} className="float-left"/>
+                                <img src={theme.summaryDetail.image} style={{ maxWidth: 180 + "px", maxHeight: 100 + "px" }} className="float-left"/>
                             );
                         }
                         themeDetailView = (

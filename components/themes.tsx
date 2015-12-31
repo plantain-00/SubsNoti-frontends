@@ -14,6 +14,7 @@ interface Theme extends types.Theme {
     expanded?: boolean;
     htmlDetail?: string;
     summaryDetail?: Summary;
+    scrollTop?: number;
 }
 
 interface State {
@@ -359,19 +360,25 @@ let spec: Self = {
     edit: function(theme: Theme) {
         let self: Self = this;
 
+        let themes = self.state.themes;
+        theme.scrollTop = global.win.scrollTop();
         self.setState({
             themeIdInEditing: theme.id,
             titleInEditing: theme.title,
             detailInEditing: theme.detail,
+            themes: themes,
         });
     },
     cancel: function(theme: Theme) {
         let self: Self = this;
 
+        let themes = self.state.themes;
+        global.win.scrollTop(theme.scrollTop);
         self.setState({
             themeIdInEditing: null,
             titleInEditing: "",
             detailInEditing: "",
+            themes: themes,
         });
     },
     save: function(theme: Theme) {
@@ -521,6 +528,7 @@ let spec: Self = {
 
         let themes = self.state.themes;
         theme.expanded = true;
+        theme.scrollTop = global.win.scrollTop();
         self.setState({ themes: themes });
     },
     collapse: function(theme: Theme) {
@@ -528,6 +536,7 @@ let spec: Self = {
 
         let themes = self.state.themes;
         theme.expanded = false;
+        global.win.scrollTop(theme.scrollTop);
         self.setState({ themes: themes });
     },
     componentDidMount: function() {
@@ -551,6 +560,7 @@ let spec: Self = {
                     self.initTheme(theme);
                     let themes = self.state.themes;
                     theme.expanded = themes[index].expanded;
+                    theme.scrollTop = themes[index].scrollTop;
                     themes[index] = theme;
                     self.setState({ themes: themes });
                 }

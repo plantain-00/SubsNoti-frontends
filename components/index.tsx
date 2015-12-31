@@ -57,11 +57,11 @@ clipboard.on("success", e => {
     global.head.showAlert(true, "emails copied:" + e.text);
 });
 
-let win = $(window);
-let doc = $(document);
+global.win = $(window);
+global.doc = $(document);
 
-win.scroll(() => {
-    if (global.scrolled && win.scrollTop() >= doc.height() - win.height()) {
+global.win.scroll(() => {
+    if (global.scrolled && global.win.scrollTop() >= global.doc.height() - global.win.height()) {
         global.scrolled();
     }
 });

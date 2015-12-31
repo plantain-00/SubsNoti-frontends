@@ -252,7 +252,6 @@ let spec: Self = {
         }
 
         if (theme.detail) {
-            theme.htmlDetail = md.render(theme.detail);
             theme.summaryDetail = extractSummary(theme.detail);
         }
     },
@@ -648,6 +647,9 @@ let spec: Self = {
                 );
                 if (theme.detail) {
                     if (theme.expanded) {
+                        if (!theme.htmlDetail) {
+                            theme.htmlDetail = md.render(theme.detail);
+                        }
                         themeDetailView = (
                             <div dangerouslySetInnerHTML={{ __html: theme.htmlDetail }}></div>
                         );

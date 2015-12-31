@@ -1,6 +1,6 @@
 {
     "name": "subsnoti-frontends",
-    "version": "2.3.0",
+    "version": "2.3.1",
     "description": "the frondends of `SubsNoti`.",
     "main": "gulpfile.js",
     "scripts": {

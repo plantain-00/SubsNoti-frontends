@@ -28,6 +28,8 @@ export let global: {
     scrolled?: () => void;
     themeCreated?: (theme: types.Theme) => void;
     themeUpdated?: (theme: types.Theme) => void;
+    win?: JQuery;
+    doc?: JQuery;
 } = new Object();
 
 let timeoutId;

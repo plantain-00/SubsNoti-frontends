@@ -5,6 +5,7 @@ import * as common from "./common";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 let History = require("history");
+let Clipboard = require("clipboard");
 
 let history = History.createHistory();
 

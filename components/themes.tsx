@@ -103,7 +103,7 @@ function extractSummary(markdown: string): Summary {
         type: string;
         attrs: string[][];
     }
-    let tokens: Token[] = md.parse(markdown);
+    let tokens: Token[] = md.parse(markdown, {});
     let image = undefined;
     let text: (LinkTag | string) [] = [];
     const maxSize = 80;

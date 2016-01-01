@@ -98,16 +98,18 @@ function uglifyCss(name, isDevelopment) {
     }
 }
 
+let webpackexternals = {
+    "react": "React",
+    "react-dom": "ReactDOM",
+    "history": "History",
+    "react-router": "ReactRouter",
+};
+
 function bundleAndUglifyJs(name, isDevelopment) {
     if (isDevelopment) {
         return gulp.src("build/components/" + name + ".js")
             .pipe(webpack({
-                externals: {
-                    "react": "React",
-                    "react-dom": "ReactDOM",
-                    "history": "History",
-                    "react-router": "ReactRouter",
-                },
+                externals: webpackexternals
             }))
             .pipe(rename(name + ".js"))
             .pipe(gulp.dest("build/scripts/"));
@@ -122,12 +124,7 @@ function bundleAndUglifyJs(name, isDevelopment) {
                 output: {
                     filename: name + ".min.js"
                 },
-                externals: {
-                    "react": "React",
-                    "react-dom": "ReactDOM",
-                    "history": "History",
-                    "react-router": "ReactRouter",
-                },
+                externals: webpackexternals,
             }))
             .pipe(gulp.dest("build/scripts/"));
     }

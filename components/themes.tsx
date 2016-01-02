@@ -98,6 +98,13 @@ interface Summary {
     text: (LinkTag | string) [];
 }
 
+function replaceProtocal(src: string) {
+    if (src.indexOf("http://") === 0 && src.indexOf("http://localhost") !== 0) {
+        return "https://" + src.substring("http://".length);
+    }
+    return src;
+}
+
 function extractSummary(markdown: string): Summary {
     interface Token {
         tag: string;
@@ -149,6 +156,7 @@ function extractSummary(markdown: string): Summary {
                 && token.children[0].attrs[0].length > 1) {
                 if (!image) {
                     image = token.children[0].attrs[0][1];
+                    image = replaceProtocal(image);
                 }
             } else {
                 pushText(token.content);
@@ -643,6 +651,27 @@ let spec: Self = {
                 return "";
             },
         });
+
+        let defaultImageRender = md.renderer.rules.image;
+        md.renderer.rules.image = function (tokens, index, options, env, s) {
+            let token = tokens[index];
+            let aIndex = token.attrIndex("src");
+
+            token.attrs[aIndex][1] = replaceProtocal(token.attrs[aIndex][1]);
+            token.attrPush(["style", "max-width: 100%;height: auto;display: block;margin: 6px 0;"]);
+
+            return defaultImageRender(tokens, index, options, env, s);
+        };
+
+        let defaultLinkRender = md.renderer.rules.link_open || function(tokens, index, options, env, s) {
+            return s.renderToken(tokens, index, options);
+        };
+        md.renderer.rules.link_open = function (tokens, index, options, env, s) {
+            let aIndex = tokens[index].attrIndex("target");
+            tokens[index].attrPush(["target", "_blank"]);
+            tokens[index].attrPush(["rel", "nofollow"]);
+            return defaultLinkRender(tokens, index, options, env, s);
+        };
     },
     componentWillUnmount: function() {
         global.body = undefined;

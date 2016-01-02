@@ -71,6 +71,9 @@ interface Self extends types.Self<State> {
     onDragOver: (e) => void;
     onDragLeave: (e) => void;
     onDrop: (e) => void;
+    onImageUploaded: (e) => void;
+    uploadImage: (file, index?: number) => void;
+    onPaste: (e) => void;
     expand: (theme: Theme) => void;
     collapse: (theme: Theme) => void;
 }
@@ -481,47 +484,94 @@ let spec: Self = {
             self.fetchThemes(1);
         }
     },
-    onDragEnter(e) {
-        e.preventDefault();
+    onDragEnter: function(e) {
+        let file = e.dataTransfer.files[0];
+        if (file) {
+            e.preventDefault();
+        }
     },
-    onDragOver(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
+    onDragOver: function(e) {
+        let file = e.dataTransfer.files[0];
+        if (file) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
     },
-    onDragLeave(e) {
-        e.preventDefault();
+    onDragLeave: function(e) {
+        let file = e.dataTransfer.files[0];
+        if (file) {
+            e.preventDefault();
+        }
     },
-    onDrop(e) {
+    onDrop: function(e) {
         let self: Self = this;
-        e.preventDefault();
 
         let file = e.dataTransfer.files[0];
         if (file) {
-            let formData = new FormData();
-            formData.append("file", file);
-
-            $.ajax({
-                url: imageUploaderBaseUrl + "/api/temperary",
-                data: formData,
-                processData: false,
-                contentType: false,
-                type: "POST",
-            }).then((data: types.TemperaryResponse) => {
-                if (data.isSuccess) {
-                    let name = data.names[0];
-                    let fileName = `${imageServerBaseUrl}/${name}`;
-                    let names = self.state.imageNamesInEditing;
-                    names.push(name);
-                    self.setState({ imageNamesInEditing: names });
-                    let index = e.target.selectionStart;
-                    let result = `${self.state.detailInEditing.substring(0,index)}\n![](${fileName})\n${self.state.detailInEditing.substring(index)}`;
-                    self.setState({ detailInEditing: result });
-                } else {
-                    global.head.showAlert(false, data.errorMessage);
-                }
-            });
+            e.preventDefault();
+            self.uploadImage(file, e.target.selectionStart);
         }
+    },
+    onPaste: function(e) {
+        let self: Self = this;
+
+        let items = (e.clipboardData  || e.originalEvent.clipboardData).items;
+        if (items.length > 0) {
+            let file;
+            for (let item of items) {
+                if (item.type.indexOf("image") === 0) {
+                    file = item.getAsFile();
+                }
+            }
+            if (file) {
+                e.preventDefault();
+                self.uploadImage(file, e.target.selectionStart);
+            }
+        }
+    },
+    onImageUploaded: function(e) {
+        let self: Self = this;
+
+        let file = e.target.files[0];
+        if (file) {
+            e.preventDefault();
+            self.uploadImage(file);
+        }
+    },
+    uploadImage: function(file, index?: number) {
+        let self: Self = this;
+
+        let formData = new FormData();
+        formData.append("file", file);
+
+        $.ajax({
+            url: imageUploaderBaseUrl + "/api/temperary",
+            data: formData,
+            processData: false,
+            contentType: false,
+            type: "POST",
+        }).then((data: types.TemperaryResponse) => {
+            if (data.isSuccess) {
+                let name = data.names[0];
+                let names = self.state.imageNamesInEditing;
+                names.push(name);
+                self.setState({ imageNamesInEditing: names });
+                let head;
+                let tail;
+                if (index) {
+                    head = self.state.detailInEditing.substring(0, index);
+                    tail = self.state.detailInEditing.substring(index);
+                } else {
+                    head = self.state.detailInEditing;
+                    tail = "";
+                }
+                let result = `${head}![](${imageServerBaseUrl}/${name})${tail}`;
+                self.setState({ detailInEditing: result });
+            } else {
+                global.head.showAlert(false, data.errorMessage);
+            }
+        });
     },
     expand: function(theme: Theme) {
         let self: Self = this;
@@ -694,7 +744,7 @@ let spec: Self = {
                     <input className="form-control" onChange={self.titleInEditingChanged} value={self.state.titleInEditing}/>
                 );
                 themeDetailView = (
-                    <textarea rows={10} className="form-control" onDragEnter={self.onDragEnter} onDragOver={self.onDragOver} onDragLeave={self.onDragLeave} onDrop={self.onDrop} onChange={self.detailInEditingChanged} value={self.state.detailInEditing}></textarea>
+                    <textarea rows={10} className="form-control" onDragEnter={self.onDragEnter} onDragOver={self.onDragOver} onDragLeave={self.onDragLeave} onDrop={self.onDrop} onPaste={self.onPaste} onChange={self.detailInEditingChanged} value={self.state.detailInEditing}></textarea>
                 );
             }
 
@@ -761,6 +811,7 @@ let spec: Self = {
                     let cancelButton;
                     let editButton;
                     let saveButton;
+                    let uploadButton;
                     if (self.state.themeIdInEditing !== null) {
                         if (self.state.themeIdInEditing === theme.id) {
                             cancelButton = (
@@ -783,6 +834,15 @@ let spec: Self = {
                                     </div>
                                 );
                             }
+                            uploadButton = (
+                                <div style={{ display: "inline" }}>
+                                    •
+                                    <button type="button" className="btn btn-xs btn-link" style={{ position: "relative" }}>
+                                        upload image
+                                        <input type="file" accept="image/*" onChange={self.onImageUploaded} style={{ opacity: 0.0001, cursor: "pointer", position: "absolute", width: 80 + "px", top: 0 + "px" }}/>
+                                    </button>
+                                </div>
+                            );
                         }
                     } else {
                         editButton = (
@@ -802,6 +862,7 @@ let spec: Self = {
                             {editButton}
                             {saveButton}
                             {cancelButton}
+                            {uploadButton}
                         </div>
                     );
                 }

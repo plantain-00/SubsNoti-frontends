@@ -372,7 +372,7 @@ let spec: Self = {
         let self: Self = this;
 
         let themes = self.state.themes;
-        theme.scrollTop = global.win.scrollTop();
+        global.win.scrollTop(theme.scrollTop);
         self.setState({
             themeIdInEditing: theme.id,
             titleInEditing: theme.title,

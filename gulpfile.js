@@ -150,7 +150,7 @@ function bundleAndUglifyHtml(name, isDevelopment) {
         version: pjson.version,
         environment: "",
         imageServerBaseUrl: "https://img.yorkyao.xyz",
-        imageUploaderBaseUrl: "https://img.yorkyao.xyz",
+        imageUploaderBaseUrl: "https://upload.yorkyao.xyz",
         apiBaseUrl: "",
     };
     if (isDevelopment) {

@@ -44,7 +44,7 @@ https://yorkyao.xyz/
 7. 可以在原位置编辑
 8. webpack打包、gulp控制html/js/css的编译、合并、压缩、版本化
 9. https和http 2
-10. 前后端的类型系统有共用的地方，抽出刀submodule实现代码共用
+10. 前后端的类型系统有共用的地方，抽出到submodule实现代码共用
 11. 基于react-router的单页
 12. 后端代码使用async函数
 13. API有调用频率限制，在response header里有反映

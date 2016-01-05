@@ -27,7 +27,7 @@ https://yorkyao.xyz/
 
 本来是用来给对email不敏感的情景来用的，比如企业内部。
 
-所以不想暴露email的话，不要在public里创建theme。
+所以如果不想暴露email，不要在public里创建theme，可以创建一个organization后，在这个organization里随意玩。
 
 一般使用情景是，比如，有人想统计周末去哪里玩的人，就可以发个theme，别人就可以watch，后悔可以unwatch，到时间copy emails并close掉；
 
@@ -47,3 +47,4 @@ https://yorkyao.xyz/
 10. 前后端的类型系统有共用的地方，抽出刀submodule实现代码共用
 11. 基于react-router的单页
 12. 后端代码使用async函数
+13. API有调用频率限制，在response header里有反映

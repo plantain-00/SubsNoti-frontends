@@ -38,7 +38,7 @@ https://yorkyao.xyz/
 1. 文档的图是用dot写，再生成svg的
 2. 有CI，有tslint、scss-lint来控制代码格式，后端有完整api测试
 3. 可以根据comment自动部署
-4. 改变theme后，不是直接修改，也不是重新查询，而是根据后端push的结果来改变
+4. 改变theme后，不是直接修改，也不是重新查询，而是根据后端的广播push的结果来改变
 5. theme创建、编辑页，支持markdown，可以点击按钮上传图片、也可以拖拽文件上传、也可以从其它页面复制图片后在textarea里粘贴
 6. 实现了完整的OAuth2，可以由生成的access token获取资源
 7. 可以在原位置编辑
@@ -48,3 +48,5 @@ https://yorkyao.xyz/
 11. 基于react-router的单页
 12. 后端代码使用async函数
 13. API有调用频率限制，在response header里有反映
+14. 无密码的设计，身份认证依靠邮箱和Github
+15. 开发环境生成的的html/js/css是无压缩的，引用的库也是未压缩的库，方便react调试；发布环境生成的的html/js/css是压缩了的，引用的库也是压缩了的库

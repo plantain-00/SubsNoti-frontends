@@ -212,7 +212,7 @@ let spec: Self = {
             case types.loginStatus.unknown:
                 loginView = (
                     <a href="javascript:void(0)">
-                        <span className="glyphicon glyphicon-user" style={{ top: 2 + "px" }}></span> &nbsp;
+                        <span className="glyphicon glyphicon-user head-icon"></span> &nbsp;
                         <span>Login now...</span>
                     </a>
                 );
@@ -220,18 +220,18 @@ let spec: Self = {
             case types.loginStatus.success:
                 loginView = (
                     <common.Link to="/user.html">
-                        <span className="glyphicon glyphicon-user" style={{ top: 2 + "px" }}></span> &nbsp;
+                        <span className="glyphicon glyphicon-user head-icon"></span> &nbsp;
                         <span>{self.state.currentUserName}</span>
-                        <span className="glyphicon glyphicon-envelope" style={{ top: 2 + "px" }}></span> &nbsp;
+                        <span className="glyphicon glyphicon-envelope head-icon"></span> &nbsp;
                         <span>{self.state.currentUserEmail}</span>
-                        <img src={self.state.currentAvatar} style={{ height: 20 + "px", width: 20 + "px" }}/>
+                        <img src={self.state.currentAvatar} className="head-avatar"/>
                     </common.Link>
                 );
                 break;
             case types.loginStatus.fail:
                 loginView = (
                     <common.Link to="/login.html">
-                        <span className="glyphicon glyphicon-user" style={{ top: 2 + "px" }}></span> &nbsp;Login
+                        <span className="glyphicon glyphicon-user head-icon"></span> &nbsp;Login
                     </common.Link>
                 );
                 break;
@@ -243,7 +243,7 @@ let spec: Self = {
             loginWithGithubView = (
                 <li>
                     <a href={apiBaseUrl + "/login_with_github"}>
-                        <span className="fa fa-github" style={{ top: 2 + "px" }}></span> &nbsp;Login with Github
+                        <span className="fa fa-github head-icon"></span> &nbsp;Login with Github
                     </a>
                 </li>
             );
@@ -251,8 +251,7 @@ let spec: Self = {
         let alertMessageView;
         if (self.state.showAlertMessage) {
             alertMessageView = (
-                <div className={ "alert alert-" + (self.state.alertIsSuccess ? "success" : "danger")} role="alert"
-                    style={{ position: "fixed", top: 60 + "px", left: 20 + "px", right: 20 + "px", zIndex: 1 }}>
+                <div className={ "head-alert alert alert-" + (self.state.alertIsSuccess ? "success" : "danger")} role="alert">
                     {self.state.alertMessage}
                 </div>
             );
@@ -260,8 +259,8 @@ let spec: Self = {
         let waitView;
         if (self.state.requestCount > 0) {
             waitView = (
-                <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, textAlign: "center", zIndex: 1 }}>
-                    <i className="fa fa-spinner fa-pulse fa-5x" style={{ marginTop: 200 + "px" }}></i>
+                <div className="head-wait">
+                    <i className="fa fa-spinner fa-pulse fa-5x"></i>
                 </div>
             );
         }

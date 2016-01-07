@@ -78,7 +78,7 @@ let spec: Self = {
                             last used: {application.lastUsed}
                         </p>
                     </td>
-                    <td style={{ width: 70 + "px" }}>
+                    <td className="authorized-application">
                         <button type="button" className="btn btn-danger" onClick={self.revoke.bind(this, application)}>Revoke</button>
                     </td>
                 </tr>
@@ -124,7 +124,7 @@ let spec: Self = {
         return (
             <div>
                 <HeadComponent/>
-                <div className="container" style={{ marginTop: 60 + "px" }}>
+                <div className="container body-container">
                     <div className="row">
                         <div className="panel panel-default">
                             <div className="panel-heading">

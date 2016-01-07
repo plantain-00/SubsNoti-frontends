@@ -182,7 +182,7 @@ let spec: Self = {
         let accessTokensView = self.state.accessTokens.map(accessToken => {
             let scopesView = accessToken.scopes.map(scope => {
                 return (
-                    <span key={scope.name} className="label label-success" style={{ marginLeft: 5 + "px", marginRight: 5 + "px" }}>
+                    <span key={scope.name} className="label label-success access-token-scope">
                         {scope.name}
                     </span>
                 );
@@ -266,7 +266,7 @@ let spec: Self = {
         return (
             <div>
                 <HeadComponent/>
-                <div className="container" style={{ marginTop: 60 + "px" }}>
+                <div className="container body-container">
                     <div className="row">
                         <div className="panel panel-default">
                             <div className="panel-heading">

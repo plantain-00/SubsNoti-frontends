@@ -168,7 +168,7 @@ let spec: Self = {
             captchaView = (
                 <div className="col-sm-2">
                     <img src={self.state.captchaUrl}/>
-                    <span className="glyphicon glyphicon-refresh" aria-hidden="true" style={{ cursor: "pointer" }} onClick={self.refreshCaptcha}></span>
+                    <span className="glyphicon glyphicon-refresh pointer" aria-hidden="true" onClick={self.refreshCaptcha}></span>
                 </div>
             );
         }
@@ -176,7 +176,7 @@ let spec: Self = {
         return (
             <div>
                 <HeadComponent/>
-                <div className="container" style={{ marginTop: 60 + "px" }}>
+                <div className="container body-container">
                     <div className="row">
                         <div className="panel panel-default">
                             <div className="panel-heading">

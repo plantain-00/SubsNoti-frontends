@@ -658,7 +658,7 @@ let spec: Self = {
             let aIndex = token.attrIndex("src");
 
             token.attrs[aIndex][1] = replaceProtocal(token.attrs[aIndex][1]);
-            token.attrPush(["style", "max-width: 100%;height: auto;display: block;margin: 6px 0;"]);
+            token.attrPush(["class", "theme-detail-image"]);
 
             return defaultImageRender(tokens, index, options, env, s);
         };
@@ -757,11 +757,11 @@ let spec: Self = {
                         });
                         if (theme.summaryDetail.image) {
                             imageView = (
-                                <img src={theme.summaryDetail.image} style={{ maxWidth: 180 + "px", maxHeight: 100 + "px" }} className="float-left"/>
+                                <img src={theme.summaryDetail.image} className="float-left theme-head-image"/>
                             );
                         }
                         themeDetailView = (
-                            <div onClick={self.expand.bind(this, theme)} style={{ cursor: "pointer" }} className="clearfix">
+                            <div onClick={self.expand.bind(this, theme)} className="clearfix pointer">
                                 {imageView}
                                 {textView}
                             </div>
@@ -844,7 +844,7 @@ let spec: Self = {
                     if (self.state.themeIdInEditing !== null) {
                         if (self.state.themeIdInEditing === theme.id) {
                             cancelButton = (
-                                <div style={{ display: "inline" }}>
+                                <div className="inline">
                                     •
                                     <button type="button" className="btn btn-xs btn-link"
                                         onClick={self.cancel.bind(this, theme)}>
@@ -854,7 +854,7 @@ let spec: Self = {
                             );
                             if (canSave && (self.state.titleInEditing !== theme.title || self.state.detailInEditing !== theme.detail)) {
                                 saveButton = (
-                                    <div style={{ display: "inline" }}>
+                                    <div className="inline">
                                         •
                                         <button type="button" className="btn btn-xs btn-link"
                                             onClick={self.save.bind(this, theme)}>
@@ -864,18 +864,18 @@ let spec: Self = {
                                 );
                             }
                             uploadButton = (
-                                <div style={{ display: "inline" }}>
+                                <div className="inline">
                                     •
-                                    <button type="button" className="btn btn-xs btn-link" style={{ position: "relative" }}>
-                                        upload image
-                                        <input type="file" accept="image/*" onChange={self.onImageUploaded} style={{ opacity: 0.0001, cursor: "pointer", position: "absolute", width: 80 + "px", top: 0 + "px" }}/>
+                                    <button type="button" className="btn btn-xs btn-link relative">
+                                        <span className="pointer">upload image</span>
+                                        <input type="file" accept="image/*" onChange={self.onImageUploaded} className="theme-image-chooser"/>
                                     </button>
                                 </div>
                             );
                         }
                     } else {
                         editButton = (
-                            <div style={{ display: "inline" }}>
+                            <div className="inline">
                                 •
                                 <button type="button" className="btn btn-xs btn-link"
                                     onClick={self.edit.bind(this, theme)}>
@@ -885,7 +885,7 @@ let spec: Self = {
                         );
                     }
                     ownerView = (
-                        <div style={{ display: "inline" }}>
+                        <div className="inline">
                             •
                             {openButton}
                             {editButton}
@@ -898,7 +898,7 @@ let spec: Self = {
                 let collapseButton;
                 if (theme.expanded) {
                     collapseButton = (
-                        <div style={{ display: "inline" }}>
+                        <div className="inline">
                             •
                             <button type="button" className="btn btn-xs btn-link"
                                 onClick={self.collapse.bind(this, theme)}>
@@ -908,7 +908,7 @@ let spec: Self = {
                     );
                 }
                 hoveringView = (
-                    <div style={{ display: "inline" }}>
+                    <div className="inline">
                         •
                         {watchButton}
                         {ownerView}
@@ -919,7 +919,7 @@ let spec: Self = {
 
             return (
                 <tr key={theme.id} onMouseEnter={self.mouseEnterTheme.bind(this, theme)} onMouseLeave={self.mouseLeaveTheme.bind(this, theme)}>
-                    <td style={{ width: 70 + "px" }}>
+                    <td className="theme-creator-avatar">
                         <img src={theme.creator.avatar} height="50" width="50"/>
                     </td>
                     <td>
@@ -929,7 +929,7 @@ let spec: Self = {
                         <div>
                             {themeDetailView}
                         </div>
-                        <div style={{ height: 22 + "px" }}>
+                        <div className="theme-buttons">
                             <button type="button" className="clip btn btn-xs btn-link" data-clipboard-text={theme.creator.email}>
                                 {theme.creator.name}
                             </button>
@@ -1056,7 +1056,7 @@ let spec: Self = {
         return (
             <div>
                 <HeadComponent/>
-                <div className="container" style={{ marginTop: 60 + "px" }}>
+                <div className="container body-container">
                     <div className="row">
                         <div className="panel panel-default">
                             <div className="panel-heading">

@@ -34,7 +34,7 @@ let spec: Self = {
             );
         }
         return (
-            <div className="container" style={{ marginTop: 60 + "px" }}>
+            <div className="container body-container">
                 <div className="row">
                     <div className="panel panel-default">
                         <div className="panel-body">

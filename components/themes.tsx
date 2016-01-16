@@ -731,7 +731,7 @@ let spec: Self = {
                 themeTitleView = (
                     <span>
                         {theme.title}
-                        <span className={ "label label-" + (theme.status === types.themeStatus.open ? "success" : "danger") }>{theme.status}</span>
+                        <span className={ "theme-title-status label label-" + (theme.status === types.themeStatus.open ? "success" : "danger") }>{theme.status}</span>
                     </span>
                 );
                 if (theme.detail) {
@@ -973,7 +973,7 @@ let spec: Self = {
             }
 
             let showCreateView = (
-                <span className={ "btn btn-primary glyphicon glyphicon-" + (self.state.showCreate ? "minus" : "plus") } aria-hidden="true" onClick={self.clickShowCreate}></span>
+                <span className={ "theme-add btn btn-primary glyphicon glyphicon-" + (self.state.showCreate ? "minus" : "plus") } aria-hidden="true" onClick={self.clickShowCreate}></span>
             );
 
             let newThemeTitleView;

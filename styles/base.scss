@@ -13,7 +13,7 @@ $background-color: #fff;
     color: $border-and-word-color;
     cursor: pointer;
     display: inline-block;
-    margin: 3px 0;
+    margin: 2px 3px;
     padding: 5px 10px;
     user-select: none;
 }
@@ -124,4 +124,12 @@ $background-color: #fff;
     i {
         margin-top: 200px;
     }
+}
+
+.theme-title-status {
+    margin-left: 3px;
+}
+
+.theme-add {
+    margin-left: 3px;
 }

@@ -4,8 +4,8 @@
 
 # tools and global npm packages
 
-+ node.js >=4.0(for ES6 support)
-+ typescript@next(for ES6 and ES7 async function support)
++ node.js >=4.0
++ typescript@next
 + gulp
 + scss-lint
 

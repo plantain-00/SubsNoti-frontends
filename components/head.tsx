@@ -163,42 +163,33 @@ let spec: Self = {
     render: function() {
         let self: Self = this;
 
-        let createOrganizationView;
-        if (self.state.createdOrganizationCount < common.maxOrganizationNumberUserCanCreate) {
-            createOrganizationView = (
-                <li>
-                    <common.Link to="/new_organization.html">New Organization</common.Link>
-                </li>
-            );
-        }
-        let inviteView;
-        if (self.state.joinedOrganizationCount > 0) {
-            inviteView = (
-                <li>
-                    <common.Link to="/invite.html">Invite</common.Link>
-                </li>
-            );
-        }
-        let registeredView;
-        let authorizedView;
-        let sccessTokenView;
+        let createOrganizationView = (
+            <li>
+                <common.Link to="/new_organization.html">New Organization</common.Link>
+            </li>
+        );
+        let inviteView = (
+            <li>
+                <common.Link to="/invite.html">Invite</common.Link>
+            </li>
+        );
+        let registeredView = (
+            <li>
+                <common.Link to="/registered.html">Registered</common.Link>
+            </li>
+        );
+        let authorizedView = (
+            <li>
+                <common.Link to="/authorized.html">Authorized</common.Link>
+            </li>
+        );
+        let sccessTokenView = (
+            <li>
+                <common.Link to="/access_tokens.html">Access tokens</common.Link>
+            </li>
+        );
         let logoutView;
         if (self.state.loginStatus === types.loginStatus.success) {
-            registeredView = (
-                <li>
-                    <common.Link to="/registered.html">Registered</common.Link>
-                </li>
-            );
-            authorizedView = (
-                <li>
-                    <common.Link to="/authorized.html">Authorized</common.Link>
-                </li>
-            );
-            sccessTokenView = (
-                <li>
-                    <common.Link to="/access_tokens.html">Access tokens</common.Link>
-                </li>
-            );
             logoutView = (
                 <li>
                     <a href="javascript:void(0)" onClick={self.exit}>

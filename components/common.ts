@@ -34,8 +34,8 @@ export const localStorageNames = {
     lastLoginName: "lastLoginName",
 };
 
-export let itemLimit = 10;
-export let maxOrganizationNumberUserCanCreate = 3;
+export const itemLimit = 10;
+export const maxOrganizationNumberUserCanCreate = 3;
 
 export function getFullUrl(avatar: string): string {
     return `${imageServerBaseUrl}/${avatar}`;

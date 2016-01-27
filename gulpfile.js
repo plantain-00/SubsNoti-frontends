@@ -1,27 +1,27 @@
 "use strict";
 
-let gulp = require("gulp");
-let rename = require("gulp-rename");
-let ejs = require("gulp-ejs");
-let webpack = require("webpack-stream");
-let minifyHtml = require("gulp-minify-html");
-let rev = require("gulp-rev");
-let minifyCSS = require("gulp-minify-css");
-let autoprefixer = require("autoprefixer");
-let postcss = require("gulp-postcss");
-let revReplace = require("gulp-rev-replace");
-let shell = require("gulp-shell");
-let tslint = require("gulp-tslint");
-let liveServer = require("live-server");
+const gulp = require("gulp");
+const rename = require("gulp-rename");
+const ejs = require("gulp-ejs");
+const webpack = require("webpack-stream");
+const minifyHtml = require("gulp-minify-html");
+const rev = require("gulp-rev");
+const minifyCSS = require("gulp-minify-css");
+const autoprefixer = require("autoprefixer");
+const postcss = require("gulp-postcss");
+const revReplace = require("gulp-rev-replace");
+const shell = require("gulp-shell");
+const tslint = require("gulp-tslint");
+const liveServer = require("live-server");
 
-let pjson = require("./package.json");
+const pjson = require("./package.json");
 
-let minifyHtmlConfig = {
+const minifyHtmlConfig = {
     conditionals: true,
     spare: true,
 };
 
-let command = "rm -rf build && tsc -p components --pretty && sass styles/base.scss > build/base.css && scss-lint styles/*.scss";
+const command = "rm -rf build && tsc -p components --pretty && sass styles/base.scss > build/base.css && scss-lint styles/*.scss";
 
 gulp.task("build", shell.task(`rm -rf dest && ${command} && gulp html-dev && rm -rf build`));
 
@@ -98,7 +98,7 @@ function uglifyCss(name, isDevelopment) {
     }
 }
 
-let webpackexternals = {
+const webpackexternals = {
     "react": "React",
     "react-dom": "ReactDOM",
     "history": "History",
@@ -144,7 +144,7 @@ function mapJs() {
 }
 
 function bundleAndUglifyHtml(name, isDevelopment) {
-    let manifest = gulp.src("build/rev-manifest.json");
+    const manifest = gulp.src("build/rev-manifest.json");
     let config = {
         dotMin: ".min",
         version: pjson.version,

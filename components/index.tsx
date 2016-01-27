@@ -4,10 +4,10 @@ import * as types from "../share/types";
 import * as common from "./common";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-let History = require("history");
-let Clipboard = require("clipboard");
+const History = require("history");
+const Clipboard = require("clipboard");
 
-let history = History.createHistory();
+const history = History.createHistory();
 
 import {SuccessComponent} from "./success";
 import {ErrorComponent} from "./error";

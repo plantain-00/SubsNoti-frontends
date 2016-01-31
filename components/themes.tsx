@@ -95,7 +95,7 @@ interface LinkTag {
 
 interface Summary {
     image: string;
-    text: (LinkTag | string) [];
+    text: (LinkTag | string)[];
 }
 
 function replaceProtocal(src: string) {
@@ -113,9 +113,9 @@ function extractSummary(markdown: string): Summary {
         type: string;
         attrs: string[][];
     }
-    let tokens: Token[] = md.parse(markdown, {});
+    const tokens: Token[] = md.parse(markdown, {});
     let image = undefined;
-    let text: (LinkTag | string) [] = [];
+    const text: (LinkTag | string)[] = [];
     const maxSize = 80;
     let size = 0;
 
@@ -136,7 +136,7 @@ function extractSummary(markdown: string): Summary {
         }
     }
 
-    for (let token of tokens) {
+    for (const token of tokens) {
         if (size >= maxSize) {
             break;
         }
@@ -145,7 +145,7 @@ function extractSummary(markdown: string): Summary {
                 && token.children[0].tag === "a"
                 && token.children[0].attrs && token.children[0].attrs.length > 0
                 && token.children[0].attrs[0].length > 1) {
-                let content = limitSize(token.children[1].content);
+                const content = limitSize(token.children[1].content);
                 text.push({
                     content: content,
                     href: token.children[0].attrs[0][1],
@@ -171,9 +171,9 @@ function extractSummary(markdown: string): Summary {
     };
 }
 
-let spec: Self = {
+const spec: Self = {
     getOrganizationsCurrentUserIn: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         $.ajax({
             url: apiBaseUrl + "/api/user/joined",
@@ -182,7 +182,7 @@ let spec: Self = {
             if (data.isSuccess) {
                 self.setState({ organizationsCurrentUserIn: data.organizations });
                 if (data.organizations.length > 0) {
-                    let lastOrganizationId = window.localStorage.getItem(common.localStorageNames.lastOrganizationId);
+                    const lastOrganizationId = window.localStorage.getItem(common.localStorageNames.lastOrganizationId);
                     if (lastOrganizationId && common.find(data.organizations, o => o.id === lastOrganizationId)) {
                         self.setState({ currentOrganizationId: lastOrganizationId });
                     } else {
@@ -202,7 +202,7 @@ let spec: Self = {
         return users.reduce((r, u) => r + u.email + ";", "");
     },
     fetchThemes: function(page: number, organizationId?: string) {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({ currentPage: page });
 
@@ -219,17 +219,17 @@ let spec: Self = {
             cache: false,
         }).then((data: types.ThemesResponse) => {
             if (data.isSuccess) {
-                for (let theme of data.themes) {
+                for (const theme of data.themes) {
                     self.initTheme(theme);
                 }
                 if (page === 1) {
                     self.setState({
-                        themes : data.themes,
+                        themes: data.themes,
                         totalCount: data.totalCount,
                     });
                 } else {
                     self.setState({
-                        themes : self.state.themes.concat(data.themes),
+                        themes: self.state.themes.concat(data.themes),
                         totalCount: data.totalCount,
                     });
                 }
@@ -239,7 +239,7 @@ let spec: Self = {
         });
     },
     initTheme: function(theme: Theme) {
-        let self: Self = this;
+        const self: Self = this;
 
         theme.isWatching = theme.watchers.some(w => w.id === global.head.state.currentUserId);
         theme.isOwner = theme.owners.some(o => o.id === global.head.state.currentUserId);
@@ -255,11 +255,11 @@ let spec: Self = {
         theme.ownersEmails = self.getEmails(theme.owners);
         theme.creator.avatar = common.getFullUrl(theme.creator.avatar);
 
-        for (let watcher of theme.watchers) {
+        for (const watcher of theme.watchers) {
             watcher.avatar = common.getFullUrl(watcher.avatar);
         }
 
-        for (let owner of theme.owners) {
+        for (const owner of theme.owners) {
             owner.avatar = common.getFullUrl(owner.avatar);
         }
 
@@ -268,7 +268,7 @@ let spec: Self = {
         }
     },
     clickOrganization: function(organization: types.Organization) {
-        let self: Self = this;
+        const self: Self = this;
 
         if (self.state.currentOrganizationId !== organization.id) {
             changeOrganization(organization.id);
@@ -280,7 +280,7 @@ let spec: Self = {
         window.localStorage.setItem(common.localStorageNames.lastOrganizationId, organization.id);
     },
     createTheme: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         $.post(apiBaseUrl + "/api/themes", {
             themeTitle: self.state.newThemeTitle,
@@ -295,9 +295,9 @@ let spec: Self = {
         });
     },
     setThemeTimeText: function() {
-        let self: Self = this;
+        const self: Self = this;
 
-        for (let theme of self.state.themes) {
+        for (const theme of self.state.themes) {
             theme.createTimeText = moment(theme.createTime, moment.ISO_8601).fromNow();
             if (theme.updateTime) {
                 theme.updateTimeText = moment(theme.updateTime, moment.ISO_8601).fromNow();
@@ -332,7 +332,7 @@ let spec: Self = {
         });
     },
     showMoreThemes: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         self.fetchThemes(self.state.currentPage + 1);
     },
@@ -369,9 +369,9 @@ let spec: Self = {
         });
     },
     edit: function(theme: Theme) {
-        let self: Self = this;
+        const self: Self = this;
 
-        let themes = self.state.themes;
+        const themes = self.state.themes;
         global.win.scrollTop(theme.scrollTop);
         self.setState({
             themeIdInEditing: theme.id,
@@ -381,9 +381,9 @@ let spec: Self = {
         });
     },
     cancel: function(theme: Theme) {
-        let self: Self = this;
+        const self: Self = this;
 
-        let themes = self.state.themes;
+        const themes = self.state.themes;
         global.win.scrollTop(theme.scrollTop);
         self.setState({
             themeIdInEditing: null,
@@ -393,7 +393,7 @@ let spec: Self = {
         });
     },
     save: function(theme: Theme) {
-        let self: Self = this;
+        const self: Self = this;
 
         $.ajax({
             url: apiBaseUrl + "/api/themes/" + theme.id,
@@ -416,90 +416,90 @@ let spec: Self = {
         });
     },
     clickOpen: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({ isOpen: !self.state.isOpen });
     },
     clickClosed: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({ isClosed: !self.state.isClosed });
     },
     clickShowCreate: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({ showCreate: !self.state.showCreate });
     },
     clickOrder: function(order: types.ThemeOrder) {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({ order: order });
     },
     nextThemeCount: function() {
-        let self: Self = this;
+        const self: Self = this;
 
-        let count = self.state.totalCount - common.itemLimit * self.state.currentPage;
+        const count = self.state.totalCount - common.itemLimit * self.state.currentPage;
         return count > common.itemLimit ? common.itemLimit : count;
     },
     canShowMoreThemes: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         return self.nextThemeCount() > 0 && self.state.requestCount === 0;
     },
     mouseEnterTheme: function(theme: Theme) {
-        let self: Self = this;
+        const self: Self = this;
 
-        let themes = self.state.themes;
+        const themes = self.state.themes;
         theme.isHovering = true;
         self.setState({ themes: themes });
     },
     mouseLeaveTheme: function(theme: Theme) {
-        let self: Self = this;
+        const self: Self = this;
 
-        let themes = self.state.themes;
+        const themes = self.state.themes;
         theme.isHovering = false;
         self.setState({ themes: themes });
     },
     newThemeTitleChanged: function(e) {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({ newThemeTitle: e.target.value });
     },
     newThemeDetailChanged: function(e) {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({ newThemeDetail: e.target.value });
     },
     qChanged: function(e) {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({ q: e.target.value });
     },
     titleInEditingChanged: function(e) {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({ titleInEditing: e.target.value });
     },
     detailInEditingChanged: function(e) {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({ detailInEditing: e.target.value });
     },
     qKeyUp: function(e) {
-        let self: Self = this;
+        const self: Self = this;
 
         if (e.keyCode === 13) {
             self.fetchThemes(1);
         }
     },
     onDragEnter: function(e) {
-        let file = e.dataTransfer.files[0];
+        const file = e.dataTransfer.files[0];
         if (file) {
             e.preventDefault();
         }
     },
     onDragOver: function(e) {
-        let file = e.dataTransfer.files[0];
+        const file = e.dataTransfer.files[0];
         if (file) {
             e.preventDefault();
             e.stopPropagation();
@@ -507,50 +507,48 @@ let spec: Self = {
         }
     },
     onDragLeave: function(e) {
-        let file = e.dataTransfer.files[0];
+        const file = e.dataTransfer.files[0];
         if (file) {
             e.preventDefault();
         }
     },
     onDrop: function(e) {
-        let self: Self = this;
+        const self: Self = this;
 
-        let file = e.dataTransfer.files[0];
+        const file = e.dataTransfer.files[0];
         if (file) {
             e.preventDefault();
             self.uploadImage(file, e.target.selectionStart);
         }
     },
     onPaste: function(e) {
-        let self: Self = this;
+        const self: Self = this;
 
-        let items = (e.clipboardData  || e.originalEvent.clipboardData).items;
+        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
         if (items.length > 0) {
-            let file;
-            for (let item of items) {
+            for (const item of items) {
                 if (item.type.indexOf("image") === 0) {
-                    file = item.getAsFile();
+                    const file = item.getAsFile();
+                    e.preventDefault();
+                    self.uploadImage(file, e.target.selectionStart);
+                    break;
                 }
-            }
-            if (file) {
-                e.preventDefault();
-                self.uploadImage(file, e.target.selectionStart);
             }
         }
     },
     onImageUploaded: function(e) {
-        let self: Self = this;
+        const self: Self = this;
 
-        let file = e.target.files[0];
+        const file = e.target.files[0];
         if (file) {
             e.preventDefault();
             self.uploadImage(file);
         }
     },
     uploadImage: function(file, index?: number) {
-        let self: Self = this;
+        const self: Self = this;
 
-        let formData = new FormData();
+        const formData = new FormData();
         formData.append("file", file);
 
         $.ajax({
@@ -561,8 +559,8 @@ let spec: Self = {
             type: "POST",
         }).then((data: types.TemperaryResponse) => {
             if (data.isSuccess) {
-                let name = data.names[0];
-                let names = self.state.imageNamesInEditing;
+                const name = data.names[0];
+                const names = self.state.imageNamesInEditing;
                 names.push(name);
                 self.setState({ imageNamesInEditing: names });
                 let head;
@@ -574,7 +572,7 @@ let spec: Self = {
                     head = self.state.detailInEditing;
                     tail = "";
                 }
-                let result = `${head}![](${imageServerBaseUrl}/${name})${tail}`;
+                const result = `${head}![](${imageServerBaseUrl}/${name})${tail}`;
                 self.setState({ detailInEditing: result });
             } else {
                 global.head.showAlert(false, data.errorMessage);
@@ -582,23 +580,23 @@ let spec: Self = {
         });
     },
     expand: function(theme: Theme) {
-        let self: Self = this;
+        const self: Self = this;
 
-        let themes = self.state.themes;
+        const themes = self.state.themes;
         theme.expanded = true;
         theme.scrollTop = global.win.scrollTop();
         self.setState({ themes: themes });
     },
     collapse: function(theme: Theme) {
-        let self: Self = this;
+        const self: Self = this;
 
-        let themes = self.state.themes;
+        const themes = self.state.themes;
         theme.expanded = false;
         global.win.scrollTop(theme.scrollTop);
         self.setState({ themes: themes });
     },
     componentDidMount: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         global.body = self;
         self.getOrganizationsCurrentUserIn();
@@ -613,10 +611,10 @@ let spec: Self = {
 
         global.themeUpdated = (theme: Theme) => {
             if (theme.organizationId === self.state.currentOrganizationId) {
-                let index = common.findIndex(self.state.themes, t => t.id === theme.id);
+                const index = common.findIndex(self.state.themes, t => t.id === theme.id);
                 if (index > -1) {
                     self.initTheme(theme);
-                    let themes = self.state.themes;
+                    const themes = self.state.themes;
                     theme.expanded = themes[index].expanded;
                     theme.scrollTop = themes[index].scrollTop;
                     themes[index] = theme;
@@ -652,10 +650,10 @@ let spec: Self = {
             },
         });
 
-        let defaultImageRender = md.renderer.rules.image;
-        md.renderer.rules.image = function (tokens, index, options, env, s) {
-            let token = tokens[index];
-            let aIndex = token.attrIndex("src");
+        const defaultImageRender = md.renderer.rules.image;
+        md.renderer.rules.image = function(tokens, index, options, env, s) {
+            const token = tokens[index];
+            const aIndex = token.attrIndex("src");
 
             token.attrs[aIndex][1] = replaceProtocal(token.attrs[aIndex][1]);
             token.attrPush(["class", "theme-detail-image"]);
@@ -663,11 +661,11 @@ let spec: Self = {
             return defaultImageRender(tokens, index, options, env, s);
         };
 
-        let defaultLinkRender = md.renderer.rules.link_open || function(tokens, index, options, env, s) {
+        const defaultLinkRender = md.renderer.rules.link_open || function(tokens, index, options, env, s) {
             return s.renderToken(tokens, index, options);
         };
-        md.renderer.rules.link_open = function (tokens, index, options, env, s) {
-            let aIndex = tokens[index].attrIndex("target");
+        md.renderer.rules.link_open = function(tokens, index, options, env, s) {
+            const aIndex = tokens[index].attrIndex("target");
             tokens[index].attrPush(["target", "_blank"]);
             tokens[index].attrPush(["rel", "nofollow"]);
             return defaultLinkRender(tokens, index, options, env, s);
@@ -705,26 +703,26 @@ let spec: Self = {
         } as State;
     },
     render: function() {
-        let self: Self = this;
+        const self: Self = this;
 
-        let canSave = self.state.titleInEditing.trim() && self.state.requestCount === 0;
+        const canSave = self.state.titleInEditing.trim() && self.state.requestCount === 0;
 
         let showMoreThemesView;
         if (self.canShowMoreThemes()) {
             showMoreThemesView = (
                 <button type="button" className="btn btn-primary btn-lg col-sm-12" onClick={self.showMoreThemes}>
-                    show {self.nextThemeCount()} more {self.nextThemeCount() > 1 ? "themes" : "theme"}(total {self.state.totalCount})
-                </button>
+                    show {self.nextThemeCount() } more {self.nextThemeCount() > 1 ? "themes" : "theme"}(total {self.state.totalCount})
+                    </button>
             );
         } else {
             showMoreThemesView = (
                 <button type="button" className="btn btn-primary btn-lg col-sm-12" disabled>
                     total {self.state.totalCount}
-                </button>
+                    </button>
             );
         }
 
-        let themesView = self.state.themes.map(theme => {
+        const themesView = self.state.themes.map(theme => {
             let themeTitleView;
             let themeDetailView;
             if (self.state.themeIdInEditing !== theme.id) {
@@ -732,7 +730,7 @@ let spec: Self = {
                     <span>
                         {theme.title}
                         <span className={ "theme-title-status label label-" + (theme.status === types.themeStatus.open ? "success" : "danger") }>{theme.status}</span>
-                    </span>
+                        </span>
                 );
                 if (theme.detail) {
                     if (theme.expanded) {
@@ -744,7 +742,7 @@ let spec: Self = {
                         );
                     } else {
                         let imageView;
-                        let textView = theme.summaryDetail.text.map((t, i) => {
+                        const textView = theme.summaryDetail.text.map((t, i) => {
                             if (typeof t === "string") {
                                 return (
                                     <span key={i}>{t}</span>
@@ -761,10 +759,10 @@ let spec: Self = {
                             );
                         }
                         themeDetailView = (
-                            <div onClick={self.expand.bind(this, theme)} className="clearfix pointer">
+                            <div onClick={self.expand.bind(this, theme) } className="clearfix pointer">
                                 {imageView}
                                 {textView}
-                            </div>
+                                </div>
                         );
                     }
                 }
@@ -782,7 +780,7 @@ let spec: Self = {
                 ownersView = (
                     <button type="button" className="clip btn btn-xs btn-link" data-clipboard-text={theme.ownersEmails}>
                         {theme.owners.length} {theme.owners.length > 1 ? "owners" : "owner"}
-                    </button>
+                        </button>
                 );
             } else {
                 ownersView = (
@@ -795,7 +793,7 @@ let spec: Self = {
                 watchersView = (
                     <button type="button" className="clip btn btn-xs btn-link" data-clipboard-text={theme.watchersEmails}>
                         {theme.watchers.length} {theme.watchers.length > 1 ? "watchers" : "watcher"}
-                    </button>
+                        </button>
                 );
             } else {
                 watchersView = (
@@ -806,15 +804,15 @@ let spec: Self = {
             let watchButton;
             if (theme.isWatching) {
                 watchButton = (
-                    <button type="button" className="btn btn-xs btn-link" onClick={self.unwatch.bind(this, theme)}>
+                    <button type="button" className="btn btn-xs btn-link" onClick={self.unwatch.bind(this, theme) }>
                         unwatch
-                    </button>
+                        </button>
                 );
             } else {
                 watchButton = (
-                    <button type="button" className="btn btn-xs btn-link" onClick={self.watch.bind(this, theme)}>
+                    <button type="button" className="btn btn-xs btn-link" onClick={self.watch.bind(this, theme) }>
                         watch
-                    </button>
+                        </button>
                 );
             }
 
@@ -825,15 +823,15 @@ let spec: Self = {
                     let openButton;
                     if (theme.status === "open") {
                         openButton = (
-                            <button type="button" className="btn btn-xs btn-link" onClick={self.close.bind(this, theme)}>
+                            <button type="button" className="btn btn-xs btn-link" onClick={self.close.bind(this, theme) }>
                                 close
-                            </button>
+                                </button>
                         );
                     } else {
                         openButton = (
-                            <button type="button" className="btn btn-xs btn-link" onClick={self.reopen.bind(this, theme)}>
+                            <button type="button" className="btn btn-xs btn-link" onClick={self.reopen.bind(this, theme) }>
                                 reopen
-                            </button>
+                                </button>
                         );
                     }
 
@@ -950,7 +948,7 @@ let spec: Self = {
             );
         });
 
-        let organizationsView = self.state.organizationsCurrentUserIn.map(organization => {
+        const organizationsView = self.state.organizationsCurrentUserIn.map(organization => {
             return (
                 <label key={organization.id} className={ "the-label " + (self.state.currentOrganizationId === organization.id ? "label-active" : "") }
                     onClick={self.clickOrganization.bind(this, organization)}>
@@ -972,7 +970,7 @@ let spec: Self = {
                 );
             }
 
-            let showCreateView = (
+            const showCreateView = (
                 <span className={ "theme-add btn btn-primary glyphicon glyphicon-" + (self.state.showCreate ? "minus" : "plus") } aria-hidden="true" onClick={self.clickShowCreate}></span>
             );
 
@@ -1073,4 +1071,4 @@ let spec: Self = {
     },
 };
 
-export let ThemesComponent = React.createClass(spec);
+export const ThemesComponent = React.createClass(spec);

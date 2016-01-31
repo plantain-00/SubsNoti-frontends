@@ -25,15 +25,15 @@ interface Self extends types.Self<State> {
     codeChanged: (e) => void;
 }
 
-let guid = common.guid();
+const guid = common.guid();
 
-let spec: Self = {
+const spec: Self = {
     login: function() {
-        let self: Self = this;
+        const self: Self = this;
 
-        let lastSuccessfulEmailTime: string = window.localStorage.getItem(common.localStorageNames.lastSuccessfulEmailTime);
+        const lastSuccessfulEmailTime: string = window.localStorage.getItem(common.localStorageNames.lastSuccessfulEmailTime);
         if (lastSuccessfulEmailTime) {
-            let time = new Date().getTime() - parseInt(lastSuccessfulEmailTime, 10);
+            const time = new Date().getTime() - parseInt(lastSuccessfulEmailTime, 10);
             if (time < 60 * 1000) {
                 global.head.showAlert(false, "please do it after " + (60 - time / 1000) + " seconds");
                 return;
@@ -57,7 +57,7 @@ let spec: Self = {
         });
     },
     refreshCaptcha: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         $.post(apiBaseUrl + "/api/captchas", {
             id: guid
@@ -70,7 +70,7 @@ let spec: Self = {
         });
     },
     getName: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         if (self.state.innerName) {
             return self.state.innerName;
@@ -78,10 +78,10 @@ let spec: Self = {
         return self.state.emailHead;
     },
     setRawEmail: function(email: string) {
-        let self: Self = this;
+        const self: Self = this;
 
         if (common.isEmail(email)) {
-            let tmp = email.trim().toLowerCase().split("@");
+            const tmp = email.trim().toLowerCase().split("@");
             self.setState({
                 emailHead: tmp[0],
                 emailTail: tmp[1],
@@ -96,18 +96,18 @@ let spec: Self = {
         }
     },
     rawEmailChanged: function(e) {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setRawEmail(e.target.value);
     },
     nameChanged: function(e) {
-        let self: Self = this;
+        const self: Self = this;
 
-        let name: string = e.target.value;
+        const name: string = e.target.value;
         self.setState({ innerName: name.trim() });
     },
     codeChanged: function(e) {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({ code: e.target.value });
     },
@@ -116,7 +116,7 @@ let spec: Self = {
         global.body = undefined;
     },
     getInitialState: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         global.body = self;
         global.authenticated = error => {
@@ -146,7 +146,7 @@ let spec: Self = {
         } as State;
     },
     render: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         let loginView;
         if (self.state.emailHead && self.state.emailTail && self.state.code && self.state.requestCount === 0) {
@@ -218,4 +218,4 @@ let spec: Self = {
     },
 };
 
-export let LoginComponent = React.createClass(spec);
+export const LoginComponent = React.createClass(spec);

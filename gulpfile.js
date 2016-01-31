@@ -145,7 +145,7 @@ function mapJs() {
 
 function bundleAndUglifyHtml(name, isDevelopment) {
     const manifest = gulp.src("build/rev-manifest.json");
-    let config = {
+    const config = {
         dotMin: ".min",
         version: pjson.version,
         environment: "",

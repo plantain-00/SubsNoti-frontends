@@ -1,8 +1,8 @@
 /// <reference path="./common.d.ts" />
 
 export function getUrlParameter(name: string): string {
-    let reg: RegExp = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-    let array: RegExpMatchArray = window.location.search.substr(1).match(reg);
+    const reg: RegExp = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    const array: RegExpMatchArray = window.location.search.substr(1).match(reg);
     if (array && array.length >= 3) {
         return decodeURI(array[2]);
     }
@@ -42,7 +42,7 @@ export function getFullUrl(avatar: string): string {
 }
 
 export function find<T>(array: T[], predicate: (t: T) => boolean) {
-    for (let a of array) {
+    for (const a of array) {
         if (predicate(a)) {
             return a;
         }
@@ -59,4 +59,4 @@ export function findIndex<T>(array: T[], predicate: (t: T) => boolean) {
     return -1;
 }
 
-export let {match, RoutingContext, Route, Router, Link} = require("react-router");
+export const {match, RoutingContext, Route, Router, Link} = require("react-router");

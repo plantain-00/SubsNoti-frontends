@@ -13,9 +13,36 @@ interface Self extends types.Self<State> {
     organizationNameChanged: (e) => void;
 }
 
-let spec: Self = {
+function add() {
+    const self: Self = this;
+
+    $.post(apiBaseUrl + "/api/organizations", {
+        organizationName: self.state.organizationName
+    }).then((data: types.Response) => {
+        if (data.isSuccess) {
+            global.head.setState({ createdOrganizationCount: global.head.state.createdOrganizationCount + 1 });
+            global.head.showAlert(true, "success");
+        } else {
+            global.head.showAlert(false, data.errorMessage);
+        }
+    });
+}
+
+const AddView = ({organizationName}) => {
+    if (organizationName.trim()) {
+        return (
+            <button type="button" className="btn btn-primary" onClick={add}>Add</button>
+        );
+    } else {
+        return (
+            <button type="button" className="btn btn-primary" disabled>Please input organization name</button>
+        );
+    }
+};
+
+const spec: Self = {
     add: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         $.post(apiBaseUrl + "/api/organizations", {
             organizationName: self.state.organizationName
@@ -29,7 +56,7 @@ let spec: Self = {
         });
     },
     organizationNameChanged: function(e) {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({ organizationName: e.target.value });
     },
@@ -39,7 +66,7 @@ let spec: Self = {
         } as State;
     },
     render: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         let addView;
         if (self.state.organizationName.trim()) {
@@ -63,7 +90,7 @@ let spec: Self = {
                             <div className="panel-body">
                                 <form className="form-horizontal">
                                     <div className="form-group">
-                                        <label className="col-sm-2 control-label">organization name:</label>
+                                        <label className="col-sm-2 control-label">organization name: </label>
 
                                         <div className="col-sm-4">
                                             <input type="text" className="form-control" value={self.state.organizationName} onChange={self.organizationNameChanged}/>
@@ -83,4 +110,4 @@ let spec: Self = {
     },
 };
 
-export let NewOrganizationComponent = React.createClass(spec);
+export const NewOrganizationComponent = React.createClass(spec);

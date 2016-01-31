@@ -14,13 +14,13 @@ interface Self extends types.Self<State> {
     nameChanged: (e) => void;
 }
 
-let spec: Self = {
+const spec: Self = {
     save: function() {
-        let self: Self = this;
+        const self: Self = this;
 
-        let file = $(":file")[0]["files"][0];
+        const file = $(":file")[0]["files"][0];
         if (file) {
-            let formData = new FormData();
+            const formData = new FormData();
             formData.append("file", file);
 
             $.ajax({
@@ -31,7 +31,7 @@ let spec: Self = {
                 type: "POST",
             }).then((data: types.TemperaryResponse) => {
                 if (data.isSuccess) {
-                    let name = data.names[0];
+                    const name = data.names[0];
 
                     self.update(name);
                 } else {
@@ -43,7 +43,7 @@ let spec: Self = {
         }
     },
     update: function(avatarFileName: string) {
-        let self: Self = this;
+        const self: Self = this;
 
         if (self.state.name.trim() !== global.head.state.currentUserName || avatarFileName) {
             $.ajax({
@@ -69,7 +69,7 @@ let spec: Self = {
         }
     },
     nameChanged: function(e) {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({ name: e.target.value });
     },
@@ -77,7 +77,7 @@ let spec: Self = {
         global.authenticated = undefined;
     },
     getInitialState: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         global.authenticated = error => {
             if (error) {
@@ -90,7 +90,7 @@ let spec: Self = {
         } as State;
     },
     render: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         let saveView;
         if (self.state.name.trim() !== "") {
@@ -138,4 +138,4 @@ let spec: Self = {
     },
 };
 
-export let UserComponent = React.createClass(spec);
+export const UserComponent = React.createClass(spec);

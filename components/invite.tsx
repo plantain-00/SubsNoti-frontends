@@ -18,9 +18,9 @@ interface Self extends types.Self<State> {
     emailChanged: (e) => void;
 }
 
-let spec: Self = {
+const spec: Self = {
     getOrganizationsCurrentUserCreated: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         $.ajax({
             url: apiBaseUrl + "/api/user/created",
@@ -29,7 +29,7 @@ let spec: Self = {
             if (data.isSuccess) {
                 self.setState({ organizationsCurrentUserCreated: data.organizations });
                 if (data.organizations.length > 0) {
-                    let lastOrganizationId = window.localStorage.getItem(common.localStorageNames.lastOrganizationId);
+                    const lastOrganizationId = window.localStorage.getItem(common.localStorageNames.lastOrganizationId);
                     if (lastOrganizationId && common.find(data.organizations, o => o.id === lastOrganizationId)) {
                         self.setState({ currentOrganizationId: lastOrganizationId });
                     } else {
@@ -42,7 +42,7 @@ let spec: Self = {
         });
     },
     invite: function(e) {
-        let self: Self = this;
+        const self: Self = this;
 
         $.ajax({
             url: apiBaseUrl + "/api/users/" + self.state.email + "/joined/" + self.state.currentOrganizationId,
@@ -58,19 +58,19 @@ let spec: Self = {
         });
     },
     clickOrganization: function(organization: types.Organization) {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({ currentOrganizationId: organization.id });
 
         window.localStorage.setItem(common.localStorageNames.lastOrganizationId, organization.id);
     },
     emailChanged: function(e) {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({ email: e.target.value });
     },
     componentDidMount: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         global.body = self;
         self.getOrganizationsCurrentUserCreated();
@@ -87,7 +87,7 @@ let spec: Self = {
         } as State;
     },
     render: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         let inviteView;
         if (common.isEmail(self.state.email.trim()) && self.state.requestCount === 0) {
@@ -99,7 +99,7 @@ let spec: Self = {
                 <button type="button" className="btn btn-primary" disabled>Please input invitee's email</button>
             );
         }
-        let organizationsView = self.state.organizationsCurrentUserCreated.map(organization => {
+        const organizationsView = self.state.organizationsCurrentUserCreated.map(organization => {
             return (
                 <label className={ "the-label " + (self.state.currentOrganizationId === organization.id ? "label-active" : "") } key={organization.id} onClick={self.clickOrganization.bind(this, organization)}>
                     {organization.name}
@@ -146,4 +146,4 @@ let spec: Self = {
     },
 };
 
-export let InviteComponent = React.createClass(spec);
+export const InviteComponent = React.createClass(spec);

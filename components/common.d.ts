@@ -1,9 +1,9 @@
 /// <reference path="../typings/tsd.d.ts" />
 
-declare let version: string;
-declare let imageServerBaseUrl: string;
-declare let imageUploaderBaseUrl: string;
-declare let apiBaseUrl: string;
-declare let socket;
-declare let markdownit;
-declare let hljs;
+declare const version: string;
+declare const imageServerBaseUrl: string;
+declare const imageUploaderBaseUrl: string;
+declare const apiBaseUrl: string;
+declare const socket;
+declare const markdownit;
+declare const hljs;

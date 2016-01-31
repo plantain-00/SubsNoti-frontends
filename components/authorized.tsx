@@ -14,21 +14,21 @@ interface Self extends types.Self<State> {
     revoke: (application: types.Application) => void;
 }
 
-let spec: Self = {
+const spec: Self = {
     show: function(application: types.Application) {
-        let self: Self = this;
+        const self: Self = this;
 
         self.state.application = application;
     },
     get: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         $.ajax({
             url: apiBaseUrl + "/api/user/authorized",
             cache: false,
         }).then((data: types.ApplicationsResponse) => {
             if (data.isSuccess) {
-                for (let application of data.applications) {
+                for (const application of data.applications) {
                     application.lastUsed = application.lastUsed ? moment(application.lastUsed, moment.ISO_8601).fromNow() : "never used";
                 }
                 self.setState({ applications: data.applications });
@@ -38,7 +38,7 @@ let spec: Self = {
         });
     },
     revoke: function(application: types.Application) {
-        let self: Self = this;
+        const self: Self = this;
 
         $.ajax({
             url: apiBaseUrl + `/api/user/authorized/${application.id}`,
@@ -54,7 +54,7 @@ let spec: Self = {
         });
     },
     componentDidMount: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         self.get();
     },
@@ -65,9 +65,9 @@ let spec: Self = {
         } as State;
     },
     render: function() {
-        let self: Self = this;
+        const self: Self = this;
 
-        let applicationsView = self.state.applications.map(application => {
+        const applicationsView = self.state.applications.map(application => {
             return (
                 <tr key={application.id}>
                     <td>
@@ -87,7 +87,7 @@ let spec: Self = {
 
         let applicationView;
         if (self.state.application) {
-            let scopesView = self.state.application.scopes.map(scope => {
+            const scopesView = self.state.application.scopes.map(scope => {
                 return (
                     <tr key={scope.name}>
                         <td>{scope.name}</td>
@@ -152,4 +152,4 @@ let spec: Self = {
     },
 };
 
-export let AuthorizedComponent = React.createClass(spec);
+export const AuthorizedComponent = React.createClass(spec);

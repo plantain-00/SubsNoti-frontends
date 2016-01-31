@@ -52,7 +52,7 @@ $(document).ajaxSend(() => {
     }
 });
 
-let clipboard = new Clipboard(".clip");
+const clipboard = new Clipboard(".clip");
 
 clipboard.on("success", e => {
     global.head.showAlert(true, "emails copied:" + e.text);

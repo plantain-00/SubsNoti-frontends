@@ -3,10 +3,10 @@ import * as common from "./common";
 import * as React from "react";
 
 function getCurrentUser(next: (data: types.CurrentUserResponse) => void) {
-    let loginResult = window.sessionStorage.getItem(common.sessionStorageNames.loginResult);
+    const loginResult = window.sessionStorage.getItem(common.sessionStorageNames.loginResult);
 
     if (loginResult) {
-        let data: types.CurrentUserResponse = JSON.parse(loginResult);
+        const data: types.CurrentUserResponse = JSON.parse(loginResult);
 
         next(data);
     } else {
@@ -21,7 +21,7 @@ function getCurrentUser(next: (data: types.CurrentUserResponse) => void) {
     }
 }
 
-export let global: {
+export const global: {
     authenticated?: (error: Error) => void;
     body?: types.Self<{ requestCount?: number }>;
     head?: Self;
@@ -54,9 +54,9 @@ interface Self extends types.Self<State> {
     exit: () => void;
 }
 
-let spec: Self = {
+const spec: Self = {
     exit: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         $.ajax({
             type: "DELETE",
@@ -80,7 +80,7 @@ let spec: Self = {
         });
     },
     showAlert: function(isSuccess: boolean, message: string) {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({
             alertIsSuccess: isSuccess,
@@ -98,7 +98,7 @@ let spec: Self = {
         }, 3000);
     },
     authenticate: function(next: (error: Error) => void) {
-        let self: Self = this;
+        const self: Self = this;
 
         getCurrentUser(data => {
             if (data.isSuccess) {
@@ -123,7 +123,7 @@ let spec: Self = {
         });
     },
     componentDidMount: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         global.head = self;
 
@@ -161,29 +161,29 @@ let spec: Self = {
         } as State;
     },
     render: function() {
-        let self: Self = this;
+        const self: Self = this;
 
-        let createOrganizationView = (
+        const createOrganizationView = (
             <li>
                 <common.Link to="/new_organization.html">New Organization</common.Link>
             </li>
         );
-        let inviteView = (
+        const inviteView = (
             <li>
                 <common.Link to="/invite.html">Invite</common.Link>
             </li>
         );
-        let registeredView = (
+        const registeredView = (
             <li>
                 <common.Link to="/registered.html">Registered</common.Link>
             </li>
         );
-        let authorizedView = (
+        const authorizedView = (
             <li>
                 <common.Link to="/authorized.html">Authorized</common.Link>
             </li>
         );
-        let sccessTokenView = (
+        const sccessTokenView = (
             <li>
                 <common.Link to="/access_tokens.html">Access tokens</common.Link>
             </li>
@@ -293,4 +293,4 @@ let spec: Self = {
     },
 };
 
-export let HeadComponent = React.createClass(spec);
+export const HeadComponent = React.createClass(spec);

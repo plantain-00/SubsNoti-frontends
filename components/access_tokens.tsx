@@ -24,9 +24,9 @@ interface Self extends types.Self<State> {
     scopesInEditingChanged: (e) => void;
 }
 
-let spec: Self = {
+const spec: Self = {
     edit: function(accessToken: types.AccessToken) {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({
             idInEditing: accessToken.id,
@@ -36,14 +36,14 @@ let spec: Self = {
         });
     },
     get: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         $.ajax({
             url: apiBaseUrl + "/api/user/access_tokens",
             cache: false,
         }).then((data: types.AccessTokensResponse) => {
             if (data.isSuccess) {
-                for (let token of data.accessTokens) {
+                for (const token of data.accessTokens) {
                     token.lastUsed = token.lastUsed ? moment(token.lastUsed, moment.ISO_8601).fromNow() : "never used";
                 }
                 self.setState({ accessTokens: data.accessTokens });
@@ -53,7 +53,7 @@ let spec: Self = {
         });
     },
     new: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({
             idInEditing: null,
@@ -63,7 +63,7 @@ let spec: Self = {
         });
     },
     save: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         if (self.state.idInEditing) {
             $.ajax({
@@ -103,7 +103,7 @@ let spec: Self = {
         }
     },
     remove: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         $.ajax({
             url: apiBaseUrl + `/api/user/access_tokens/${self.state.idInEditing}`,
@@ -119,7 +119,7 @@ let spec: Self = {
         });
     },
     regenerate: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         $.ajax({
             url: apiBaseUrl + `/api/user/access_tokens/${self.state.idInEditing}/value`,
@@ -136,15 +136,15 @@ let spec: Self = {
         });
     },
     descriptionInEditingChanged: function(e) {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({ descriptionInEditing: e.target.value });
     },
     scopesInEditingChanged: function(e) {
-        let self: Self = this;
+        const self: Self = this;
 
-        let value = e.target.value;
-        let index = self.state.scopesInEditing.indexOf(value);
+        const value = e.target.value;
+        const index = self.state.scopesInEditing.indexOf(value);
         if (index >= 0) {
             self.setState({ scopesInEditing: self.state.scopesInEditing.splice(index, 1) });
         } else {
@@ -152,7 +152,7 @@ let spec: Self = {
         }
     },
     componentDidMount: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         self.get();
 
@@ -177,10 +177,10 @@ let spec: Self = {
         } as State;
     },
     render: function() {
-        let self: Self = this;
+        const self: Self = this;
 
-        let accessTokensView = self.state.accessTokens.map(accessToken => {
-            let scopesView = accessToken.scopes.map(scope => {
+        const accessTokensView = self.state.accessTokens.map(accessToken => {
+            const scopesView = accessToken.scopes.map(scope => {
                 return (
                     <span key={scope.name} className="label label-success access-token-scope">
                         {scope.name}
@@ -204,8 +204,8 @@ let spec: Self = {
             );
         });
 
-        let scopesView = self.state.scopes.map(scope => {
-            let checked = self.state.scopesInEditing.indexOf(scope.name) >= 0;
+        const scopesView = self.state.scopes.map(scope => {
+            const checked = self.state.scopesInEditing.indexOf(scope.name) >= 0;
             return (
                 <label key={scope.name} className="checkbox">
                     <input type="checkbox" onChange={self.scopesInEditingChanged} value={scope.name} checked={checked} />
@@ -224,7 +224,7 @@ let spec: Self = {
             );
         }
 
-        let descriptionView = (
+        const descriptionView = (
             <div className="form-group">
                 <label htmlFor="description">description</label>
                 <input type="text" className="form-control" id="description" onChange={self.descriptionInEditingChanged} value={self.state.descriptionInEditing} />
@@ -294,4 +294,4 @@ let spec: Self = {
     },
 };
 
-export let AccessTokensComponent = React.createClass(spec);
+export const AccessTokensComponent = React.createClass(spec);

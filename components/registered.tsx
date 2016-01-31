@@ -27,9 +27,9 @@ interface Self extends types.Self<State> {
     authorizationCallbackUrlInEditingChanged: (e) => void;
 }
 
-let spec: Self = {
+const spec: Self = {
     edit: function(application: types.Application) {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({
             idInEditing: application.id,
@@ -41,7 +41,7 @@ let spec: Self = {
         });
     },
     get: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         $.ajax({
             url: apiBaseUrl + "/api/user/registered",
@@ -55,7 +55,7 @@ let spec: Self = {
         });
     },
     new: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({
             idInEditing: null,
@@ -67,7 +67,7 @@ let spec: Self = {
         });
     },
     save: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         if (self.state.idInEditing) {
             $.ajax({
@@ -110,7 +110,7 @@ let spec: Self = {
         }
     },
     remove: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         $.ajax({
             url: apiBaseUrl + `/api/user/registered/${self.state.idInEditing}`,
@@ -126,7 +126,7 @@ let spec: Self = {
         });
     },
     resetClientSecret: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         $.ajax({
             url: apiBaseUrl + `/api/user/registered/${self.state.idInEditing}/client_secret`,
@@ -142,27 +142,27 @@ let spec: Self = {
         });
     },
     nameInEditingChanged: function(e) {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({ nameInEditing: e.target.value });
     },
     homeUrlInEditingChanged: function(e) {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({ homeUrlInEditing: e.target.value });
     },
     descriptionInEditingChanged: function(e) {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({ descriptionInEditing: e.target.value });
     },
     authorizationCallbackUrlInEditingChanged: function(e) {
-        let self: Self = this;
+        const self: Self = this;
 
         self.setState({ authorizationCallbackUrlInEditing: e.target.value });
     },
     componentDidMount: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         self.get();
     },
@@ -178,9 +178,9 @@ let spec: Self = {
         } as State;
     },
     render: function() {
-        let self: Self = this;
+        const self: Self = this;
 
-        let applicationsView = self.state.applications.map(application => {
+        const applicationsView = self.state.applications.map(application => {
             return (
                 <tr key={application.id}>
                     <td>
@@ -193,25 +193,25 @@ let spec: Self = {
             );
         });
 
-        let nameView = (
+        const nameView = (
             <div className="form-group">
                 <label htmlFor="name">name</label>
                 <input type="text" className="form-control" id="name" placeholder="name" onChange={self.nameInEditingChanged} value={self.state.nameInEditing}/>
             </div>
         );
-        let homeUrlView = (
+        const homeUrlView = (
             <div className="form-group">
                 <label htmlFor="home-url">home url</label>
                 <input type="text" className="form-control" id="home-url" placeholder="https://" onChange={self.homeUrlInEditingChanged} value={self.state.homeUrlInEditing}/>
             </div>
         );
-        let descriptionView = (
+        const descriptionView = (
             <div className="form-group">
                 <label htmlFor="description">description</label>
                 <input type="text" className="form-control" id="description" placeholder="optional" onChange={self.descriptionInEditingChanged} value={self.state.descriptionInEditing}/>
             </div>
         );
-        let authorizationCallbackUrl = (
+        const authorizationCallbackUrl = (
             <div className="form-group">
                 <label htmlFor="authorizationCallbackUrl">authorization callback url</label>
                 <input type="text" className="form-control" id="authorizationCallbackUrl" placeholder="https://" onChange={self.authorizationCallbackUrlInEditingChanged} value={self.state.authorizationCallbackUrlInEditing}/>
@@ -279,4 +279,4 @@ let spec: Self = {
     },
 };
 
-export let RegisteredComponent = React.createClass(spec);
+export const RegisteredComponent = React.createClass(spec);

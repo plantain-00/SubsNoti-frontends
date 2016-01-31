@@ -15,9 +15,9 @@ interface Self extends types.Self<State> {
     confirm: () => void;
 }
 
-let spec: Self = {
+const spec: Self = {
     confirm: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         $.ajax({
             url: apiBaseUrl + `/api/user/access_tokens/${self.state.code}`,
@@ -32,16 +32,16 @@ let spec: Self = {
         });
     },
     componentDidMount: function() {
-        let self: Self = this;
+        const self: Self = this;
 
-        let scopes = decodeURIComponent(common.getUrlParameter("scopes"));
+        const scopes = decodeURIComponent(common.getUrlParameter("scopes"));
         self.setState({
             redirectUrl: decodeURIComponent(common.getUrlParameter("redirect_url")),
             scopes: scopes.split(","),
             code: decodeURIComponent(common.getUrlParameter("code")),
         });
 
-        let applicationId = common.getUrlParameter("application_id");
+        const applicationId = common.getUrlParameter("application_id");
         if (applicationId) {
             $.ajax({
                 url: apiBaseUrl + `/api/applications/${decodeURIComponent(applicationId)}`
@@ -74,7 +74,7 @@ let spec: Self = {
         } as State;
     },
     render: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         let applicationView;
         if (self.state.application) {
@@ -85,8 +85,8 @@ let spec: Self = {
             );
         }
 
-        let scopesView = self.state.allScopes.map(scope => {
-            let checked = self.state.scopes.indexOf(scope.name) >= 0;
+        const scopesView = self.state.allScopes.map(scope => {
+            const checked = self.state.scopes.indexOf(scope.name) >= 0;
             return (
                 <label key={scope.name} className="checkbox">
                     <input type="checkbox" checked={checked} value={scope.name} readOnly/>
@@ -125,4 +125,4 @@ let spec: Self = {
     },
 };
 
-export let AuthorizationComponent = React.createClass(spec);
+export const AuthorizationComponent = React.createClass(spec);

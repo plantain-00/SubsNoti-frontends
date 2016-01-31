@@ -17,7 +17,7 @@ import {LoginComponent} from "./login";
 import {UserComponent} from "./user";
 import {ThemesComponent} from "./themes";
 
-let routes = [
+const routes = [
     <common.Route path="/" component={ThemesComponent}/>,
     <common.Route path="/themes.html" component={ThemesComponent}/>,
     <common.Route path="/success.html" component={SuccessComponent}/>,
@@ -49,7 +49,7 @@ common.match({ routes, location: "/" }, (error, redirectLocation, renderProps) =
         return;
     }
     if (renderProps) {
-        let component = <common.RoutingContext {...renderProps} />;
+        const component = <common.RoutingContext {...renderProps} />;
         console.log(renderToString(component));
     }
 });

@@ -8,14 +8,14 @@ interface State {
 
 interface Self extends types.Self<State> { }
 
-let spec: Self = {
+const spec: Self = {
     getInitialState: function() {
         return {
             message: decodeURIComponent(common.getUrlParameter("message"))
         } as State;
     },
     render: function() {
-        let self: Self = this;
+        const self: Self = this;
         return (
             <div className="container body-container">
                 <div className="row">
@@ -33,4 +33,4 @@ let spec: Self = {
     },
 };
 
-export let ErrorComponent = React.createClass(spec);
+export const ErrorComponent = React.createClass(spec);

@@ -8,22 +8,22 @@ interface State {
 
 interface Self extends types.Self<State> { }
 
-let spec: Self = {
+const spec: Self = {
     getInitialState: function() {
-        let willClearPreviousStatus = common.getUrlParameter("clear_previous_status");
+        const willClearPreviousStatus = common.getUrlParameter("clear_previous_status");
 
         if (willClearPreviousStatus === types.yes) {
             window.sessionStorage.removeItem(common.sessionStorageNames.loginResult);
         }
 
-        let redirectUrl = common.getUrlParameter("redirect_url");
+        const redirectUrl = common.getUrlParameter("redirect_url");
 
         return {
             redirectUrl: redirectUrl ? decodeURIComponent(redirectUrl) : ""
         } as State;
     },
     render: function() {
-        let self: Self = this;
+        const self: Self = this;
 
         let redirectUrlView;
         if (self.state.redirectUrl) {
@@ -50,4 +50,4 @@ let spec: Self = {
     },
 };
 
-export let SuccessComponent = React.createClass(spec);
+export const SuccessComponent = React.createClass(spec);

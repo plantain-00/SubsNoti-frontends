@@ -13,33 +13,6 @@ interface Self extends types.Self<State> {
     organizationNameChanged: (e) => void;
 }
 
-function add() {
-    const self: Self = this;
-
-    $.post(apiBaseUrl + "/api/organizations", {
-        organizationName: self.state.organizationName
-    }).then((data: types.Response) => {
-        if (data.isSuccess) {
-            global.head.setState({ createdOrganizationCount: global.head.state.createdOrganizationCount + 1 });
-            global.head.showAlert(true, "success");
-        } else {
-            global.head.showAlert(false, data.errorMessage);
-        }
-    });
-}
-
-const AddView = ({organizationName}) => {
-    if (organizationName.trim()) {
-        return (
-            <button type="button" className="btn btn-primary" onClick={add}>Add</button>
-        );
-    } else {
-        return (
-            <button type="button" className="btn btn-primary" disabled>Please input organization name</button>
-        );
-    }
-};
-
 const spec: Self = {
     add: function() {
         const self: Self = this;

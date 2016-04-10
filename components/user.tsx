@@ -86,7 +86,7 @@ const spec: Self = {
         };
 
         return {
-            name: ""
+            name: "",
         } as State;
     },
     render: function() {

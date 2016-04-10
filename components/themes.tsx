@@ -80,7 +80,7 @@ interface Self extends types.Self<State> {
 
 function changeOrganization(id) {
     socket.emit("change organization", {
-        to: id
+        to: id,
     });
 }
 
@@ -340,7 +340,7 @@ const spec: Self = {
         $.ajax({
             url: apiBaseUrl + "/api/themes/" + theme.id,
             data: {
-                status: types.themeStatus.closed
+                status: types.themeStatus.closed,
             },
             cache: false,
             type: "PUT",
@@ -356,7 +356,7 @@ const spec: Self = {
         $.ajax({
             url: apiBaseUrl + "/api/themes/" + theme.id,
             data: {
-                status: types.themeStatus.open
+                status: types.themeStatus.open,
             },
             cache: false,
             type: "PUT",

@@ -19,7 +19,7 @@ const spec: Self = {
         const redirectUrl = common.getUrlParameter("redirect_url");
 
         return {
-            redirectUrl: redirectUrl ? decodeURIComponent(redirectUrl) : ""
+            redirectUrl: redirectUrl ? decodeURIComponent(redirectUrl) : "",
         } as State;
     },
     render: function() {

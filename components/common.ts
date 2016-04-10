@@ -24,7 +24,7 @@ export function isEmail(s: string): boolean {
 }
 
 export const sessionStorageNames = {
-    loginResult: "loginResult"
+    loginResult: "loginResult",
 };
 
 export const localStorageNames = {

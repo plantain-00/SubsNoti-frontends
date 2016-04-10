@@ -157,7 +157,7 @@ const spec: Self = {
         self.get();
 
         $.ajax({
-            url: apiBaseUrl + "/api/scopes"
+            url: apiBaseUrl + "/api/scopes",
         }).then((data: types.ScopesResponse) => {
             if (data.isSuccess) {
                 self.setState({ scopes: data.scopes });

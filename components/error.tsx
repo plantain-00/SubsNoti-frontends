@@ -11,7 +11,7 @@ interface Self extends types.Self<State> { }
 const spec: Self = {
     getInitialState: function() {
         return {
-            message: decodeURIComponent(common.getUrlParameter("message"))
+            message: decodeURIComponent(common.getUrlParameter("message")),
         } as State;
     },
     render: function() {

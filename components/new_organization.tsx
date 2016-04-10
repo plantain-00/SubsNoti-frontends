@@ -18,7 +18,7 @@ const spec: Self = {
         const self: Self = this;
 
         $.post(apiBaseUrl + "/api/organizations", {
-            organizationName: self.state.organizationName
+            organizationName: self.state.organizationName,
         }).then((data: types.Response) => {
             if (data.isSuccess) {
                 global.head.setState({ createdOrganizationCount: global.head.state.createdOrganizationCount + 1 });
@@ -35,7 +35,7 @@ const spec: Self = {
     },
     getInitialState: function() {
         return {
-            organizationName: ""
+            organizationName: "",
         } as State;
     },
     render: function() {

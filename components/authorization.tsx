@@ -44,7 +44,7 @@ const spec: Self = {
         const applicationId = common.getUrlParameter("application_id");
         if (applicationId) {
             $.ajax({
-                url: apiBaseUrl + `/api/applications/${decodeURIComponent(applicationId)}`
+                url: apiBaseUrl + `/api/applications/${decodeURIComponent(applicationId)}`,
             }).then((data: types.ApplicationResponse) => {
                 if (data.isSuccess) {
                     self.setState({ application: data.application });
@@ -55,7 +55,7 @@ const spec: Self = {
         }
 
         $.ajax({
-            url: apiBaseUrl + "/api/scopes"
+            url: apiBaseUrl + "/api/scopes",
         }).then((data: types.ScopesResponse) => {
             if (data.isSuccess) {
                 self.setState({ allScopes: data.scopes });

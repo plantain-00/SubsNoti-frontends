@@ -1,6 +1,6 @@
 {
     "name": "subsnoti-frontends",
-    "version": "2.7.4",
+    "version": "2.7.5",
     "description": "the frondends of `SubsNoti`.",
     "main": "gulpfile.js",
     "scripts": {
@@ -31,11 +31,11 @@
         "gulp-tslint": "^4.2.1",
         "history": "^2.0.0",
         "live-server": "^0.9.0",
-        "react": "^0.14.3",
-        "react-dom": "^0.14.3",
+        "react": "^15.0.1",
+        "react-dom": "^15.0.1",
         "react-router": "^2.0.0",
-        "tslint": "3.2.0-dev.2",
-        "typescript": "^1.8.0-dev.20151213",
+        "tslint": "^3.7.1",
+        "typescript": "^1.8.9",
         "webpack-stream": "^3.0.1"
     }
 }

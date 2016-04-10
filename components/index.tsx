@@ -25,10 +25,10 @@ import {global} from "./head";
 
 $.ajaxSetup({
     headers: {
-        "X-Version": version
+        "X-Version": version,
     },
     xhrFields: {
-        withCredentials: true
+        withCredentials: true,
     },
 });
 

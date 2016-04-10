@@ -60,7 +60,7 @@ const spec: Self = {
         const self: Self = this;
 
         $.post(apiBaseUrl + "/api/captchas", {
-            id: guid
+            id: guid,
         }).then((data: types.CaptchaResponse) => {
             if (data.isSuccess) {
                 self.setState({ captchaUrl: data.url });

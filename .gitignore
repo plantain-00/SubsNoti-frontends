@@ -8,3 +8,5 @@ dest/scripts/*.js
 dest/styles/*.css
 build/
 **/*.map
+typings
+.vscode

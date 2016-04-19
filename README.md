@@ -8,10 +8,12 @@
 + typescript@next
 + gulp
 + scss-lint
++ tsd
 
 # development
 
 + `npm install`
++ `tsd install`
 + `gulp build`
 + `gulp host`
 

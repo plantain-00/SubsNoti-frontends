@@ -5,7 +5,7 @@
 # tools and global npm packages
 
 + node.js >=4.0
-+ typescript@next
++ typescript
 + gulp
 + scss-lint
 + tsd

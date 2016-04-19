@@ -19,6 +19,12 @@
         },
         "node/node.d.ts": {
             "commit": "1da639a106527e0c4010b354a1efe52a3059a291"
+        },
+        "react/react.d.ts": {
+            "commit": "544a35a10866b32afda9c7f029c0764558563f4f"
+        },
+        "react/react-dom.d.ts": {
+            "commit": "544a35a10866b32afda9c7f029c0764558563f4f"
         }
     }
 }

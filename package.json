@@ -30,7 +30,7 @@
         "gulp-shell": "^0.5.1",
         "gulp-tslint": "^4.2.1",
         "history": "^2.0.0",
-        "live-server": "^0.9.0",
+        "live-server": "^1.0.0",
         "react": "^15.0.1",
         "react-dom": "^15.0.1",
         "react-router": "^2.0.0",

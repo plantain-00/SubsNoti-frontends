@@ -12,3 +12,4 @@ templates/
 *.yml
 .gitmodules
 gulpfile.js
+README.md

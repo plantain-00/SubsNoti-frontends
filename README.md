@@ -4,7 +4,6 @@
 
 # tools and global npm packages
 
-+ node.js >=4.0
 + typescript
 + gulp
 + scss-lint

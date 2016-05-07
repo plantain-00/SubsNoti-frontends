@@ -4,14 +4,12 @@
 
 # tools and global npm packages
 
-+ typescript
-+ gulp
++ `npm i -g typescript tsd tslint check-npm gulp`
 + scss-lint
-+ tsd
 
 # development
 
-+ `npm install`
++ `npm i`
 + `tsd install`
 + `gulp build`
 + `gulp host`
@@ -19,7 +17,3 @@
 # deploy
 
 + `gulp deploy`
-
-# demo
-
-https://yorkyao.xyz/

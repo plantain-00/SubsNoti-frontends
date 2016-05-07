@@ -11,8 +11,6 @@ const autoprefixer = require("autoprefixer");
 const postcss = require("gulp-postcss");
 const revReplace = require("gulp-rev-replace");
 const shell = require("gulp-shell");
-const tslint = require("gulp-tslint");
-const liveServer = require("live-server");
 
 const pjson = require("./package.json");
 
@@ -21,7 +19,7 @@ const minifyHtmlConfig = {
     spare: true,
 };
 
-const command = "rm -rf build && tsc -p components --pretty && sass styles/base.scss > build/base.css && scss-lint styles/*.scss";
+const command = "rm -rf build && tsc -p components --pretty && npm run tslint && sass styles/base.scss > build/base.css && scss-lint styles/*.scss";
 
 gulp.task("build", shell.task(`rm -rf dest && ${command} && gulp html-dev && rm -rf build`));
 
@@ -35,11 +33,11 @@ gulp.task("css-dest", () => {
     return uglifyCss("base", false);
 });
 
-gulp.task("js-dev", ["tslint"], () => {
+gulp.task("js-dev", () => {
     return bundleAndUglifyJs("index", true);
 });
 
-gulp.task("js-dest", ["tslint"], () => {
+gulp.task("js-dest", () => {
     return bundleAndUglifyJs("index", false);
 });
 
@@ -61,25 +59,6 @@ gulp.task("html-dev", ["rev-dev"], () => {
 
 gulp.task("html-dest", ["rev-dest", "map-dest"], () => {
     return bundleAndUglifyHtml("index", false);
-});
-
-gulp.task("tslint", () => {
-    return gulp.src(["components/**/*.ts", "components/**/*.tsx"])
-        .pipe(tslint({
-            tslint: require("tslint")
-        }))
-        .pipe(tslint.report("prose", { emitError: true }));
-});
-
-gulp.task("host", () => {
-    liveServer.start({
-        port: 8888,
-        host: "0.0.0.0",
-        root: "dest",
-        open: false,
-        ignore: "",
-        wait: 500,
-    });
 });
 
 function uglifyCss(name, isDevelopment) {

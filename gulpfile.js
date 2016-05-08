@@ -26,19 +26,19 @@ gulp.task("build", shell.task(`rm -rf dest && ${command} && gulp html-dev && rm 
 gulp.task("deploy", shell.task(`${command} && gulp html-dest && rm -rf build`));
 
 gulp.task("css-dev", () => {
-    return uglifyCss("base", true);
+    return uglifyCss(true);
 });
 
 gulp.task("css-dest", () => {
-    return uglifyCss("base", false);
+    return uglifyCss(false);
 });
 
 gulp.task("js-dev", () => {
-    return bundleAndUglifyJs("index", true);
+    return bundleAndUglifyJs(true);
 });
 
 gulp.task("js-dest", () => {
-    return bundleAndUglifyJs("index", false);
+    return bundleAndUglifyJs(false);
 });
 
 gulp.task("rev-dev", ["css-dev", "js-dev"], () => {
@@ -54,14 +54,15 @@ gulp.task("map-dest", ["css-dest", "js-dest"], () => {
 });
 
 gulp.task("html-dev", ["rev-dev"], () => {
-    return bundleAndUglifyHtml("index", true);
+    return bundleAndUglifyHtml(true);
 });
 
 gulp.task("html-dest", ["rev-dest", "map-dest"], () => {
-    return bundleAndUglifyHtml("index", false);
+    return bundleAndUglifyHtml(false);
 });
 
-function uglifyCss(name, isDevelopment) {
+function uglifyCss(isDevelopment) {
+    const name = "base";
     if (isDevelopment) {
         return gulp.src("build/" + name + ".css")
             .pipe(postcss([autoprefixer({ browsers: ["last 2 versions"] })]))
@@ -84,7 +85,8 @@ const webpackexternals = {
     "react-router": "ReactRouter",
 };
 
-function bundleAndUglifyJs(name, isDevelopment) {
+function bundleAndUglifyJs(isDevelopment) {
+    const name = "index";
     if (isDevelopment) {
         return gulp.src("build/components/" + name + ".js")
             .pipe(webpack({
@@ -122,7 +124,8 @@ function mapJs() {
         .pipe(gulp.dest("dest"));
 }
 
-function bundleAndUglifyHtml(name, isDevelopment) {
+function bundleAndUglifyHtml(isDevelopment) {
+    const name = "index";
     const manifest = gulp.src("build/rev-manifest.json");
     const config = {
         dotMin: ".min",

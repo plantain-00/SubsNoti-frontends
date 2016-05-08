@@ -2,10 +2,8 @@ language: node_js
 node_js:
   - "6.0"
 before_script:
-  - npm install -g gulp typescript tsd
-  - tsd install
-  - gem install sass
-  - gem install scss_lint
+  - npm run init
+  - npm run restore
 script:
   - gulp build
   - gulp deploy

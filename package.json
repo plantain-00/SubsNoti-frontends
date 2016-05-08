@@ -4,7 +4,9 @@
     "description": "the frondends of `SubsNoti`.",
     "scripts": {
         "tslint": "tslint 'components/**/*.ts' 'components/**/*.tsx'",
-        "check": "npm-check -u"
+        "check": "npm-check -u",
+        "init": "npm i -g gulp typescript tsd tslint check-npm && gem install sass && gem install scss_lint",
+        "restore": "tsd install && npm i"
     },
     "repository": {
         "type": "git",

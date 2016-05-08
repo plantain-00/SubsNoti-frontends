@@ -4,15 +4,12 @@
 
 # tools and global npm packages
 
-+ `npm i -g typescript tsd tslint check-npm gulp`
-+ scss-lint
++ `npm run init`
 
 # development
 
-+ `npm i`
-+ `tsd install`
++ `npm run restore`
 + `gulp build`
-+ `gulp host`
 
 # deploy
 

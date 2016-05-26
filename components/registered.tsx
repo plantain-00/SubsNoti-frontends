@@ -47,7 +47,7 @@ const spec: Self = {
             url: apiBaseUrl + "/api/user/registered",
             cache: false,
         }).then((data: types.ApplicationsResponse) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 self.setState({ applications: data.applications });
             } else {
                 global.head.showAlert(false, data.errorMessage);
@@ -80,7 +80,7 @@ const spec: Self = {
                     authorizationCallbackUrl: self.state.authorizationCallbackUrlInEditing,
                 },
             }).then((data: types.Response) => {
-                if (data.isSuccess) {
+                if (data.status === 0) {
                     global.head.showAlert(true, "success");
                     self.new();
                     self.get();
@@ -99,7 +99,7 @@ const spec: Self = {
                     authorizationCallbackUrl: self.state.authorizationCallbackUrlInEditing,
                 },
             }).then((data: types.Response) => {
-                if (data.isSuccess) {
+                if (data.status === 0) {
                     global.head.showAlert(true, "success");
                     self.new();
                     self.get();
@@ -116,7 +116,7 @@ const spec: Self = {
             url: apiBaseUrl + `/api/user/registered/${self.state.idInEditing}`,
             method: "DELETE",
         }).then((data: types.Response) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 global.head.showAlert(true, "success");
                 self.new();
                 self.get();
@@ -132,7 +132,7 @@ const spec: Self = {
             url: apiBaseUrl + `/api/user/registered/${self.state.idInEditing}/client_secret`,
             method: "PUT",
         }).then((data: types.Response) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 global.head.showAlert(true, "success");
                 self.new();
                 self.get();

@@ -20,7 +20,7 @@ const spec: Self = {
         $.post(apiBaseUrl + "/api/organizations", {
             organizationName: self.state.organizationName,
         }).then((data: types.Response) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 global.head.setState({ createdOrganizationCount: global.head.state.createdOrganizationCount + 1 });
                 global.head.showAlert(true, "success");
             } else {

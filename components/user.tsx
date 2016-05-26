@@ -30,7 +30,7 @@ const spec: Self = {
                 contentType: false,
                 type: "POST",
             }).then((data: types.TemperaryResponse) => {
-                if (data.isSuccess) {
+                if (data.status === 0) {
                     const name = data.names[0];
 
                     self.update(name);
@@ -55,7 +55,7 @@ const spec: Self = {
                 cache: false,
                 type: "PUT",
             }).then((data: types.Response) => {
-                if (data.isSuccess) {
+                if (data.status === 0) {
                     window.sessionStorage.removeItem(common.sessionStorageNames.loginResult);
 
                     global.head.authenticate(error => { ; });

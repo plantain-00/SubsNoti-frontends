@@ -47,7 +47,7 @@ const spec: Self = {
             code: self.state.code,
             redirectUrl: self.state.redirectUrl,
         }).then((data: types.Response) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 global.head.showAlert(true, "success, please check your email.");
                 window.localStorage.setItem(common.localStorageNames.lastSuccessfulEmailTime, new Date().getTime().toString());
             } else {
@@ -62,7 +62,7 @@ const spec: Self = {
         $.post(apiBaseUrl + "/api/captchas", {
             id: guid,
         }).then((data: types.CaptchaResponse) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 self.setState({ captchaUrl: data.url });
             } else {
                 global.head.showAlert(false, data.errorMessage);

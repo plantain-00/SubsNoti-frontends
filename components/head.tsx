@@ -63,7 +63,7 @@ const spec: Self = {
             url: apiBaseUrl + "/api/user/logged_in",
             cache: false,
         }).then((data: types.CurrentUserResponse) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 self.setState({
                     loginStatus: types.loginStatus.fail,
                     currentUserId: "",
@@ -101,7 +101,7 @@ const spec: Self = {
         const self: Self = this;
 
         getCurrentUser(data => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 self.setState({
                     loginStatus: types.loginStatus.success,
                     currentUserId: data.user.id,

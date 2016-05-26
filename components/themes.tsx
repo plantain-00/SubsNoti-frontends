@@ -179,7 +179,7 @@ const spec: Self = {
             url: apiBaseUrl + "/api/user/joined",
             cache: false,
         }).then((data: types.OrganizationsResponse) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 self.setState({ organizationsCurrentUserIn: data.organizations });
                 if (data.organizations.length > 0) {
                     const lastOrganizationId = window.localStorage.getItem(common.localStorageNames.lastOrganizationId);
@@ -218,7 +218,7 @@ const spec: Self = {
             },
             cache: false,
         }).then((data: types.ThemesResponse) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 for (const theme of data.themes) {
                     self.initTheme(theme);
                 }
@@ -287,7 +287,7 @@ const spec: Self = {
             themeDetail: self.state.newThemeDetail,
             organizationId: self.state.currentOrganizationId,
         }).then((data: types.Response) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 global.head.showAlert(true, "success");
             } else {
                 global.head.showAlert(false, data.errorMessage);
@@ -311,7 +311,7 @@ const spec: Self = {
             url: apiBaseUrl + "/api/user/watched/" + theme.id,
             type: "PUT",
         }).then((data: types.Response) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 global.head.showAlert(true, "success");
             } else {
                 global.head.showAlert(false, data.errorMessage);
@@ -324,7 +324,7 @@ const spec: Self = {
             data: {},
             type: "DELETE",
         }).then((data: types.Response) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 global.head.showAlert(true, "success");
             } else {
                 global.head.showAlert(false, data.errorMessage);
@@ -345,7 +345,7 @@ const spec: Self = {
             cache: false,
             type: "PUT",
         }).then((data: types.Response) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 global.head.showAlert(true, "success");
             } else {
                 global.head.showAlert(false, data.errorMessage);
@@ -361,7 +361,7 @@ const spec: Self = {
             cache: false,
             type: "PUT",
         }).then((data: types.Response) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 global.head.showAlert(true, "success");
             } else {
                 global.head.showAlert(false, data.errorMessage);
@@ -405,7 +405,7 @@ const spec: Self = {
             cache: false,
             type: "PUT",
         }).then((data: types.Response) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 global.head.showAlert(true, "success");
                 self.setState({ imageNamesInEditing: [] });
 
@@ -558,7 +558,7 @@ const spec: Self = {
             contentType: false,
             type: "POST",
         }).then((data: types.TemperaryResponse) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 const name = data.names[0];
                 const names = self.state.imageNamesInEditing;
                 names.push(name);

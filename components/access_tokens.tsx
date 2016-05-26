@@ -42,7 +42,7 @@ const spec: Self = {
             url: apiBaseUrl + "/api/user/access_tokens",
             cache: false,
         }).then((data: types.AccessTokensResponse) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 for (const token of data.accessTokens) {
                     token.lastUsed = token.lastUsed ? moment(token.lastUsed, moment.ISO_8601).fromNow() : "never used";
                 }
@@ -74,7 +74,7 @@ const spec: Self = {
                     scopes: self.state.scopesInEditing,
                 },
             }).then((data: types.Response) => {
-                if (data.isSuccess) {
+                if (data.status === 0) {
                     global.head.showAlert(true, "success");
                     self.new();
                     self.get();
@@ -91,7 +91,7 @@ const spec: Self = {
                     scopes: self.state.scopesInEditing,
                 },
             }).then((data: types.AccessTokenResponse) => {
-                if (data.isSuccess) {
+                if (data.status === 0) {
                     global.head.showAlert(true, "success");
                     self.new();
                     self.get();
@@ -109,7 +109,7 @@ const spec: Self = {
             url: apiBaseUrl + `/api/user/access_tokens/${self.state.idInEditing}`,
             method: "DELETE",
         }).then((data: types.Response) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 global.head.showAlert(true, "success");
                 self.new();
                 self.get();
@@ -125,7 +125,7 @@ const spec: Self = {
             url: apiBaseUrl + `/api/user/access_tokens/${self.state.idInEditing}/value`,
             method: "PUT",
         }).then((data: types.AccessTokenResponse) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 global.head.showAlert(true, "success");
                 self.new();
                 self.get();
@@ -159,7 +159,7 @@ const spec: Self = {
         $.ajax({
             url: apiBaseUrl + "/api/scopes",
         }).then((data: types.ScopesResponse) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 self.setState({ scopes: data.scopes });
             } else {
                 global.head.showAlert(false, data.errorMessage);

@@ -23,7 +23,7 @@ const spec: Self = {
             url: apiBaseUrl + `/api/user/access_tokens/${self.state.code}`,
             method: "POST",
         }).then((data: types.Response) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 alert("success");
                 location.href = self.state.redirectUrl;
             } else {
@@ -46,7 +46,7 @@ const spec: Self = {
             $.ajax({
                 url: apiBaseUrl + `/api/applications/${decodeURIComponent(applicationId)}`,
             }).then((data: types.ApplicationResponse) => {
-                if (data.isSuccess) {
+                if (data.status === 0) {
                     self.setState({ application: data.application });
                 } else {
                     global.head.showAlert(false, data.errorMessage);
@@ -57,7 +57,7 @@ const spec: Self = {
         $.ajax({
             url: apiBaseUrl + "/api/scopes",
         }).then((data: types.ScopesResponse) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 self.setState({ allScopes: data.scopes });
             } else {
                 global.head.showAlert(false, data.errorMessage);

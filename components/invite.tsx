@@ -26,7 +26,7 @@ const spec: Self = {
             url: apiBaseUrl + "/api/user/created",
             cache: false,
         }).then((data: types.OrganizationsResponse) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 self.setState({ organizationsCurrentUserCreated: data.organizations });
                 if (data.organizations.length > 0) {
                     const lastOrganizationId = window.localStorage.getItem(common.localStorageNames.lastOrganizationId);
@@ -50,7 +50,7 @@ const spec: Self = {
             cache: false,
             type: "PUT",
         }).then((data: types.Response) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 global.head.showAlert(true, "success");
             } else {
                 global.head.showAlert(false, data.errorMessage);

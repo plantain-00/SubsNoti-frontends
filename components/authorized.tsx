@@ -27,7 +27,7 @@ const spec: Self = {
             url: apiBaseUrl + "/api/user/authorized",
             cache: false,
         }).then((data: types.ApplicationsResponse) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 for (const application of data.applications) {
                     application.lastUsed = application.lastUsed ? moment(application.lastUsed, moment.ISO_8601).fromNow() : "never used";
                 }
@@ -44,7 +44,7 @@ const spec: Self = {
             url: apiBaseUrl + `/api/user/authorized/${application.id}`,
             method: "DELETE",
         }).then((data: types.Response) => {
-            if (data.isSuccess) {
+            if (data.status === 0) {
                 global.head.showAlert(true, "success");
                 self.setState({ application: null });
                 self.get();

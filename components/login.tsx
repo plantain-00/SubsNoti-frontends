@@ -43,7 +43,7 @@ const spec: Self = {
         $.post(apiBaseUrl + "/api/tokens", {
             email: `${self.state.emailHead}@${self.state.emailTail}`,
             name: self.getName(),
-            guid: guid,
+            guid,
             code: self.state.code,
             redirectUrl: self.state.redirectUrl,
         }).then((data: types.Response) => {

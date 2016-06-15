@@ -50,7 +50,7 @@ const spec: Self = {
                 url: apiBaseUrl + "/api/user",
                 data: {
                     name: self.state.name,
-                    avatarFileName: avatarFileName,
+                    avatarFileName,
                 },
                 cache: false,
                 type: "PUT",

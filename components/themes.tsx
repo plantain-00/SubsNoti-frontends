@@ -165,10 +165,7 @@ function extractSummary(markdown: string): Summary {
             pushText(token.content);
         }
     }
-    return {
-        image: image,
-        text: text,
-    };
+    return { image, text };
 }
 
 const spec: Self = {
@@ -209,7 +206,7 @@ const spec: Self = {
         $.ajax({
             url: apiBaseUrl + "/api/organizations/" + (organizationId ? organizationId : self.state.currentOrganizationId) + "/themes",
             data: {
-                page: page,
+                page,
                 limit: common.itemLimit,
                 q: self.state.q,
                 isOpen: self.state.isOpen ? types.yes : types.no,
@@ -377,7 +374,7 @@ const spec: Self = {
             themeIdInEditing: theme.id,
             titleInEditing: theme.title,
             detailInEditing: theme.detail,
-            themes: themes,
+            themes,
         });
     },
     cancel: function(theme: Theme) {
@@ -389,7 +386,7 @@ const spec: Self = {
             themeIdInEditing: null,
             titleInEditing: "",
             detailInEditing: "",
-            themes: themes,
+            themes,
         });
     },
     save: function(theme: Theme) {
@@ -433,7 +430,7 @@ const spec: Self = {
     clickOrder: function(order: types.ThemeOrder) {
         const self: Self = this;
 
-        self.setState({ order: order });
+        self.setState({ order });
     },
     nextThemeCount: function() {
         const self: Self = this;
@@ -451,14 +448,14 @@ const spec: Self = {
 
         const themes = self.state.themes;
         theme.isHovering = true;
-        self.setState({ themes: themes });
+        self.setState({ themes });
     },
     mouseLeaveTheme: function(theme: Theme) {
         const self: Self = this;
 
         const themes = self.state.themes;
         theme.isHovering = false;
-        self.setState({ themes: themes });
+        self.setState({ themes });
     },
     newThemeTitleChanged: function(e) {
         const self: Self = this;
@@ -585,7 +582,7 @@ const spec: Self = {
         const themes = self.state.themes;
         theme.expanded = true;
         theme.scrollTop = global.win.scrollTop();
-        self.setState({ themes: themes });
+        self.setState({ themes });
     },
     collapse: function(theme: Theme) {
         const self: Self = this;
@@ -593,7 +590,7 @@ const spec: Self = {
         const themes = self.state.themes;
         theme.expanded = false;
         global.win.scrollTop(theme.scrollTop);
-        self.setState({ themes: themes });
+        self.setState({ themes });
     },
     componentDidMount: function() {
         const self: Self = this;
@@ -618,7 +615,7 @@ const spec: Self = {
                     theme.expanded = themes[index].expanded;
                     theme.scrollTop = themes[index].scrollTop;
                     themes[index] = theme;
-                    self.setState({ themes: themes });
+                    self.setState({ themes });
                 }
             }
         };
@@ -712,13 +709,13 @@ const spec: Self = {
             showMoreThemesView = (
                 <button type="button" className="btn btn-primary btn-lg col-sm-12" onClick={self.showMoreThemes}>
                     show {self.nextThemeCount() } more {self.nextThemeCount() > 1 ? "themes" : "theme"}(total {self.state.totalCount})
-                    </button>
+                </button>
             );
         } else {
             showMoreThemesView = (
                 <button type="button" className="btn btn-primary btn-lg col-sm-12" disabled>
                     total {self.state.totalCount}
-                    </button>
+                </button>
             );
         }
 
@@ -730,7 +727,7 @@ const spec: Self = {
                     <span>
                         {theme.title}
                         <span className={ "theme-title-status label label-" + (theme.status === types.themeStatus.open ? "success" : "danger") }>{theme.status}</span>
-                        </span>
+                    </span>
                 );
                 if (theme.detail) {
                     if (theme.expanded) {
@@ -762,7 +759,7 @@ const spec: Self = {
                             <div onClick={self.expand.bind(this, theme) } className="clearfix pointer">
                                 {imageView}
                                 {textView}
-                                </div>
+                            </div>
                         );
                     }
                 }
@@ -780,7 +777,7 @@ const spec: Self = {
                 ownersView = (
                     <button type="button" className="clip btn btn-xs btn-link" data-clipboard-text={theme.ownersEmails}>
                         {theme.owners.length} {theme.owners.length > 1 ? "owners" : "owner"}
-                        </button>
+                    </button>
                 );
             } else {
                 ownersView = (
@@ -793,7 +790,7 @@ const spec: Self = {
                 watchersView = (
                     <button type="button" className="clip btn btn-xs btn-link" data-clipboard-text={theme.watchersEmails}>
                         {theme.watchers.length} {theme.watchers.length > 1 ? "watchers" : "watcher"}
-                        </button>
+                    </button>
                 );
             } else {
                 watchersView = (
@@ -806,13 +803,13 @@ const spec: Self = {
                 watchButton = (
                     <button type="button" className="btn btn-xs btn-link" onClick={self.unwatch.bind(this, theme) }>
                         unwatch
-                        </button>
+                    </button>
                 );
             } else {
                 watchButton = (
                     <button type="button" className="btn btn-xs btn-link" onClick={self.watch.bind(this, theme) }>
                         watch
-                        </button>
+                    </button>
                 );
             }
 
@@ -825,13 +822,13 @@ const spec: Self = {
                         openButton = (
                             <button type="button" className="btn btn-xs btn-link" onClick={self.close.bind(this, theme) }>
                                 close
-                                </button>
+                            </button>
                         );
                     } else {
                         openButton = (
                             <button type="button" className="btn btn-xs btn-link" onClick={self.reopen.bind(this, theme) }>
                                 reopen
-                                </button>
+                            </button>
                         );
                     }
 

@@ -3,7 +3,7 @@ import {HeadComponent, global} from "./head";
 import * as common from "./common";
 import * as React from "react";
 
-interface State {
+type State = {
     emailHead?: string;
     emailTail?: string;
     innerName?: string;
@@ -12,121 +12,105 @@ interface State {
     code?: string;
     redirectUrl?: string;
     requestCount?: number;
-}
+};
 
-interface Self extends types.Self<State> {
+type Self = types.Self<State> & {
     login: () => void;
     refreshCaptcha: () => void;
     getName: () => void;
     setRawEmail: (email: string) => void;
 
-    rawEmailChanged: (e) => void;
-    nameChanged: (e) => void;
-    codeChanged: (e) => void;
-}
+    rawEmailChanged: (e: common.Event) => void;
+    nameChanged: (e: common.Event) => void;
+    codeChanged: (e: common.Event) => void;
+};
 
 const guid = common.guid();
 
 const spec: Self = {
-    login: function() {
-        const self: Self = this;
-
+    login: function(this: Self) {
         const lastSuccessfulEmailTime: string = window.localStorage.getItem(common.localStorageNames.lastSuccessfulEmailTime);
         if (lastSuccessfulEmailTime) {
             const time = new Date().getTime() - parseInt(lastSuccessfulEmailTime, 10);
             if (time < 60 * 1000) {
-                global.head.showAlert(false, "please do it after " + (60 - time / 1000) + " seconds");
+                global.head!.showAlert(false, "please do it after " + (60 - time / 1000) + " seconds");
                 return;
             }
         }
 
         $.post(apiBaseUrl + "/api/tokens", {
-            email: `${self.state.emailHead}@${self.state.emailTail}`,
-            name: self.getName(),
+            email: `${this.state!.emailHead}@${this.state!.emailTail}`,
+            name: this.getName(),
             guid,
-            code: self.state.code,
-            redirectUrl: self.state.redirectUrl,
+            code: this.state!.code,
+            redirectUrl: this.state!.redirectUrl,
         }).then((data: types.Response) => {
             if (data.status === 0) {
-                global.head.showAlert(true, "success, please check your email.");
+                global.head!.showAlert(true, "success, please check your email.");
                 window.localStorage.setItem(common.localStorageNames.lastSuccessfulEmailTime, new Date().getTime().toString());
             } else {
-                global.head.showAlert(false, data.errorMessage);
-                self.refreshCaptcha();
+                global.head!.showAlert(false, data.errorMessage!);
+                this.refreshCaptcha();
             }
         });
     },
-    refreshCaptcha: function() {
-        const self: Self = this;
-
+    refreshCaptcha: function(this: Self) {
         $.post(apiBaseUrl + "/api/captchas", {
             id: guid,
         }).then((data: types.CaptchaResponse) => {
             if (data.status === 0) {
-                self.setState({ captchaUrl: data.url });
+                this.setState!({ captchaUrl: data.url });
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    getName: function() {
-        const self: Self = this;
-
-        if (self.state.innerName) {
-            return self.state.innerName;
+    getName: function(this: Self) {
+        if (this.state!.innerName) {
+            return this.state!.innerName;
         }
-        return self.state.emailHead;
+        return this.state!.emailHead;
     },
-    setRawEmail: function(email: string) {
-        const self: Self = this;
-
+    setRawEmail: function(this: Self, email: string) {
         if (common.isEmail(email)) {
             const tmp = email.trim().toLowerCase().split("@");
-            self.setState({
+            this.setState!({
                 emailHead: tmp[0],
                 emailTail: tmp[1],
                 innerRawEmail: email,
             });
         } else {
-            self.setState({
+            this.setState!({
                 emailHead: "",
                 emailTail: "",
                 innerRawEmail: email,
             });
         }
     },
-    rawEmailChanged: function(e) {
-        const self: Self = this;
-
-        self.setRawEmail(e.target.value);
+    rawEmailChanged: function(this: Self, e: common.Event) {
+        this.setRawEmail(e.target.value);
     },
-    nameChanged: function(e) {
-        const self: Self = this;
-
+    nameChanged: function(this: Self, e: common.Event) {
         const name: string = e.target.value;
-        self.setState({ innerName: name.trim() });
+        this.setState!({ innerName: name.trim() });
     },
-    codeChanged: function(e) {
-        const self: Self = this;
-
-        self.setState({ code: e.target.value });
+    codeChanged: function(this: Self, e: common.Event) {
+        this.setState!({ code: e.target.value });
     },
     componentWillUnmount: function() {
         global.authenticated = undefined;
         global.body = undefined;
     },
-    getInitialState: function() {
-        const self: Self = this;
-
-        global.body = self;
+    getInitialState: function(this: Self) {
+        global.body = this;
         global.authenticated = error => {
             if (error) {
-                self.setRawEmail(window.localStorage.getItem(common.localStorageNames.lastLoginEmail));
-                self.setState({
+                this.setRawEmail(window.localStorage.getItem(common.localStorageNames.lastLoginEmail));
+                this.setState!({
                     innerName: window.localStorage.getItem(common.localStorageNames.lastLoginName),
-                    redirectUrl: decodeURIComponent(common.getUrlParameter("redirect_url")),
+                    redirectUrl: decodeURIComponent(common.getUrlParameter("redirect_url")!),
                 });
-                self.refreshCaptcha();
+                this.refreshCaptcha();
                 return;
             }
 
@@ -145,13 +129,11 @@ const spec: Self = {
             requestCount: 0,
         } as State;
     },
-    render: function() {
-        const self: Self = this;
-
-        let loginView;
-        if (self.state.emailHead && self.state.emailTail && self.state.code && self.state.requestCount === 0) {
+    render: function(this: Self) {
+        let loginView: JSX.Element | undefined = undefined;
+        if (this.state!.emailHead && this.state!.emailTail && this.state!.code && this.state!.requestCount === 0) {
             loginView = (
-                <button type="button" className="btn btn-primary" onClick={self.login}>
+                <button type="button" className="btn btn-primary" onClick={this.login}>
                     Login
                 </button>
             );
@@ -163,12 +145,12 @@ const spec: Self = {
             );
         }
 
-        let captchaView;
-        if (self.state.captchaUrl) {
+        let captchaView: JSX.Element | undefined = undefined;
+        if (this.state!.captchaUrl) {
             captchaView = (
                 <div className="col-sm-2">
-                    <img src={self.state.captchaUrl}/>
-                    <span className="glyphicon glyphicon-refresh pointer" aria-hidden="true" onClick={self.refreshCaptcha}></span>
+                    <img src={this.state!.captchaUrl}/>
+                    <span className="glyphicon glyphicon-refresh pointer" aria-hidden="true" onClick={this.refreshCaptcha}></span>
                 </div>
             );
         }
@@ -190,19 +172,19 @@ const spec: Self = {
                                         </label>
 
                                         <div className="col-sm-4">
-                                            <input type="text" className="form-control" onChange={self.rawEmailChanged} value={self.state.innerRawEmail}/>
+                                            <input type="text" className="form-control" onChange={this.rawEmailChanged} value={this.state!.innerRawEmail}/>
                                         </div>
 
                                         <label className="col-sm-1 control-label">name:</label>
 
                                         <div className="col-sm-2">
-                                            <input type="text" className="form-control" onChange={self.nameChanged} value={self.state.innerName}/>
+                                            <input type="text" className="form-control" onChange={this.nameChanged} value={this.state!.innerName}/>
                                         </div>
                                     </div>
                                     <div className="form-group">
                                         {captchaView}
                                         <div className="col-sm-2">
-                                            <input type="text" className="form-control" onChange={self.codeChanged} value={self.state.code}/>
+                                            <input type="text" className="form-control" onChange={this.codeChanged} value={this.state!.code}/>
                                         </div>
                                         <div className="col-sm-4">
                                             {loginView}

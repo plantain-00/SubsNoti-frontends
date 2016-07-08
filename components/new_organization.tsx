@@ -3,48 +3,42 @@ import {HeadComponent, global} from "./head";
 import * as common from "./common";
 import * as React from "react";
 
-interface State {
+type State = {
     organizationName?: string;
-}
+};
 
-interface Self extends types.Self<State> {
+type Self = types.Self<State> & {
     add: () => void;
 
-    organizationNameChanged: (e) => void;
-}
+    organizationNameChanged: (e: common.Event) => void;
+};
 
 const spec: Self = {
-    add: function() {
-        const self: Self = this;
-
+    add: function(this: Self) {
         $.post(apiBaseUrl + "/api/organizations", {
-            organizationName: self.state.organizationName,
+            organizationName: this.state!.organizationName,
         }).then((data: types.Response) => {
             if (data.status === 0) {
-                global.head.setState({ createdOrganizationCount: global.head.state.createdOrganizationCount + 1 });
-                global.head.showAlert(true, "success");
+                global.head!.setState!({ createdOrganizationCount: global.head!.state!.createdOrganizationCount + 1 });
+                global.head!.showAlert(true, "success");
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    organizationNameChanged: function(e) {
-        const self: Self = this;
-
-        self.setState({ organizationName: e.target.value });
+    organizationNameChanged: function(this: Self, e: common.Event) {
+        this.setState!({ organizationName: e.target.value });
     },
     getInitialState: function() {
         return {
             organizationName: "",
         } as State;
     },
-    render: function() {
-        const self: Self = this;
-
-        let addView;
-        if (self.state.organizationName.trim()) {
+    render: function(this: Self) {
+        let addView: JSX.Element | undefined = undefined;
+        if (this.state!.organizationName!.trim()) {
             addView = (
-                <button type="button" className="btn btn-primary" onClick={self.add}>Add</button>
+                <button type="button" className="btn btn-primary" onClick={this.add}>Add</button>
             );
         } else {
             addView = (
@@ -66,7 +60,7 @@ const spec: Self = {
                                         <label className="col-sm-2 control-label">organization name: </label>
 
                                         <div className="col-sm-4">
-                                            <input type="text" className="form-control" value={self.state.organizationName} onChange={self.organizationNameChanged}/>
+                                            <input type="text" className="form-control" value={this.state!.organizationName} onChange={this.organizationNameChanged}/>
                                         </div>
 
                                         <div className="col-sm-2">

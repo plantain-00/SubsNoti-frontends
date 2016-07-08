@@ -1,24 +1,22 @@
 import * as types from "../share/types";
-import {HeadComponent, global} from "./head";
+import { HeadComponent, global } from "./head";
 import * as common from "./common";
 import * as React from "react";
 
-interface State {
+type State = {
     name?: string;
-}
+};
 
-interface Self extends types.Self<State> {
+type Self = types.Self<State> & {
     save: () => void;
-    update: (avatarFileName: string) => void;
+    update: (avatarFileName?: string) => void;
 
-    nameChanged: (e) => void;
+    nameChanged: (e: any) => void;
 }
 
 const spec: Self = {
-    save: function() {
-        const self: Self = this;
-
-        const file = $(":file")[0]["files"][0];
+    save: function (this: Self) {
+        const file = (($(":file")[0] as any)["files"] as File[])[0];
         if (file) {
             const formData = new FormData();
             formData.append("file", file);
@@ -33,23 +31,21 @@ const spec: Self = {
                 if (data.status === 0) {
                     const name = data.names[0];
 
-                    self.update(name);
+                    this.update(name);
                 } else {
-                    global.head.showAlert(false, data.errorMessage);
+                    global.head!.showAlert(false, data.errorMessage!);
                 }
             });
         } else {
-            self.update(null);
+            this.update();
         }
     },
-    update: function(avatarFileName: string) {
-        const self: Self = this;
-
-        if (self.state.name.trim() !== global.head.state.currentUserName || avatarFileName) {
+    update: function (this: Self, avatarFileName: string) {
+        if (this.state!.name!.trim() !== global.head!.state!.currentUserName || avatarFileName) {
             $.ajax({
                 url: apiBaseUrl + "/api/user",
                 data: {
-                    name: self.state.name,
+                    name: this.state!.name,
                     avatarFileName,
                 },
                 cache: false,
@@ -58,30 +54,26 @@ const spec: Self = {
                 if (data.status === 0) {
                     window.sessionStorage.removeItem(common.sessionStorageNames.loginResult);
 
-                    global.head.authenticate(error => { ; });
-                    global.head.showAlert(true, "success");
+                    global.head!.authenticate(error => { ; });
+                    global.head!.showAlert(true, "success");
                 } else {
-                    global.head.showAlert(false, data.errorMessage);
+                    global.head!.showAlert(false, data.errorMessage!);
                 }
             });
         } else {
-            global.head.showAlert(false, "nothing changes.");
+            global.head!.showAlert(false, "nothing changes.");
         }
     },
-    nameChanged: function(e) {
-        const self: Self = this;
-
-        self.setState({ name: e.target.value });
+    nameChanged: function (this: Self, e: common.Event) {
+        this.setState!({ name: e.target.value });
     },
-    componentWillUnmount: function() {
+    componentWillUnmount: function () {
         global.authenticated = undefined;
     },
-    getInitialState: function() {
-        const self: Self = this;
-
+    getInitialState: function (this: Self) {
         global.authenticated = error => {
             if (error) {
-                self.setState({ name: global.head.state.currentUserName });
+                this.setState!({ name: global.head!.state!.currentUserName });
             }
         };
 
@@ -89,13 +81,11 @@ const spec: Self = {
             name: "",
         } as State;
     },
-    render: function() {
-        const self: Self = this;
-
-        let saveView;
-        if (self.state.name.trim() !== "") {
+    render: function (this: Self) {
+        let saveView: JSX.Element;
+        if (this.state!.name!.trim() !== "") {
             saveView = (
-                <button type="button" className="btn btn-primary" onClick={self.save}>Save</button>
+                <button type="button" className="btn btn-primary" onClick={this.save}>Save</button>
             );
         } else {
             saveView = (
@@ -115,12 +105,12 @@ const spec: Self = {
                             <div className="panel-body">
                                 <form className="form-horizontal">
                                     <div className="form-group">
-                                        <label className="col-sm-1 control-label">name:</label>
+                                        <label className="col-sm-1 control-label">name: </label>
 
                                         <div className="col-sm-2">
-                                            <input type="text" className="form-control" value={self.state.name} onChange={self.nameChanged}/>
+                                            <input type="text" className="form-control" value={this.state!.name} onChange={this.nameChanged}/>
                                         </div>
-                                        <label className="col-sm-1 control-label">avatar:</label>
+                                        <label className="col-sm-1 control-label">avatar: </label>
                                         <div className="col-sm-2">
                                             <input type="file" name="avatar"/>
                                         </div>

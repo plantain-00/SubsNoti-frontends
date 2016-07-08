@@ -1,8 +1,8 @@
 /// <reference path="./common.d.ts" />
 
-export function getUrlParameter(name: string): string {
+export function getUrlParameter(name: string): string | null {
     const reg: RegExp = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-    const array: RegExpMatchArray = window.location.search.substr(1).match(reg);
+    const array: RegExpMatchArray | null = window.location.search.substr(1).match(reg);
     if (array && array.length >= 3) {
         return decodeURI(array[2]);
     }
@@ -60,3 +60,21 @@ export function findIndex<T>(array: T[], predicate: (t: T) => boolean) {
 }
 
 export const {match, RoutingContext, Route, Router, Link} = require("react-router");
+
+export type Event = {
+    target: {
+        value: any,
+        selectionStart: number,
+        files: File[],
+    },
+    keyCode: number,
+    dataTransfer: {
+        files: File[],
+    },
+    preventDefault: () => void,
+    stopPropagation: () => void;
+    clipboardData: any,
+    originalEvent: {
+        clipboardData: any,
+    }
+};

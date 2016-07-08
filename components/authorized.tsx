@@ -1,28 +1,23 @@
 import * as types from "../share/types";
 import {HeadComponent, global} from "./head";
-import * as common from "./common";
 import * as React from "react";
 
-interface State {
+type State = {
     applications?: types.Application[];
     application?: types.Application;
-}
+};
 
-interface Self extends types.Self<State> {
+type Self = types.Self<State> & {
     show: (application: types.Application) => void;
     get: () => void;
     revoke: (application: types.Application) => void;
-}
+};
 
 const spec: Self = {
-    show: function(application: types.Application) {
-        const self: Self = this;
-
-        self.state.application = application;
+    show: function(this: Self, application: types.Application) {
+        this.state!.application = application;
     },
-    get: function() {
-        const self: Self = this;
-
+    get: function(this: Self) {
         $.ajax({
             url: apiBaseUrl + "/api/user/authorized",
             cache: false,
@@ -31,63 +26,57 @@ const spec: Self = {
                 for (const application of data.applications) {
                     application.lastUsed = application.lastUsed ? moment(application.lastUsed, moment.ISO_8601).fromNow() : "never used";
                 }
-                self.setState({ applications: data.applications });
+                this.setState!({ applications: data.applications });
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    revoke: function(application: types.Application) {
-        const self: Self = this;
-
+    revoke: function(this: Self, application: types.Application) {
         $.ajax({
             url: apiBaseUrl + `/api/user/authorized/${application.id}`,
             method: "DELETE",
         }).then((data: types.Response) => {
             if (data.status === 0) {
-                global.head.showAlert(true, "success");
-                self.setState({ application: null });
-                self.get();
+                global.head!.showAlert(true, "success");
+                this.setState!({ application: undefined });
+                this.get();
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    componentDidMount: function() {
-        const self: Self = this;
-
-        self.get();
+    componentDidMount: function(this: Self) {
+        this.get();
     },
     getInitialState: function() {
         return {
             applications: [],
-            application: null,
+            application: undefined,
         } as State;
     },
-    render: function() {
-        const self: Self = this;
-
-        const applicationsView = self.state.applications.map(application => {
+    render: function(this: Self) {
+        const applicationsView = this.state!.applications!.map(application => {
             return (
                 <tr key={application.id}>
                     <td>
-                        <a href="javascript:void(0)" onClick={self.show.bind(this, application)}>{application.name}</a>
+                        <a href="javascript:void(0)" onClick={this.show.bind(this, application)}>{application.name}</a>
                         <p>
-                            owned by: {application.creator.name}
+                            owned by: {application.creator!.name}
                             •
                             last used: {application.lastUsed}
                         </p>
                     </td>
                     <td className="authorized-application">
-                        <button type="button" className="btn btn-danger" onClick={self.revoke.bind(this, application)}>Revoke</button>
+                        <button type="button" className="btn btn-danger" onClick={this.revoke.bind(this, application)}>Revoke</button>
                     </td>
                 </tr>
             );
         });
 
-        let applicationView;
-        if (self.state.application) {
-            const scopesView = self.state.application.scopes.map(scope => {
+        let applicationView: JSX.Element | undefined = undefined;
+        if (this.state!.application) {
+            const scopesView = this.state!.application!.scopes!.map(scope => {
                 return (
                     <tr key={scope.name}>
                         <td>{scope.name}</td>
@@ -99,15 +88,15 @@ const spec: Self = {
                 <form className="form">
                     <div className="form-group">
                         <label>name</label>
-                        <input type="text" className="form-control" readOnly value={self.state.application.name}/>
+                        <input type="text" className="form-control" readOnly value={this.state!.application!.name}/>
                     </div>
                     <div className="form-group">
                         <label>home url</label>
-                        <input type="text" className="form-control" readOnly value={self.state.application.homeUrl}/>
+                        <input type="text" className="form-control" readOnly value={this.state!.application!.homeUrl}/>
                     </div>
                     <div className="form-group">
                         <label>description</label>
-                        <input type="text" className="form-control" readOnly value={self.state.application.description}/>
+                        <input type="text" className="form-control" readOnly value={this.state!.application!.description}/>
                     </div>
                     <div className="form-group">
                         <label>scopes</label>

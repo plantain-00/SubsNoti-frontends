@@ -3,77 +3,67 @@ import {HeadComponent, global} from "./head";
 import * as common from "./common";
 import * as React from "react";
 
-interface State {
+type State = {
     email?: string;
     organizationsCurrentUserCreated?: types.Organization[];
     currentOrganizationId?: string;
     requestCount?: number;
-}
+};
 
-interface Self extends types.Self<State> {
+type Self = types.Self<State> & {
     getOrganizationsCurrentUserCreated: () => void;
-    invite: (e) => void;
+    invite: (e: common.Event) => void;
     clickOrganization: (organization: types.Organization) => void;
 
-    emailChanged: (e) => void;
-}
+    emailChanged: (e: common.Event) => void;
+};
 
 const spec: Self = {
-    getOrganizationsCurrentUserCreated: function() {
-        const self: Self = this;
-
+    getOrganizationsCurrentUserCreated: function(this: Self) {
         $.ajax({
             url: apiBaseUrl + "/api/user/created",
             cache: false,
         }).then((data: types.OrganizationsResponse) => {
             if (data.status === 0) {
-                self.setState({ organizationsCurrentUserCreated: data.organizations });
+                this.setState!({ organizationsCurrentUserCreated: data.organizations });
                 if (data.organizations.length > 0) {
                     const lastOrganizationId = window.localStorage.getItem(common.localStorageNames.lastOrganizationId);
                     if (lastOrganizationId && common.find(data.organizations, o => o.id === lastOrganizationId)) {
-                        self.setState({ currentOrganizationId: lastOrganizationId });
+                        this.setState!({ currentOrganizationId: lastOrganizationId });
                     } else {
-                        self.setState({ currentOrganizationId: data.organizations[0].id });
+                        this.setState!({ currentOrganizationId: data.organizations[0].id });
                     }
                 }
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    invite: function(e) {
-        const self: Self = this;
-
+    invite: function(this: Self, e: common.Event) {
         $.ajax({
-            url: apiBaseUrl + "/api/users/" + self.state.email + "/joined/" + self.state.currentOrganizationId,
+            url: apiBaseUrl + "/api/users/" + this.state!.email + "/joined/" + this.state!.currentOrganizationId,
             data: {},
             cache: false,
             type: "PUT",
         }).then((data: types.Response) => {
             if (data.status === 0) {
-                global.head.showAlert(true, "success");
+                global.head!.showAlert(true, "success");
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    clickOrganization: function(organization: types.Organization) {
-        const self: Self = this;
-
-        self.setState({ currentOrganizationId: organization.id });
+    clickOrganization: function(this: Self, organization: types.Organization) {
+        this.setState!({ currentOrganizationId: organization.id });
 
         window.localStorage.setItem(common.localStorageNames.lastOrganizationId, organization.id);
     },
-    emailChanged: function(e) {
-        const self: Self = this;
-
-        self.setState({ email: e.target.value });
+    emailChanged: function(this: Self, e: common.Event) {
+        this.setState!({ email: e.target.value });
     },
-    componentDidMount: function() {
-        const self: Self = this;
-
-        global.body = self;
-        self.getOrganizationsCurrentUserCreated();
+    componentDidMount: function(this: Self) {
+        global.body = this;
+        this.getOrganizationsCurrentUserCreated();
     },
     componentWillUnmount: function() {
         global.body = undefined;
@@ -86,22 +76,20 @@ const spec: Self = {
             requestCount: 0,
         } as State;
     },
-    render: function() {
-        const self: Self = this;
-
-        let inviteView;
-        if (common.isEmail(self.state.email.trim()) && self.state.requestCount === 0) {
+    render: function(this: Self) {
+        let inviteView: JSX.Element | undefined = undefined;
+        if (common.isEmail(this.state!.email!.trim()) && this.state!.requestCount === 0) {
             inviteView = (
-                <button type="button" className="btn btn-primary" onClick={self.invite}>Invite</button>
+                <button type="button" className="btn btn-primary" onClick={this.invite}>Invite</button>
             );
         } else {
             inviteView = (
                 <button type="button" className="btn btn-primary" disabled>Please input invitee's email</button>
             );
         }
-        const organizationsView = self.state.organizationsCurrentUserCreated.map(organization => {
+        const organizationsView = this.state!.organizationsCurrentUserCreated!.map(organization => {
             return (
-                <label className={ "the-label " + (self.state.currentOrganizationId === organization.id ? "label-active" : "") } key={organization.id} onClick={self.clickOrganization.bind(this, organization)}>
+                <label className={ "the-label " + (this.state!.currentOrganizationId === organization.id ? "label-active" : "") } key={organization.id} onClick={this.clickOrganization.bind(this, organization)}>
                     {organization.name}
                 </label>
             );
@@ -129,7 +117,7 @@ const spec: Self = {
                                         </label>
 
                                         <div className="col-sm-4">
-                                            <input type="text" className="form-control" onChange={self.emailChanged} value={self.state.email}/>
+                                            <input type="text" className="form-control" onChange={this.emailChanged} value={this.state!.email}/>
                                         </div>
 
                                         <div className="col-sm-2">

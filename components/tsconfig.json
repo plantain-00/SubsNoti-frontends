@@ -3,6 +3,10 @@
         "module": "commonjs",
         "jsx": "react",
         "target": "es5",
-        "outDir": "../build/"
+        "outDir": "../build/",
+        "noImplicitAny": true,
+        "noUnusedLocals": true,
+        "noImplicitThis": true,
+        "strictNullChecks": true
     }
 }

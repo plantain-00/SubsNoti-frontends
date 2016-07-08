@@ -1,44 +1,40 @@
 import * as types from "../share/types";
-import {HeadComponent, global} from "./head";
+import { HeadComponent, global } from "./head";
 import * as common from "./common";
 import * as React from "react";
 
-interface State {
+type State = {
     allScopes?: types.Scope[];
     scopes?: string[];
     redirectUrl?: string;
     code?: string;
     application?: types.Application;
-}
+};
 
-interface Self extends types.Self<State> {
+type Self = types.Self<State> & {
     confirm: () => void;
-}
+};
 
 const spec: Self = {
-    confirm: function() {
-        const self: Self = this;
-
+    confirm: function (this: Self) {
         $.ajax({
-            url: apiBaseUrl + `/api/user/access_tokens/${self.state.code}`,
+            url: apiBaseUrl + `/api/user/access_tokens/${this.state!.code}`,
             method: "POST",
         }).then((data: types.Response) => {
             if (data.status === 0) {
                 alert("success");
-                location.href = self.state.redirectUrl;
+                location.href = this.state!.redirectUrl!;
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    componentDidMount: function() {
-        const self: Self = this;
-
-        const scopes = decodeURIComponent(common.getUrlParameter("scopes"));
-        self.setState({
-            redirectUrl: decodeURIComponent(common.getUrlParameter("redirect_url")),
+    componentDidMount: function (this: Self) {
+        const scopes = decodeURIComponent(common.getUrlParameter("scopes") !);
+        this.setState!({
+            redirectUrl: decodeURIComponent(common.getUrlParameter("redirect_url") !),
             scopes: scopes.split(","),
-            code: decodeURIComponent(common.getUrlParameter("code")),
+            code: decodeURIComponent(common.getUrlParameter("code") !),
         });
 
         const applicationId = common.getUrlParameter("application_id");
@@ -47,9 +43,9 @@ const spec: Self = {
                 url: apiBaseUrl + `/api/applications/${decodeURIComponent(applicationId)}`,
             }).then((data: types.ApplicationResponse) => {
                 if (data.status === 0) {
-                    self.setState({ application: data.application });
+                    this.setState!({ application: data.application });
                 } else {
-                    global.head.showAlert(false, data.errorMessage);
+                    global.head!.showAlert(false, data.errorMessage!);
                 }
             });
         }
@@ -58,51 +54,49 @@ const spec: Self = {
             url: apiBaseUrl + "/api/scopes",
         }).then((data: types.ScopesResponse) => {
             if (data.status === 0) {
-                self.setState({ allScopes: data.scopes });
+                this.setState!({ allScopes: data.scopes });
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    getInitialState: function() {
+    getInitialState: function () {
         return {
             allScopes: [],
             scopes: [],
             redirectUrl: "",
             code: "",
-            application: null,
+            application: undefined,
         } as State;
     },
-    render: function() {
-        const self: Self = this;
-
-        let applicationView;
-        if (self.state.application) {
+    render: function (this: Self) {
+        let applicationView: JSX.Element | undefined = undefined;
+        if (this.state!.application) {
             applicationView = (
                 <div className="panel-heading">
-                    Authorization to {self.state.application.name} (owned by {self.state.application.creator.name})
+                    Authorization to {this.state!.application!.name} (owned by {this.state!.application!.creator!.name})
                 </div>
             );
         }
 
-        const scopesView = self.state.allScopes.map(scope => {
-            const checked = self.state.scopes.indexOf(scope.name) >= 0;
+        const scopesView = this.state!.allScopes!.map(scope => {
+            const checked = this.state!.scopes!.indexOf(scope.name) >= 0;
             return (
                 <label key={scope.name} className="checkbox">
                     <input type="checkbox" checked={checked} value={scope.name} readOnly/>
-                    {scope.name} : {scope.description}
+                    {scope.name}: {scope.description}
                 </label>
             );
         });
 
-        let codeView;
-        if (self.state.code) {
+        let codeView: JSX.Element | undefined = undefined;
+        if (this.state!.code) {
             codeView = (
                 <form className="form">
                     <div className="checkbox">
                         {scopesView}
                     </div>
-                    <button type="button" className="btn btn-primary" onClick={self.confirm}>Confirm</button>
+                    <button type="button" className="btn btn-primary" onClick={this.confirm}>Confirm</button>
                 </form>
             );
         }

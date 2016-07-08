@@ -9,19 +9,19 @@ const Clipboard = require("clipboard");
 
 const history = History.createHistory();
 
-import {SuccessComponent} from "./success";
-import {ErrorComponent} from "./error";
-import {NewOrganizationComponent} from "./new_organization";
-import {InviteComponent} from "./invite";
-import {AccessTokensComponent} from "./access_tokens";
-import {AuthorizedComponent} from "./authorized";
-import {RegisteredComponent} from "./registered";
-import {AuthorizationComponent} from "./authorization";
-import {LoginComponent} from "./login";
-import {UserComponent} from "./user";
-import {ThemesComponent} from "./themes";
+import { SuccessComponent } from "./success";
+import { ErrorComponent } from "./error";
+import { NewOrganizationComponent } from "./new_organization";
+import { InviteComponent } from "./invite";
+import { AccessTokensComponent } from "./access_tokens";
+import { AuthorizedComponent } from "./authorized";
+import { RegisteredComponent } from "./registered";
+import { AuthorizationComponent } from "./authorization";
+import { LoginComponent } from "./login";
+import { UserComponent } from "./user";
+import { ThemesComponent } from "./themes";
 
-import {global} from "./head";
+import { global } from "./head";
 
 $.ajaxSetup({
     headers: {
@@ -34,17 +34,17 @@ $.ajaxSetup({
 
 $(document).ajaxSend(() => {
     if (global.head) {
-        global.head.setState({ requestCount: global.head.state.requestCount + 1 });
+        global.head.setState!({ requestCount: global.head.state!.requestCount + 1 });
     }
     if (global.body) {
-        global.body.setState({ requestCount: global.body.state.requestCount + 1 });
+        global.body.setState!({ requestCount: global.body.state!.requestCount + 1 });
     }
 }).ajaxComplete(() => {
     if (global.head) {
-        global.head.setState({ requestCount: global.head.state.requestCount - 1 });
+        global.head.setState!({ requestCount: global.head.state!.requestCount - 1 });
     }
     if (global.body) {
-        global.body.setState({ requestCount: global.body.state.requestCount - 1 });
+        global.body.setState!({ requestCount: global.body.state!.requestCount - 1 });
     }
 }).ajaxError(() => {
     if (global.head) {
@@ -54,15 +54,15 @@ $(document).ajaxSend(() => {
 
 const clipboard = new Clipboard(".clip");
 
-clipboard.on("success", e => {
-    global.head.showAlert(true, "emails copied:" + e.text);
+clipboard.on("success", (e: { text: string }) => {
+    global.head!.showAlert(true, "emails copied:" + e.text);
 });
 
 global.win = $(window);
 global.doc = $(document);
 
 global.win.scroll(() => {
-    if (global.scrolled && global.win.scrollTop() >= global.doc.height() - global.win.height()) {
+    if (global.scrolled && global.win!.scrollTop() >= global.doc!.height() - global.win!.height()) {
         global.scrolled();
     }
 });
@@ -94,5 +94,5 @@ ReactDOM.render(
         <common.Route path="/login.html" component={LoginComponent}/>
         <common.Route path="/user.html" component={UserComponent}/>
     </common.Router>,
-    document.getElementById("container")
+    document.getElementById("container") !
 );

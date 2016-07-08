@@ -1,21 +1,20 @@
 /// <reference path="./common.d.ts" />
 
-import * as types from "../share/types";
 import * as common from "./common";
 import * as React from "react";
 import { renderToString } from "react-dom/server";
 
-import {SuccessComponent} from "./success";
-import {ErrorComponent} from "./error";
-import {NewOrganizationComponent} from "./new_organization";
-import {InviteComponent} from "./invite";
-import {AccessTokensComponent} from "./access_tokens";
-import {AuthorizedComponent} from "./authorized";
-import {RegisteredComponent} from "./registered";
-import {AuthorizationComponent} from "./authorization";
-import {LoginComponent} from "./login";
-import {UserComponent} from "./user";
-import {ThemesComponent} from "./themes";
+import { SuccessComponent } from "./success";
+import { ErrorComponent } from "./error";
+import { NewOrganizationComponent } from "./new_organization";
+import { InviteComponent } from "./invite";
+import { AccessTokensComponent } from "./access_tokens";
+import { AuthorizedComponent } from "./authorized";
+import { RegisteredComponent } from "./registered";
+import { AuthorizationComponent } from "./authorization";
+import { LoginComponent } from "./login";
+import { UserComponent } from "./user";
+import { ThemesComponent } from "./themes";
 
 const routes = [
     <common.Route path="/" component={ThemesComponent}/>,
@@ -39,7 +38,7 @@ const routes = [
  * 3. backends add modules of `react`, `react-dom`, `history` and `react-router`
  * 4. for requests of `*.html`, handle them like below
  */
-common.match({ routes, location: "/" }, (error, redirectLocation, renderProps) => {
+common.match({ routes, location: "/" }, (error: Error, redirectLocation: string, renderProps: any[]) => {
     if (error) {
         console.log(error);
         return;

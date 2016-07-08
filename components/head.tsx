@@ -32,9 +32,9 @@ export const global: {
     doc?: JQuery;
 } = new Object();
 
-let timeoutId;
+let timeoutId: NodeJS.Timer | undefined;
 
-interface State {
+type State = {
     loginStatus?: types.LoginStatus;
     currentUserId?: string;
     currentUserName?: string;
@@ -46,25 +46,23 @@ interface State {
     alertIsSuccess?: boolean;
     showAlertMessage?: boolean;
     alertMessage?: string;
-}
+};
 
-interface Self extends types.Self<State> {
+type Self = types.Self<State> & {
     showAlert: (isSuccess: boolean, message: string) => void;
     authenticate: (next: (error: Error) => void) => void;
     exit: () => void;
-}
+};
 
 const spec: Self = {
-    exit: function() {
-        const self: Self = this;
-
+    exit: function (this: Self) {
         $.ajax({
             type: "DELETE",
             url: apiBaseUrl + "/api/user/logged_in",
             cache: false,
         }).then((data: types.CurrentUserResponse) => {
             if (data.status === 0) {
-                self.setState({
+                this.setState!({
                     loginStatus: types.loginStatus.fail,
                     currentUserId: "",
                     currentUserName: "",
@@ -75,14 +73,12 @@ const spec: Self = {
                 });
                 window.sessionStorage.removeItem(common.sessionStorageNames.loginResult);
             } else {
-                self.showAlert(false, data.errorMessage);
+                this.showAlert(false, data.errorMessage!);
             }
         });
     },
-    showAlert: function(isSuccess: boolean, message: string) {
-        const self: Self = this;
-
-        self.setState({
+    showAlert: function (this: Self, isSuccess: boolean, message: string) {
+        this.setState!({
             alertIsSuccess: isSuccess,
             alertMessage: message,
             showAlertMessage: true,
@@ -93,16 +89,14 @@ const spec: Self = {
         }
 
         timeoutId = setTimeout(() => {
-            self.setState({ showAlertMessage: false });
-            timeoutId = null;
+            this.setState!({ showAlertMessage: false });
+            timeoutId = undefined;
         }, 3000);
     },
-    authenticate: function(next: (error: Error) => void) {
-        const self: Self = this;
-
+    authenticate: function (this: Self, next: (error: Error | null) => void) {
         getCurrentUser(data => {
             if (data.status === 0) {
-                self.setState({
+                this.setState!({
                     loginStatus: types.loginStatus.success,
                     currentUserId: data.user.id,
                     currentUserName: data.user.name,
@@ -112,23 +106,21 @@ const spec: Self = {
                     joinedOrganizationCount: data.user.joinedOrganizationCount,
                 });
 
-                window.localStorage.setItem(common.localStorageNames.lastLoginEmail, data.user.email);
+                window.localStorage.setItem(common.localStorageNames.lastLoginEmail, data.user.email!);
                 window.localStorage.setItem(common.localStorageNames.lastLoginName, data.user.name);
 
                 next(null);
             } else {
-                self.setState({ loginStatus: types.loginStatus.fail });
+                this.setState!({ loginStatus: types.loginStatus.fail });
                 next(new Error(data.errorMessage));
             }
         });
     },
-    componentDidMount: function() {
-        const self: Self = this;
+    componentDidMount: function (this: Self) {
+        global.head = this;
 
-        global.head = self;
-
-        $(document).ready(function() {
-            self.authenticate(error => {
+        $(document).ready(function () {
+            global.head!.authenticate(error => {
                 if (error) {
                     console.log(error);
                 }
@@ -139,13 +131,13 @@ const spec: Self = {
             });
         });
     },
-    componentWillUnmount: function() {
+    componentWillUnmount: function () {
         global.head = undefined;
         global.authenticated = undefined;
-        clearTimeout(timeoutId);
-        timeoutId = null;
+        clearTimeout(timeoutId!);
+        timeoutId = undefined;
     },
-    getInitialState: function() {
+    getInitialState: function () {
         return {
             loginStatus: types.loginStatus.unknown,
             currentUserId: "",
@@ -160,9 +152,7 @@ const spec: Self = {
             alertMessage: "",
         } as State;
     },
-    render: function() {
-        const self: Self = this;
-
+    render: function (this: Self) {
         const createOrganizationView = (
             <li>
                 <common.Link to="/new_organization.html">New Organization</common.Link>
@@ -188,18 +178,18 @@ const spec: Self = {
                 <common.Link to="/access_tokens.html">Access tokens</common.Link>
             </li>
         );
-        let logoutView;
-        if (self.state.loginStatus === types.loginStatus.success) {
+        let logoutView: JSX.Element | undefined = undefined;
+        if (this.state!.loginStatus === types.loginStatus.success) {
             logoutView = (
                 <li>
-                    <a href="javascript:void(0)" onClick={self.exit}>
+                    <a href="javascript:void(0)" onClick={this.exit}>
                         <span className="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                     </a>
                 </li>
             );
         }
-        let loginView;
-        switch (self.state.loginStatus) {
+        let loginView: JSX.Element | undefined = undefined;
+        switch (this.state!.loginStatus) {
             case types.loginStatus.unknown:
                 loginView = (
                     <a href="javascript:void(0)">
@@ -212,10 +202,10 @@ const spec: Self = {
                 loginView = (
                     <common.Link to="/user.html">
                         <span className="glyphicon glyphicon-user head-icon"></span> &nbsp;
-                        <span>{self.state.currentUserName}</span>
+                        <span>{this.state!.currentUserName}</span>
                         <span className="glyphicon glyphicon-envelope head-icon"></span> &nbsp;
-                        <span>{self.state.currentUserEmail}</span>
-                        <img src={self.state.currentAvatar} className="head-avatar"/>
+                        <span>{this.state!.currentUserEmail}</span>
+                        <img src={this.state!.currentAvatar} className="head-avatar"/>
                     </common.Link>
                 );
                 break;
@@ -229,8 +219,8 @@ const spec: Self = {
             default:
                 break;
         }
-        let loginWithGithubView;
-        if (self.state.loginStatus === types.loginStatus.fail) {
+        let loginWithGithubView: JSX.Element | undefined = undefined;
+        if (this.state!.loginStatus === types.loginStatus.fail) {
             loginWithGithubView = (
                 <li>
                     <a href={apiBaseUrl + "/login_with_github"}>
@@ -239,16 +229,16 @@ const spec: Self = {
                 </li>
             );
         }
-        let alertMessageView;
-        if (self.state.showAlertMessage) {
+        let alertMessageView: JSX.Element | undefined = undefined;
+        if (this.state!.showAlertMessage) {
             alertMessageView = (
-                <div className={ "head-alert alert alert-" + (self.state.alertIsSuccess ? "success" : "danger")} role="alert">
-                    {self.state.alertMessage}
+                <div className={"head-alert alert alert-" + (this.state!.alertIsSuccess ? "success" : "danger")} role="alert">
+                    {this.state!.alertMessage}
                 </div>
             );
         }
-        let waitView;
-        if (self.state.requestCount > 0) {
+        let waitView: JSX.Element | undefined = undefined;
+        if (this.state!.requestCount > 0) {
             waitView = (
                 <div className="head-wait">
                     <i className="fa fa-spinner fa-pulse fa-5x"></i>

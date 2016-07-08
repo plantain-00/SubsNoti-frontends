@@ -2,11 +2,11 @@ import * as types from "../share/types";
 import * as common from "./common";
 import * as React from "react";
 
-interface State {
+type State = {
     redirectUrl?: string;
-}
+};
 
-interface Self extends types.Self<State> { }
+type Self = types.Self<State>;
 
 const spec: Self = {
     getInitialState: function() {
@@ -22,14 +22,12 @@ const spec: Self = {
             redirectUrl: redirectUrl ? decodeURIComponent(redirectUrl) : "",
         } as State;
     },
-    render: function() {
-        const self: Self = this;
-
-        let redirectUrlView;
-        if (self.state.redirectUrl) {
+    render: function(this: Self) {
+        let redirectUrlView: JSX.Element | undefined = undefined;
+        if (this.state!.redirectUrl) {
             redirectUrlView = (
                 <span>
-                    or <a href={self.state.redirectUrl} className="alert-link">Continue</a>
+                    or <a href={this.state!.redirectUrl} className="alert-link">Continue</a>
                 </span>
             );
         }

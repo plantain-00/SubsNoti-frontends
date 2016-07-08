@@ -1,18 +1,18 @@
 import * as types from "../share/types";
-import {HeadComponent, global} from "./head";
+import { HeadComponent, global } from "./head";
 import * as common from "./common";
 import * as React from "react";
 
-interface State {
+type State = {
     accessTokens?: types.AccessToken[];
     idInEditing?: string;
     descriptionInEditing?: string;
     scopes?: types.Scope[];
     scopesInEditing?: string[];
     newAccessToken?: string;
-}
+};
 
-interface Self extends types.Self<State> {
+type Self = types.Self<State> & {
     edit: (accessToken: types.AccessToken) => void;
     get: () => void;
     new: () => void;
@@ -20,24 +20,20 @@ interface Self extends types.Self<State> {
     remove: () => void;
     regenerate: () => void;
 
-    descriptionInEditingChanged: (e) => void;
-    scopesInEditingChanged: (e) => void;
-}
+    descriptionInEditingChanged: (e: common.Event) => void;
+    scopesInEditingChanged: (e: common.Event) => void;
+};
 
 const spec: Self = {
-    edit: function(accessToken: types.AccessToken) {
-        const self: Self = this;
-
-        self.setState({
+    edit: function (this: Self, accessToken: types.AccessToken) {
+        this.setState!({
             idInEditing: accessToken.id,
             descriptionInEditing: accessToken.description,
-            scopesInEditing: accessToken.scopes.map(a => a.name),
+            scopesInEditing: accessToken.scopes!.map(a => a.name),
             newAccessToken: "",
         });
     },
-    get: function() {
-        const self: Self = this;
-
+    get: function (this: Self) {
         $.ajax({
             url: apiBaseUrl + "/api/user/access_tokens",
             cache: false,
@@ -46,40 +42,36 @@ const spec: Self = {
                 for (const token of data.accessTokens) {
                     token.lastUsed = token.lastUsed ? moment(token.lastUsed, moment.ISO_8601).fromNow() : "never used";
                 }
-                self.setState({ accessTokens: data.accessTokens });
+                this.setState!({ accessTokens: data.accessTokens });
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    new: function() {
-        const self: Self = this;
-
-        self.setState({
-            idInEditing: null,
+    new: function (this: Self) {
+        this.setState!({
+            idInEditing: undefined,
             descriptionInEditing: "",
             scopesInEditing: [],
             newAccessToken: "",
         });
     },
-    save: function() {
-        const self: Self = this;
-
-        if (self.state.idInEditing) {
+    save: function (this: Self) {
+        if (this.state!.idInEditing) {
             $.ajax({
-                url: apiBaseUrl + `/api/user/access_tokens/${self.state.idInEditing}`,
+                url: apiBaseUrl + `/api/user/access_tokens/${this.state!.idInEditing}`,
                 method: "PUT",
                 data: {
-                    description: self.state.descriptionInEditing,
-                    scopes: self.state.scopesInEditing,
+                    description: this.state!.descriptionInEditing,
+                    scopes: this.state!.scopesInEditing,
                 },
             }).then((data: types.Response) => {
                 if (data.status === 0) {
-                    global.head.showAlert(true, "success");
-                    self.new();
-                    self.get();
+                    global.head!.showAlert(true, "success");
+                    this.new();
+                    this.get();
                 } else {
-                    global.head.showAlert(false, data.errorMessage);
+                    global.head!.showAlert(false, data.errorMessage!);
                 }
             });
         } else {
@@ -87,100 +79,88 @@ const spec: Self = {
                 url: apiBaseUrl + "/api/user/access_tokens",
                 method: "POST",
                 data: {
-                    description: self.state.descriptionInEditing,
-                    scopes: self.state.scopesInEditing,
+                    description: this.state!.descriptionInEditing,
+                    scopes: this.state!.scopesInEditing,
                 },
             }).then((data: types.AccessTokenResponse) => {
                 if (data.status === 0) {
-                    global.head.showAlert(true, "success");
-                    self.new();
-                    self.get();
-                    self.setState({ newAccessToken: data.accessToken });
+                    global.head!.showAlert(true, "success");
+                    this.new();
+                    this.get();
+                    this.setState!({ newAccessToken: data.accessToken });
                 } else {
-                    global.head.showAlert(false, data.errorMessage);
+                    global.head!.showAlert(false, data.errorMessage!);
                 }
             });
         }
     },
-    remove: function() {
-        const self: Self = this;
-
+    remove: function (this: Self) {
         $.ajax({
-            url: apiBaseUrl + `/api/user/access_tokens/${self.state.idInEditing}`,
+            url: apiBaseUrl + `/api/user/access_tokens/${this.state!.idInEditing}`,
             method: "DELETE",
         }).then((data: types.Response) => {
             if (data.status === 0) {
-                global.head.showAlert(true, "success");
-                self.new();
-                self.get();
+                global.head!.showAlert(true, "success");
+                this.new();
+                this.get();
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    regenerate: function() {
-        const self: Self = this;
-
+    regenerate: function (this: Self) {
         $.ajax({
-            url: apiBaseUrl + `/api/user/access_tokens/${self.state.idInEditing}/value`,
+            url: apiBaseUrl + `/api/user/access_tokens/${this.state!.idInEditing}/value`,
             method: "PUT",
         }).then((data: types.AccessTokenResponse) => {
             if (data.status === 0) {
-                global.head.showAlert(true, "success");
-                self.new();
-                self.get();
-                self.setState({ newAccessToken: data.accessToken });
+                global.head!.showAlert(true, "success");
+                this.new();
+                this.get();
+                this.setState!({ newAccessToken: data.accessToken });
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    descriptionInEditingChanged: function(e) {
-        const self: Self = this;
-
-        self.setState({ descriptionInEditing: e.target.value });
+    descriptionInEditingChanged: function (this: Self, e: common.Event) {
+        this.setState!({ descriptionInEditing: e.target.value });
     },
-    scopesInEditingChanged: function(e) {
-        const self: Self = this;
-
+    scopesInEditingChanged: function (this: Self, e: common.Event) {
         const value = e.target.value;
-        const index = self.state.scopesInEditing.indexOf(value);
+        const index = this.state!.scopesInEditing!.indexOf(value);
         if (index >= 0) {
-            self.setState({ scopesInEditing: self.state.scopesInEditing.splice(index, 1) });
+            this.setState!({ scopesInEditing: this.state!.scopesInEditing!.splice(index, 1) });
         } else {
-            self.setState({ scopesInEditing: self.state.scopesInEditing.concat([value]) });
+            this.setState!({ scopesInEditing: this.state!.scopesInEditing!.concat([value]) });
         }
     },
-    componentDidMount: function() {
-        const self: Self = this;
-
-        self.get();
+    componentDidMount: function (this: Self) {
+        this.get();
 
         $.ajax({
             url: apiBaseUrl + "/api/scopes",
         }).then((data: types.ScopesResponse) => {
             if (data.status === 0) {
-                self.setState({ scopes: data.scopes });
+                this.setState!({ scopes: data.scopes });
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    getInitialState: function() {
+    getInitialState: function () {
         return {
             accessTokens: [],
-            idInEditing: null,
+            idInEditing: undefined,
             descriptionInEditing: "",
             scopes: [],
             scopesInEditing: [],
             newAccessToken: "",
         } as State;
     },
-    render: function() {
-        const self: Self = this;
-
-        const accessTokensView = self.state.accessTokens.map(accessToken => {
-            const scopesView = accessToken.scopes.map(scope => {
+    render: function (this: Self) {
+        const accessTokensView = this.state!.accessTokens!.map(accessToken => {
+            const scopesView = accessToken.scopes!.map(scope => {
                 return (
                     <span key={scope.name} className="label label-success access-token-scope">
                         {scope.name}
@@ -190,7 +170,7 @@ const spec: Self = {
             return (
                 <tr key={accessToken.id}>
                     <td>
-                        <a href="javascript:void(0)" onClick={self.edit.bind(this, accessToken) }>
+                        <a href="javascript:void(0)" onClick={this.edit.bind(this, accessToken)}>
                             {accessToken.description}
                             (last used: {accessToken.lastUsed})
                         </a>
@@ -204,22 +184,22 @@ const spec: Self = {
             );
         });
 
-        const scopesView = self.state.scopes.map(scope => {
-            const checked = self.state.scopesInEditing.indexOf(scope.name) >= 0;
+        const scopesView = this.state!.scopes!.map(scope => {
+            const checked = this.state!.scopesInEditing!.indexOf(scope.name) >= 0;
             return (
                 <label key={scope.name} className="checkbox">
-                    <input type="checkbox" onChange={self.scopesInEditingChanged} value={scope.name} checked={checked} />
+                    <input type="checkbox" onChange={this.scopesInEditingChanged} value={scope.name} checked={checked} />
                     {scope.name} : {scope.description}
                 </label>
             );
         });
 
-        let newAccessTokenView;
-        if (self.state.newAccessToken) {
+        let newAccessTokenView: JSX.Element | undefined = undefined;
+        if (this.state!.newAccessToken) {
             newAccessTokenView = (
                 <div className="form-group">
                     <label>new access token</label>
-                    <input type="text" className="form-control" value={self.state.newAccessToken} readOnly />
+                    <input type="text" className="form-control" value={this.state!.newAccessToken} readOnly />
                 </div>
             );
         }
@@ -227,18 +207,18 @@ const spec: Self = {
         const descriptionView = (
             <div className="form-group">
                 <label htmlFor="description">description</label>
-                <input type="text" className="form-control" id="description" onChange={self.descriptionInEditingChanged} value={self.state.descriptionInEditing} />
+                <input type="text" className="form-control" id="description" onChange={this.descriptionInEditingChanged} value={this.state!.descriptionInEditing} />
             </div>
         );
 
-        let accessTokenView;
-        if (self.state.idInEditing) {
+        let accessTokenView: JSX.Element;
+        if (this.state!.idInEditing) {
             accessTokenView = (
                 <form className="form">
-                    <button type="button" className="btn btn-default" onClick={self.new}>
+                    <button type="button" className="btn btn-default" onClick={this.new}>
                         New
                     </button>
-                    <button type="button" className="btn btn-danger" onClick={self.regenerate}>
+                    <button type="button" className="btn btn-danger" onClick={this.regenerate}>
                         Regenerate access token
                     </button>
                     {newAccessTokenView}
@@ -246,8 +226,8 @@ const spec: Self = {
                     <div className="checkbox">
                         {scopesView}
                     </div>
-                    <button type="button" className="btn btn-primary" onClick={self.save}>Update</button>
-                    <button type="button" className="btn btn-danger" onClick={self.remove}>Delete</button>
+                    <button type="button" className="btn btn-primary" onClick={this.save}>Update</button>
+                    <button type="button" className="btn btn-danger" onClick={this.remove}>Delete</button>
                 </form>
             );
         } else {
@@ -258,7 +238,7 @@ const spec: Self = {
                     <div className="checkbox">
                         {scopesView}
                     </div>
-                    <button type="button" className="btn btn-primary" onClick={self.save}>Create</button>
+                    <button type="button" className="btn btn-primary" onClick={this.save}>Create</button>
                 </form>
             );
         }

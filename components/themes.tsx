@@ -1,9 +1,9 @@
 import * as types from "../share/types";
-import {HeadComponent, global} from "./head";
+import { HeadComponent, global } from "./head";
 import * as common from "./common";
 import * as React from "react";
 
-interface Theme extends types.Theme {
+type Theme = types.Theme & {
     createTimeText?: string;
     updateTimeText?: string;
     isWatching?: boolean;
@@ -15,9 +15,9 @@ interface Theme extends types.Theme {
     htmlDetail?: string;
     summaryDetail?: Summary;
     scrollTop?: number;
-}
+};
 
-interface State {
+type State = {
     organizationsCurrentUserIn?: types.Organization[];
     currentOrganizationId?: string;
     themes?: Theme[];
@@ -35,9 +35,9 @@ interface State {
     showCreate?: boolean;
     order?: types.ThemeOrder;
     requestCount?: number;
-}
+};
 
-interface Self extends types.Self<State> {
+type Self = types.Self<State> & {
     getOrganizationsCurrentUserIn: () => void;
     fetchThemes: (page: number, organizationId?: string) => void;
     initTheme: (theme: Theme) => void;
@@ -61,42 +61,42 @@ interface Self extends types.Self<State> {
     canShowMoreThemes: () => boolean;
     mouseEnterTheme: (theme: Theme) => void;
     mouseLeaveTheme: (theme: Theme) => void;
-    newThemeTitleChanged: (e) => void;
-    newThemeDetailChanged: (e) => void;
-    qChanged: (e) => void;
-    titleInEditingChanged: (e) => void;
-    detailInEditingChanged: (e) => void;
-    qKeyUp: (e) => void;
-    onDragEnter: (e) => void;
-    onDragOver: (e) => void;
-    onDragLeave: (e) => void;
-    onDrop: (e) => void;
-    onImageUploaded: (e) => void;
-    uploadImage: (file, index?: number) => void;
-    onPaste: (e) => void;
+    newThemeTitleChanged: (e: common.Event) => void;
+    newThemeDetailChanged: (e: common.Event) => void;
+    qChanged: (e: common.Event) => void;
+    titleInEditingChanged: (e: common.Event) => void;
+    detailInEditingChanged: (e: common.Event) => void;
+    qKeyUp: (e: common.Event) => void;
+    onDragEnter: (e: common.Event) => void;
+    onDragOver: (e: common.Event) => void;
+    onDragLeave: (e: common.Event) => void;
+    onDrop: (e: common.Event) => void;
+    onImageUploaded: (e: common.Event) => void;
+    uploadImage: (file: File, index?: number) => void;
+    onPaste: (e: common.Event) => void;
     expand: (theme: Theme) => void;
     collapse: (theme: Theme) => void;
-}
+};
 
-function changeOrganization(id) {
+function changeOrganization(id: string) {
     socket.emit("change organization", {
         to: id,
     });
 }
 
-let intervalId;
+let intervalId: NodeJS.Timer;
 
-let md;
+let md: any;
 
-interface LinkTag {
+type LinkTag = {
     href: string;
     content: string;
-}
+};
 
-interface Summary {
-    image: string;
+type Summary = {
+    image: string | undefined;
     text: (LinkTag | string)[];
-}
+};
 
 function replaceProtocal(src: string) {
     if (src.indexOf("http://") === 0 && src.indexOf("http://localhost") !== 0) {
@@ -106,15 +106,15 @@ function replaceProtocal(src: string) {
 }
 
 function extractSummary(markdown: string): Summary {
-    interface Token {
+    type Token = {
         tag: string;
         content: string;
         children: Token[];
         type: string;
         attrs: string[][];
-    }
+    };
     const tokens: Token[] = md.parse(markdown, {});
-    let image = undefined;
+    let image: string | undefined = undefined;
     const text: (LinkTag | string)[] = [];
     const maxSize = 80;
     let size = 0;
@@ -169,77 +169,71 @@ function extractSummary(markdown: string): Summary {
 }
 
 const spec: Self = {
-    getOrganizationsCurrentUserIn: function() {
-        const self: Self = this;
-
+    getOrganizationsCurrentUserIn: function (this: Self) {
         $.ajax({
             url: apiBaseUrl + "/api/user/joined",
             cache: false,
         }).then((data: types.OrganizationsResponse) => {
             if (data.status === 0) {
-                self.setState({ organizationsCurrentUserIn: data.organizations });
+                this.setState!({ organizationsCurrentUserIn: data.organizations });
                 if (data.organizations.length > 0) {
                     const lastOrganizationId = window.localStorage.getItem(common.localStorageNames.lastOrganizationId);
                     if (lastOrganizationId && common.find(data.organizations, o => o.id === lastOrganizationId)) {
-                        self.setState({ currentOrganizationId: lastOrganizationId });
+                        this.setState!({ currentOrganizationId: lastOrganizationId });
                     } else {
-                        self.setState({ currentOrganizationId: data.organizations[0].id });
+                        this.setState!({ currentOrganizationId: data.organizations[0].id });
                     }
 
-                    changeOrganization(self.state.currentOrganizationId);
+                    changeOrganization(this.state!.currentOrganizationId!);
 
-                    self.fetchThemes(1);
+                    this.fetchThemes(1);
                 }
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    getEmails: function(users: types.User[]) {
+    getEmails: function (users: types.User[]) {
         return users.reduce((r, u) => r + u.email + ";", "");
     },
-    fetchThemes: function(page: number, organizationId?: string) {
-        const self: Self = this;
-
-        self.setState({ currentPage: page });
+    fetchThemes: function (this: Self, page: number, organizationId?: string) {
+        this.setState!({ currentPage: page });
 
         $.ajax({
-            url: apiBaseUrl + "/api/organizations/" + (organizationId ? organizationId : self.state.currentOrganizationId) + "/themes",
+            url: apiBaseUrl + "/api/organizations/" + (organizationId ? organizationId : this.state!.currentOrganizationId) + "/themes",
             data: {
                 page,
                 limit: common.itemLimit,
-                q: self.state.q,
-                isOpen: self.state.isOpen ? types.yes : types.no,
-                isClosed: self.state.isClosed ? types.yes : types.no,
-                order: self.state.order,
+                q: this.state!.q,
+                isOpen: this.state!.isOpen ? types.yes : types.no,
+                isClosed: this.state!.isClosed ? types.yes : types.no,
+                order: this.state!.order,
             },
             cache: false,
         }).then((data: types.ThemesResponse) => {
             if (data.status === 0) {
                 for (const theme of data.themes) {
-                    self.initTheme(theme);
+                    this.initTheme(theme);
                 }
                 if (page === 1) {
-                    self.setState({
+                    this.setState!({
                         themes: data.themes,
                         totalCount: data.totalCount,
                     });
                 } else {
-                    self.setState({
-                        themes: self.state.themes.concat(data.themes),
+                    this.setState!({
+                        themes: this.state!.themes!.concat(data.themes),
                         totalCount: data.totalCount,
                     });
                 }
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    initTheme: function(theme: Theme) {
-        const self: Self = this;
-
-        theme.isWatching = theme.watchers.some(w => w.id === global.head.state.currentUserId);
-        theme.isOwner = theme.owners.some(o => o.id === global.head.state.currentUserId);
+    initTheme: function (this: Self, theme: Theme) {
+        theme.isWatching = theme.watchers.some(w => w.id === global.head!.state!.currentUserId);
+        theme.isOwner = theme.owners.some(o => o.id === global.head!.state!.currentUserId);
         theme.createTimeText = moment(theme.createTime, moment.ISO_8601).fromNow();
         if (theme.updateTime) {
             theme.updateTimeText = moment(theme.updateTime, moment.ISO_8601).fromNow();
@@ -248,8 +242,8 @@ const spec: Self = {
         }
         theme.isHovering = false;
         theme.expanded = false;
-        theme.watchersEmails = self.getEmails(theme.watchers);
-        theme.ownersEmails = self.getEmails(theme.owners);
+        theme.watchersEmails = this.getEmails(theme.watchers);
+        theme.ownersEmails = this.getEmails(theme.owners);
         theme.creator.avatar = common.getFullUrl(theme.creator.avatar);
 
         for (const watcher of theme.watchers) {
@@ -264,37 +258,31 @@ const spec: Self = {
             theme.summaryDetail = extractSummary(theme.detail);
         }
     },
-    clickOrganization: function(organization: types.Organization) {
-        const self: Self = this;
-
-        if (self.state.currentOrganizationId !== organization.id) {
+    clickOrganization: function (this: Self, organization: types.Organization) {
+        if (this.state!.currentOrganizationId !== organization.id) {
             changeOrganization(organization.id);
         }
 
-        self.setState({ currentOrganizationId: organization.id });
-        self.fetchThemes(1, organization.id);
+        this.setState!({ currentOrganizationId: organization.id });
+        this.fetchThemes(1, organization.id);
 
         window.localStorage.setItem(common.localStorageNames.lastOrganizationId, organization.id);
     },
-    createTheme: function() {
-        const self: Self = this;
-
+    createTheme: function (this: Self) {
         $.post(apiBaseUrl + "/api/themes", {
-            themeTitle: self.state.newThemeTitle,
-            themeDetail: self.state.newThemeDetail,
-            organizationId: self.state.currentOrganizationId,
+            themeTitle: this.state!.newThemeTitle,
+            themeDetail: this.state!.newThemeDetail,
+            organizationId: this.state!.currentOrganizationId,
         }).then((data: types.Response) => {
             if (data.status === 0) {
-                global.head.showAlert(true, "success");
+                global.head!.showAlert(true, "success");
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    setThemeTimeText: function() {
-        const self: Self = this;
-
-        for (const theme of self.state.themes) {
+    setThemeTimeText: function (this: Self) {
+        for (const theme of this.state!.themes!) {
             theme.createTimeText = moment(theme.createTime, moment.ISO_8601).fromNow();
             if (theme.updateTime) {
                 theme.updateTimeText = moment(theme.updateTime, moment.ISO_8601).fromNow();
@@ -303,37 +291,35 @@ const spec: Self = {
             }
         }
     },
-    watch: function(theme: Theme) {
+    watch: function (theme: Theme) {
         $.ajax({
             url: apiBaseUrl + "/api/user/watched/" + theme.id,
             type: "PUT",
         }).then((data: types.Response) => {
             if (data.status === 0) {
-                global.head.showAlert(true, "success");
+                global.head!.showAlert(true, "success");
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    unwatch: function(theme: Theme) {
+    unwatch: function (theme: Theme) {
         $.ajax({
             url: apiBaseUrl + "/api/user/watched/" + theme.id,
             data: {},
             type: "DELETE",
         }).then((data: types.Response) => {
             if (data.status === 0) {
-                global.head.showAlert(true, "success");
+                global.head!.showAlert(true, "success");
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    showMoreThemes: function() {
-        const self: Self = this;
-
-        self.fetchThemes(self.state.currentPage + 1);
+    showMoreThemes: function (this: Self) {
+        this.fetchThemes(this.state!.currentPage + 1);
     },
-    close: function(theme: Theme) {
+    close: function (theme: Theme) {
         $.ajax({
             url: apiBaseUrl + "/api/themes/" + theme.id,
             data: {
@@ -343,13 +329,13 @@ const spec: Self = {
             type: "PUT",
         }).then((data: types.Response) => {
             if (data.status === 0) {
-                global.head.showAlert(true, "success");
+                global.head!.showAlert(true, "success");
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    reopen: function(theme: Theme) {
+    reopen: function (theme: Theme) {
         $.ajax({
             url: apiBaseUrl + "/api/themes/" + theme.id,
             data: {
@@ -359,143 +345,109 @@ const spec: Self = {
             type: "PUT",
         }).then((data: types.Response) => {
             if (data.status === 0) {
-                global.head.showAlert(true, "success");
+                global.head!.showAlert(true, "success");
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    edit: function(theme: Theme) {
-        const self: Self = this;
-
-        const themes = self.state.themes;
-        global.win.scrollTop(theme.scrollTop);
-        self.setState({
+    edit: function (this: Self, theme: Theme) {
+        const themes = this.state!.themes;
+        global.win!.scrollTop(theme.scrollTop!);
+        this.setState!({
             themeIdInEditing: theme.id,
             titleInEditing: theme.title,
             detailInEditing: theme.detail,
             themes,
         });
     },
-    cancel: function(theme: Theme) {
-        const self: Self = this;
-
-        const themes = self.state.themes;
-        global.win.scrollTop(theme.scrollTop);
-        self.setState({
-            themeIdInEditing: null,
+    cancel: function (this: Self, theme: Theme) {
+        const themes = this.state!.themes;
+        global.win!.scrollTop(theme.scrollTop!);
+        this.setState!({
+            themeIdInEditing: undefined,
             titleInEditing: "",
             detailInEditing: "",
             themes,
         });
     },
-    save: function(theme: Theme) {
-        const self: Self = this;
-
+    save: function (this: Self, theme: Theme) {
         $.ajax({
             url: apiBaseUrl + "/api/themes/" + theme.id,
             data: {
-                title: self.state.titleInEditing,
-                detail: self.state.detailInEditing,
-                imageNames: self.state.imageNamesInEditing,
+                title: this.state!.titleInEditing,
+                detail: this.state!.detailInEditing,
+                imageNames: this.state!.imageNamesInEditing,
             },
             cache: false,
             type: "PUT",
         }).then((data: types.Response) => {
             if (data.status === 0) {
-                global.head.showAlert(true, "success");
-                self.setState({ imageNamesInEditing: [] });
+                global.head!.showAlert(true, "success");
+                this.setState!({ imageNamesInEditing: [] });
 
-                self.cancel(theme);
+                this.cancel(theme);
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    clickOpen: function() {
-        const self: Self = this;
-
-        self.setState({ isOpen: !self.state.isOpen });
+    clickOpen: function (this: Self) {
+        this.setState!({ isOpen: !this.state!.isOpen });
     },
-    clickClosed: function() {
-        const self: Self = this;
-
-        self.setState({ isClosed: !self.state.isClosed });
+    clickClosed: function (this: Self) {
+        this.setState!({ isClosed: !this.state!.isClosed });
     },
-    clickShowCreate: function() {
-        const self: Self = this;
-
-        self.setState({ showCreate: !self.state.showCreate });
+    clickShowCreate: function (this: Self) {
+        this.setState!({ showCreate: !this.state!.showCreate });
     },
-    clickOrder: function(order: types.ThemeOrder) {
-        const self: Self = this;
-
-        self.setState({ order });
+    clickOrder: function (this: Self, order: types.ThemeOrder) {
+        this.setState!({ order });
     },
-    nextThemeCount: function() {
-        const self: Self = this;
-
-        const count = self.state.totalCount - common.itemLimit * self.state.currentPage;
+    nextThemeCount: function (this: Self) {
+        const count = this.state!.totalCount - common.itemLimit * this.state!.currentPage;
         return count > common.itemLimit ? common.itemLimit : count;
     },
-    canShowMoreThemes: function() {
-        const self: Self = this;
-
-        return self.nextThemeCount() > 0 && self.state.requestCount === 0;
+    canShowMoreThemes: function (this: Self) {
+        return this.nextThemeCount() > 0 && this.state!.requestCount === 0;
     },
-    mouseEnterTheme: function(theme: Theme) {
-        const self: Self = this;
-
-        const themes = self.state.themes;
+    mouseEnterTheme: function (this: Self, theme: Theme) {
+        const themes = this.state!.themes;
         theme.isHovering = true;
-        self.setState({ themes });
+        this.setState!({ themes });
     },
-    mouseLeaveTheme: function(theme: Theme) {
-        const self: Self = this;
-
-        const themes = self.state.themes;
+    mouseLeaveTheme: function (this: Self, theme: Theme) {
+        const themes = this.state!.themes;
         theme.isHovering = false;
-        self.setState({ themes });
+        this.setState!({ themes });
     },
-    newThemeTitleChanged: function(e) {
-        const self: Self = this;
-
-        self.setState({ newThemeTitle: e.target.value });
+    newThemeTitleChanged: function (this: Self, e: common.Event) {
+        this.setState!({ newThemeTitle: e.target.value });
     },
-    newThemeDetailChanged: function(e) {
-        const self: Self = this;
-
-        self.setState({ newThemeDetail: e.target.value });
+    newThemeDetailChanged: function (this: Self, e: common.Event) {
+        this.setState!({ newThemeDetail: e.target.value });
     },
-    qChanged: function(e) {
-        const self: Self = this;
-
-        self.setState({ q: e.target.value });
+    qChanged: function (this: Self, e: common.Event) {
+        this.setState!({ q: e.target.value });
     },
-    titleInEditingChanged: function(e) {
-        const self: Self = this;
-
-        self.setState({ titleInEditing: e.target.value });
+    titleInEditingChanged: function (this: Self, e: common.Event) {
+        this.setState!({ titleInEditing: e.target.value });
     },
-    detailInEditingChanged: function(e) {
-        const self: Self = this;
-
-        self.setState({ detailInEditing: e.target.value });
+    detailInEditingChanged: function (this: Self, e: common.Event) {
+        this.setState!({ detailInEditing: e.target.value });
     },
-    qKeyUp: function(e) {
-        const self: Self = this;
-
+    qKeyUp: function (this: Self, e: common.Event) {
         if (e.keyCode === 13) {
-            self.fetchThemes(1);
+            this.fetchThemes(1);
         }
     },
-    onDragEnter: function(e) {
+    onDragEnter: function (e: common.Event) {
         const file = e.dataTransfer.files[0];
         if (file) {
             e.preventDefault();
         }
     },
-    onDragOver: function(e) {
+    onDragOver: function (e: common.Event) {
         const file = e.dataTransfer.files[0];
         if (file) {
             e.preventDefault();
@@ -503,48 +455,40 @@ const spec: Self = {
             return false;
         }
     },
-    onDragLeave: function(e) {
+    onDragLeave: function (e: common.Event) {
         const file = e.dataTransfer.files[0];
         if (file) {
             e.preventDefault();
         }
     },
-    onDrop: function(e) {
-        const self: Self = this;
-
+    onDrop: function (this: Self, e: common.Event) {
         const file = e.dataTransfer.files[0];
         if (file) {
             e.preventDefault();
-            self.uploadImage(file, e.target.selectionStart);
+            this.uploadImage(file, e.target.selectionStart);
         }
     },
-    onPaste: function(e) {
-        const self: Self = this;
-
+    onPaste: function (this: Self, e: common.Event) {
         const items = (e.clipboardData || e.originalEvent.clipboardData).items;
         if (items.length > 0) {
             for (const item of items) {
                 if (item.type.indexOf("image") === 0) {
                     const file = item.getAsFile();
                     e.preventDefault();
-                    self.uploadImage(file, e.target.selectionStart);
+                    this.uploadImage(file, e.target.selectionStart);
                     break;
                 }
             }
         }
     },
-    onImageUploaded: function(e) {
-        const self: Self = this;
-
+    onImageUploaded: function (this: Self, e: common.Event) {
         const file = e.target.files[0];
         if (file) {
             e.preventDefault();
-            self.uploadImage(file);
+            this.uploadImage(file);
         }
     },
-    uploadImage: function(file, index?: number) {
-        const self: Self = this;
-
+    uploadImage: function (this: Self, file: File, index?: number) {
         const formData = new FormData();
         formData.append("file", file);
 
@@ -557,78 +501,72 @@ const spec: Self = {
         }).then((data: types.TemperaryResponse) => {
             if (data.status === 0) {
                 const name = data.names[0];
-                const names = self.state.imageNamesInEditing;
-                names.push(name);
-                self.setState({ imageNamesInEditing: names });
-                let head;
-                let tail;
+                const names = this.state!.imageNamesInEditing;
+                names!.push(name);
+                this.setState!({ imageNamesInEditing: names });
+                let head: string;
+                let tail: string;
                 if (index) {
-                    head = self.state.detailInEditing.substring(0, index);
-                    tail = self.state.detailInEditing.substring(index);
+                    head = this.state!.detailInEditing!.substring(0, index);
+                    tail = this.state!.detailInEditing!.substring(index);
                 } else {
-                    head = self.state.detailInEditing;
+                    head = this.state!.detailInEditing!;
                     tail = "";
                 }
                 const result = `${head}![](${imageServerBaseUrl}/${name})${tail}`;
-                self.setState({ detailInEditing: result });
+                this.setState!({ detailInEditing: result });
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    expand: function(theme: Theme) {
-        const self: Self = this;
-
-        const themes = self.state.themes;
+    expand: function (this: Self, theme: Theme) {
+        const themes = this.state!.themes;
         theme.expanded = true;
-        theme.scrollTop = global.win.scrollTop();
-        self.setState({ themes });
+        theme.scrollTop = global.win!.scrollTop();
+        this.setState!({ themes });
     },
-    collapse: function(theme: Theme) {
-        const self: Self = this;
-
-        const themes = self.state.themes;
+    collapse: function (this: Self, theme: Theme) {
+        const themes = this.state!.themes;
         theme.expanded = false;
-        global.win.scrollTop(theme.scrollTop);
-        self.setState({ themes });
+        global.win!.scrollTop(theme.scrollTop!);
+        this.setState!({ themes });
     },
-    componentDidMount: function() {
-        const self: Self = this;
-
-        global.body = self;
-        self.getOrganizationsCurrentUserIn();
-        intervalId = setInterval(self.setThemeTimeText, 10000);
+    componentDidMount: function (this: Self) {
+        global.body = this;
+        this.getOrganizationsCurrentUserIn();
+        intervalId = setInterval(this.setThemeTimeText, 10000);
 
         global.themeCreated = (theme: Theme) => {
-            if (theme.organizationId === self.state.currentOrganizationId) {
-                self.initTheme(theme);
-                self.setState({ themes: [theme].concat(self.state.themes) });
+            if (theme.organizationId === this.state!.currentOrganizationId) {
+                this.initTheme(theme);
+                this.setState!({ themes: [theme].concat(this.state!.themes!) });
             }
         };
 
         global.themeUpdated = (theme: Theme) => {
-            if (theme.organizationId === self.state.currentOrganizationId) {
-                const index = common.findIndex(self.state.themes, t => t.id === theme.id);
+            if (theme.organizationId === this.state!.currentOrganizationId) {
+                const index = common.findIndex(this.state!.themes!, t => t.id === theme.id);
                 if (index > -1) {
-                    self.initTheme(theme);
-                    const themes = self.state.themes;
-                    theme.expanded = themes[index].expanded;
-                    theme.scrollTop = themes[index].scrollTop;
-                    themes[index] = theme;
-                    self.setState({ themes });
+                    this.initTheme(theme);
+                    const themes = this.state!.themes;
+                    theme.expanded = themes![index].expanded;
+                    theme.scrollTop = themes![index].scrollTop;
+                    themes![index] = theme;
+                    this.setState!({ themes });
                 }
             }
         };
 
         global.scrolled = () => {
-            if (self.canShowMoreThemes()) {
-                self.showMoreThemes();
+            if (this.canShowMoreThemes()) {
+                this.showMoreThemes();
             }
         };
 
         md = markdownit({
             linkify: true,
-            highlight: function(str, lang) {
+            highlight: function (str: string, lang: string) {
                 if (lang && hljs.getLanguage(lang)) {
                     try {
                         return hljs.highlight(lang, str).value;
@@ -648,7 +586,7 @@ const spec: Self = {
         });
 
         const defaultImageRender = md.renderer.rules.image;
-        md.renderer.rules.image = function(tokens, index, options, env, s) {
+        md.renderer.rules.image = function (tokens: any, index: number, options: any, env: any, s: any) {
             const token = tokens[index];
             const aIndex = token.attrIndex("src");
 
@@ -658,17 +596,16 @@ const spec: Self = {
             return defaultImageRender(tokens, index, options, env, s);
         };
 
-        const defaultLinkRender = md.renderer.rules.link_open || function(tokens, index, options, env, s) {
+        const defaultLinkRender = md.renderer.rules.link_open || function (tokens: any, index: number, options: any, env: any, s: any) {
             return s.renderToken(tokens, index, options);
         };
-        md.renderer.rules.link_open = function(tokens, index, options, env, s) {
-            const aIndex = tokens[index].attrIndex("target");
+        md.renderer.rules.link_open = function (tokens: any, index: number, options: any, env: any, s: any) {
             tokens[index].attrPush(["target", "_blank"]);
             tokens[index].attrPush(["rel", "nofollow"]);
             return defaultLinkRender(tokens, index, options, env, s);
         };
     },
-    componentWillUnmount: function() {
+    componentWillUnmount: function () {
         global.body = undefined;
         if (intervalId) {
             clearInterval(intervalId);
@@ -678,7 +615,7 @@ const spec: Self = {
         global.scrolled = undefined;
         md = undefined;
     },
-    getInitialState: function() {
+    getInitialState: function () {
         return {
             organizationsCurrentUserIn: [],
             currentOrganizationId: "",
@@ -687,7 +624,7 @@ const spec: Self = {
             newThemeDetail: "",
             currentPage: 1,
             totalCount: 0,
-            themeIdInEditing: null,
+            themeIdInEditing: undefined,
             titleInEditing: "",
             detailInEditing: "",
             imageNamesInEditing: [],
@@ -699,34 +636,32 @@ const spec: Self = {
             requestCount: 0,
         } as State;
     },
-    render: function() {
-        const self: Self = this;
+    render: function (this: Self) {
+        const canSave = this.state!.titleInEditing!.trim() && this.state!.requestCount === 0;
 
-        const canSave = self.state.titleInEditing.trim() && self.state.requestCount === 0;
-
-        let showMoreThemesView;
-        if (self.canShowMoreThemes()) {
+        let showMoreThemesView: JSX.Element | undefined = undefined;
+        if (this.canShowMoreThemes()) {
             showMoreThemesView = (
-                <button type="button" className="btn btn-primary btn-lg col-sm-12" onClick={self.showMoreThemes}>
-                    show {self.nextThemeCount() } more {self.nextThemeCount() > 1 ? "themes" : "theme"}(total {self.state.totalCount})
+                <button type="button" className="btn btn-primary btn-lg col-sm-12" onClick={this.showMoreThemes}>
+                    show {this.nextThemeCount()} more {this.nextThemeCount() > 1 ? "themes" : "theme"}(total {this.state!.totalCount})
                 </button>
             );
         } else {
             showMoreThemesView = (
                 <button type="button" className="btn btn-primary btn-lg col-sm-12" disabled>
-                    total {self.state.totalCount}
+                    total {this.state!.totalCount}
                 </button>
             );
         }
 
-        const themesView = self.state.themes.map(theme => {
-            let themeTitleView;
-            let themeDetailView;
-            if (self.state.themeIdInEditing !== theme.id) {
+        const themesView = this.state!.themes!.map(theme => {
+            let themeTitleView: JSX.Element | undefined = undefined;
+            let themeDetailView: JSX.Element | undefined = undefined;
+            if (this.state!.themeIdInEditing !== theme.id) {
                 themeTitleView = (
                     <span>
                         {theme.title}
-                        <span className={ "theme-title-status label label-" + (theme.status === types.themeStatus.open ? "success" : "danger") }>{theme.status}</span>
+                        <span className={"theme-title-status label label-" + (theme.status === types.themeStatus.open ? "success" : "danger")}>{theme.status}</span>
                     </span>
                 );
                 if (theme.detail) {
@@ -738,8 +673,8 @@ const spec: Self = {
                             <div dangerouslySetInnerHTML={{ __html: theme.htmlDetail }}></div>
                         );
                     } else {
-                        let imageView;
-                        const textView = theme.summaryDetail.text.map((t, i) => {
+                        let imageView: JSX.Element | undefined = undefined;
+                        const textView = theme.summaryDetail!.text.map((t, i) => {
                             if (typeof t === "string") {
                                 return (
                                     <span key={i}>{t}</span>
@@ -750,13 +685,13 @@ const spec: Self = {
                                 );
                             }
                         });
-                        if (theme.summaryDetail.image) {
+                        if (theme.summaryDetail!.image) {
                             imageView = (
-                                <img src={theme.summaryDetail.image} className="float-left theme-head-image"/>
+                                <img src={theme.summaryDetail!.image} className="float-left theme-head-image"/>
                             );
                         }
                         themeDetailView = (
-                            <div onClick={self.expand.bind(this, theme) } className="clearfix pointer">
+                            <div onClick={this.expand.bind(this, theme)} className="clearfix pointer">
                                 {imageView}
                                 {textView}
                             </div>
@@ -765,14 +700,14 @@ const spec: Self = {
                 }
             } else {
                 themeTitleView = (
-                    <input className="form-control" onChange={self.titleInEditingChanged} value={self.state.titleInEditing}/>
+                    <input className="form-control" onChange={this.titleInEditingChanged} value={this.state!.titleInEditing}/>
                 );
                 themeDetailView = (
-                    <textarea rows={10} className="form-control" onDragEnter={self.onDragEnter} onDragOver={self.onDragOver} onDragLeave={self.onDragLeave} onDrop={self.onDrop} onPaste={self.onPaste} onChange={self.detailInEditingChanged} value={self.state.detailInEditing}></textarea>
+                    <textarea rows={10} className="form-control" onDragEnter={this.onDragEnter} onDragOver={this.onDragOver} onDragLeave={this.onDragLeave} onDrop={this.onDrop} onPaste={this.onPaste} onChange={this.detailInEditingChanged} value={this.state!.detailInEditing}></textarea>
                 );
             }
 
-            let ownersView;
+            let ownersView: JSX.Element | undefined = undefined;
             if (theme.owners.length > 0) {
                 ownersView = (
                     <button type="button" className="clip btn btn-xs btn-link" data-clipboard-text={theme.ownersEmails}>
@@ -785,7 +720,7 @@ const spec: Self = {
                 );
             }
 
-            let watchersView;
+            let watchersView: JSX.Element | undefined = undefined;
             if (theme.watchers.length > 0) {
                 watchersView = (
                     <button type="button" className="clip btn btn-xs btn-link" data-clipboard-text={theme.watchersEmails}>
@@ -798,61 +733,61 @@ const spec: Self = {
                 );
             }
 
-            let watchButton;
+            let watchButton: JSX.Element | undefined = undefined;
             if (theme.isWatching) {
                 watchButton = (
-                    <button type="button" className="btn btn-xs btn-link" onClick={self.unwatch.bind(this, theme) }>
+                    <button type="button" className="btn btn-xs btn-link" onClick={this.unwatch.bind(this, theme)}>
                         unwatch
                     </button>
                 );
             } else {
                 watchButton = (
-                    <button type="button" className="btn btn-xs btn-link" onClick={self.watch.bind(this, theme) }>
+                    <button type="button" className="btn btn-xs btn-link" onClick={this.watch.bind(this, theme)}>
                         watch
                     </button>
                 );
             }
 
-            let hoveringView;
-            if (theme.isHovering || theme.expanded || self.state.themeIdInEditing === theme.id) {
-                let ownerView;
+            let hoveringView: JSX.Element | undefined = undefined;
+            if (theme.isHovering || theme.expanded || this.state!.themeIdInEditing === theme.id) {
+                let ownerView: JSX.Element | undefined = undefined;
                 if (theme.isOwner) {
-                    let openButton;
+                    let openButton: JSX.Element | undefined = undefined;
                     if (theme.status === "open") {
                         openButton = (
-                            <button type="button" className="btn btn-xs btn-link" onClick={self.close.bind(this, theme) }>
+                            <button type="button" className="btn btn-xs btn-link" onClick={this.close.bind(this, theme)}>
                                 close
                             </button>
                         );
                     } else {
                         openButton = (
-                            <button type="button" className="btn btn-xs btn-link" onClick={self.reopen.bind(this, theme) }>
+                            <button type="button" className="btn btn-xs btn-link" onClick={this.reopen.bind(this, theme)}>
                                 reopen
                             </button>
                         );
                     }
 
-                    let cancelButton;
-                    let editButton;
-                    let saveButton;
-                    let uploadButton;
-                    if (self.state.themeIdInEditing !== null) {
-                        if (self.state.themeIdInEditing === theme.id) {
+                    let cancelButton: JSX.Element | undefined = undefined;
+                    let editButton: JSX.Element | undefined = undefined;
+                    let saveButton: JSX.Element | undefined = undefined;
+                    let uploadButton: JSX.Element | undefined = undefined;
+                    if (this.state!.themeIdInEditing !== null) {
+                        if (this.state!.themeIdInEditing === theme.id) {
                             cancelButton = (
                                 <div className="inline">
                                     •
                                     <button type="button" className="btn btn-xs btn-link"
-                                        onClick={self.cancel.bind(this, theme)}>
+                                        onClick={this.cancel.bind(this, theme)}>
                                         cancel
                                     </button>
                                 </div>
                             );
-                            if (canSave && (self.state.titleInEditing !== theme.title || self.state.detailInEditing !== theme.detail)) {
+                            if (canSave && (this.state!.titleInEditing !== theme.title || this.state!.detailInEditing !== theme.detail)) {
                                 saveButton = (
                                     <div className="inline">
                                         •
                                         <button type="button" className="btn btn-xs btn-link"
-                                            onClick={self.save.bind(this, theme)}>
+                                            onClick={this.save.bind(this, theme)}>
                                             save
                                         </button>
                                     </div>
@@ -863,7 +798,7 @@ const spec: Self = {
                                     •
                                     <button type="button" className="btn btn-xs btn-link relative">
                                         <span className="pointer">upload image</span>
-                                        <input type="file" accept="image/*" onChange={self.onImageUploaded} className="theme-image-chooser"/>
+                                        <input type="file" accept="image/*" onChange={this.onImageUploaded} className="theme-image-chooser"/>
                                     </button>
                                 </div>
                             );
@@ -873,7 +808,7 @@ const spec: Self = {
                             <div className="inline">
                                 •
                                 <button type="button" className="btn btn-xs btn-link"
-                                    onClick={self.edit.bind(this, theme)}>
+                                    onClick={this.edit.bind(this, theme)}>
                                     edit
                                 </button>
                             </div>
@@ -890,13 +825,13 @@ const spec: Self = {
                         </div>
                     );
                 }
-                let collapseButton;
+                let collapseButton: JSX.Element | undefined = undefined;
                 if (theme.expanded) {
                     collapseButton = (
                         <div className="inline">
                             •
                             <button type="button" className="btn btn-xs btn-link"
-                                onClick={self.collapse.bind(this, theme)}>
+                                onClick={this.collapse.bind(this, theme)}>
                                 collapse
                             </button>
                         </div>
@@ -913,7 +848,7 @@ const spec: Self = {
             }
 
             return (
-                <tr key={theme.id} onMouseEnter={self.mouseEnterTheme.bind(this, theme)} onMouseLeave={self.mouseLeaveTheme.bind(this, theme)}>
+                <tr key={theme.id} onMouseEnter={this.mouseEnterTheme.bind(this, theme)} onMouseLeave={this.mouseLeaveTheme.bind(this, theme)}>
                     <td className="theme-creator-avatar">
                         <img src={theme.creator.avatar} height="50" width="50"/>
                     </td>
@@ -945,21 +880,21 @@ const spec: Self = {
             );
         });
 
-        const organizationsView = self.state.organizationsCurrentUserIn.map(organization => {
+        const organizationsView = this.state!.organizationsCurrentUserIn!.map(organization => {
             return (
-                <label key={organization.id} className={ "the-label " + (self.state.currentOrganizationId === organization.id ? "label-active" : "") }
-                    onClick={self.clickOrganization.bind(this, organization)}>
+                <label key={organization.id} className={ "the-label " + (this.state!.currentOrganizationId === organization.id ? "label-active" : "") }
+                    onClick={this.clickOrganization.bind(this, organization)}>
                     {organization.name}
                 </label>
             );
         });
 
-        let currentOrganizationView;
-        if (self.state.currentOrganizationId !== "") {
-            let createButton;
-            if (self.state.newThemeTitle.trim() && self.state.requestCount === 0) {
+        let currentOrganizationView: JSX.Element | undefined = undefined;
+        if (this.state!.currentOrganizationId !== "") {
+            let createButton: JSX.Element | undefined = undefined;
+            if (this.state!.newThemeTitle!.trim() && this.state!.requestCount === 0) {
                 createButton = (
-                    <button type="button" className="btn btn-primary" onClick={self.createTheme}>Create</button>
+                    <button type="button" className="btn btn-primary" onClick={this.createTheme}>Create</button>
                 );
             } else {
                 createButton = (
@@ -968,18 +903,18 @@ const spec: Self = {
             }
 
             const showCreateView = (
-                <span className={ "theme-add btn btn-primary glyphicon glyphicon-" + (self.state.showCreate ? "minus" : "plus") } aria-hidden="true" onClick={self.clickShowCreate}></span>
+                <span className={ "theme-add btn btn-primary glyphicon glyphicon-" + (this.state!.showCreate ? "minus" : "plus") } aria-hidden="true" onClick={this.clickShowCreate}></span>
             );
 
-            let newThemeTitleView;
-            let newThemeDetailView;
-            let createButtonView;
-            if (self.state.showCreate) {
+            let newThemeTitleView: JSX.Element | undefined = undefined;
+            let newThemeDetailView: JSX.Element | undefined = undefined;
+            let createButtonView: JSX.Element | undefined = undefined;
+            if (this.state!.showCreate) {
                 newThemeTitleView = (
                     <div className="form-group">
                         <label className="col-sm-2 control-label">title</label>
                         <div className="col-sm-10">
-                            <input type="text" className="form-control" onChange={self.newThemeTitleChanged} value={self.state.newThemeTitle}/>
+                            <input type="text" className="form-control" onChange={this.newThemeTitleChanged} value={this.state!.newThemeTitle}/>
                         </div>
                     </div>
                 );
@@ -987,7 +922,7 @@ const spec: Self = {
                     <div className="form-group">
                         <label className="col-sm-2 control-label">detail</label>
                         <div className="col-sm-10">
-                            <textarea className="form-control" rows={10} onChange={self.newThemeDetailChanged} value={self.state.newThemeDetail}></textarea>
+                            <textarea className="form-control" rows={10} onChange={this.newThemeDetailChanged} value={this.state!.newThemeDetail}></textarea>
                         </div>
                     </div>
                 );
@@ -1009,23 +944,23 @@ const spec: Self = {
                     </div>
                     <div className="form-group">
                         <div className="col-sm-4">
-                            <input className="form-control" onChange={self.qChanged} value={self.state.q} onKeyUp={self.qKeyUp}/>
+                            <input className="form-control" onChange={this.qChanged} value={this.state!.q} onKeyUp={this.qKeyUp}/>
                         </div>
                         <div className="col-sm-8">
-                            <label className={ "the-label " + (self.state.isOpen ? "label-active" : "") } onClick={self.clickOpen}>
+                            <label className={ "the-label " + (this.state!.isOpen ? "label-active" : "") } onClick={this.clickOpen}>
                                 open
                             </label>
-                            <label className={ "the-label " + (self.state.isClosed ? "label-active" : "") } onClick={self.clickClosed}>
+                            <label className={ "the-label " + (this.state!.isClosed ? "label-active" : "") } onClick={this.clickClosed}>
                                 closed
                             </label>
                             order by
-                            <label className={ "the-label " + (self.state.order === "newest" ? "label-active" : "") } onClick={self.clickOrder.bind(this, "newest")}>
+                            <label className={ "the-label " + (this.state!.order === "newest" ? "label-active" : "") } onClick={this.clickOrder.bind(this, "newest")}>
                                 newest
                             </label>
-                            <label className={ "the-label " + (self.state.order === "recently updated" ? "label-active" : "") } onClick={self.clickOrder.bind(this, "recently updated")}>
+                            <label className={ "the-label " + (this.state!.order === "recently updated" ? "label-active" : "") } onClick={this.clickOrder.bind(this, "recently updated")}>
                                 recently updated
                             </label>
-                            <span className="glyphicon glyphicon-search btn btn-primary" aria-hidden="true" onClick={self.fetchThemes.bind(this, 1, undefined)}></span>
+                            <span className="glyphicon glyphicon-search btn btn-primary" aria-hidden="true" onClick={this.fetchThemes.bind(this, 1, undefined)}></span>
                             {showCreateView}
                         </div>
                     </div>

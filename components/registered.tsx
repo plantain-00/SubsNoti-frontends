@@ -3,7 +3,7 @@ import {HeadComponent, global} from "./head";
 import * as common from "./common";
 import * as React from "react";
 
-interface State {
+type State = {
     applications?: types.Application[];
     idInEditing?: string;
     nameInEditing?: string;
@@ -11,9 +11,9 @@ interface State {
     descriptionInEditing?: string;
     authorizationCallbackUrlInEditing?: string;
     clientSecretInEditing?: string;
-}
+};
 
-interface Self extends types.Self<State> {
+type Self = types.Self<State> & {
     edit: (application: types.Application) => void;
     get: () => void;
     new: () => void;
@@ -21,17 +21,15 @@ interface Self extends types.Self<State> {
     remove: () => void;
     resetClientSecret: () => void;
 
-    nameInEditingChanged: (e) => void;
-    homeUrlInEditingChanged: (e) => void;
-    descriptionInEditingChanged: (e) => void;
-    authorizationCallbackUrlInEditingChanged: (e) => void;
-}
+    nameInEditingChanged: (e: common.Event) => void;
+    homeUrlInEditingChanged: (e: common.Event) => void;
+    descriptionInEditingChanged: (e: common.Event) => void;
+    authorizationCallbackUrlInEditingChanged: (e: common.Event) => void;
+};
 
 const spec: Self = {
-    edit: function(application: types.Application) {
-        const self: Self = this;
-
-        self.setState({
+    edit: function(this: Self, application: types.Application) {
+        this.setState!({
             idInEditing: application.id,
             nameInEditing: application.name,
             homeUrlInEditing: application.homeUrl,
@@ -40,25 +38,21 @@ const spec: Self = {
             clientSecretInEditing: application.clientSecret,
         });
     },
-    get: function() {
-        const self: Self = this;
-
+    get: function(this: Self) {
         $.ajax({
             url: apiBaseUrl + "/api/user/registered",
             cache: false,
         }).then((data: types.ApplicationsResponse) => {
             if (data.status === 0) {
-                self.setState({ applications: data.applications });
+                this.setState!({ applications: data.applications });
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    new: function() {
-        const self: Self = this;
-
-        self.setState({
-            idInEditing: null,
+    new: function(this: Self) {
+        this.setState!({
+            idInEditing: undefined,
             nameInEditing: "",
             homeUrlInEditing: "",
             descriptionInEditing: "",
@@ -66,26 +60,24 @@ const spec: Self = {
             clientSecretInEditing: "",
         });
     },
-    save: function() {
-        const self: Self = this;
-
-        if (self.state.idInEditing) {
+    save: function(this: Self) {
+        if (this.state!.idInEditing) {
             $.ajax({
-                url: apiBaseUrl + `/api/user/registered/${self.state.idInEditing}`,
+                url: apiBaseUrl + `/api/user/registered/${this.state!.idInEditing}`,
                 method: "PUT",
                 data: {
-                    name: self.state.nameInEditing,
-                    homeUrl: self.state.homeUrlInEditing,
-                    description: self.state.descriptionInEditing,
-                    authorizationCallbackUrl: self.state.authorizationCallbackUrlInEditing,
+                    name: this.state!.nameInEditing,
+                    homeUrl: this.state!.homeUrlInEditing,
+                    description: this.state!.descriptionInEditing,
+                    authorizationCallbackUrl: this.state!.authorizationCallbackUrlInEditing,
                 },
             }).then((data: types.Response) => {
                 if (data.status === 0) {
-                    global.head.showAlert(true, "success");
-                    self.new();
-                    self.get();
+                    global.head!.showAlert(true, "success");
+                    this.new();
+                    this.get();
                 } else {
-                    global.head.showAlert(false, data.errorMessage);
+                    global.head!.showAlert(false, data.errorMessage!);
                 }
             });
         } else {
@@ -93,83 +85,69 @@ const spec: Self = {
                 url: apiBaseUrl + "/api/user/registered",
                 method: "POST",
                 data: {
-                    name: self.state.nameInEditing,
-                    homeUrl: self.state.homeUrlInEditing,
-                    description: self.state.descriptionInEditing,
-                    authorizationCallbackUrl: self.state.authorizationCallbackUrlInEditing,
+                    name: this.state!.nameInEditing,
+                    homeUrl: this.state!.homeUrlInEditing,
+                    description: this.state!.descriptionInEditing,
+                    authorizationCallbackUrl: this.state!.authorizationCallbackUrlInEditing,
                 },
             }).then((data: types.Response) => {
                 if (data.status === 0) {
-                    global.head.showAlert(true, "success");
-                    self.new();
-                    self.get();
+                    global.head!.showAlert(true, "success");
+                    this.new();
+                    this.get();
                 } else {
-                    global.head.showAlert(false, data.errorMessage);
+                    global.head!.showAlert(false, data.errorMessage!);
                 }
             });
         }
     },
-    remove: function() {
-        const self: Self = this;
-
+    remove: function(this: Self) {
         $.ajax({
-            url: apiBaseUrl + `/api/user/registered/${self.state.idInEditing}`,
+            url: apiBaseUrl + `/api/user/registered/${this.state!.idInEditing}`,
             method: "DELETE",
         }).then((data: types.Response) => {
             if (data.status === 0) {
-                global.head.showAlert(true, "success");
-                self.new();
-                self.get();
+                global.head!.showAlert(true, "success");
+                this.new();
+                this.get();
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    resetClientSecret: function() {
-        const self: Self = this;
-
+    resetClientSecret: function(this: Self) {
         $.ajax({
-            url: apiBaseUrl + `/api/user/registered/${self.state.idInEditing}/client_secret`,
+            url: apiBaseUrl + `/api/user/registered/${this.state!.idInEditing}/client_secret`,
             method: "PUT",
         }).then((data: types.Response) => {
             if (data.status === 0) {
-                global.head.showAlert(true, "success");
-                self.new();
-                self.get();
+                global.head!.showAlert(true, "success");
+                this.new();
+                this.get();
             } else {
-                global.head.showAlert(false, data.errorMessage);
+                global.head!.showAlert(false, data.errorMessage!);
             }
         });
     },
-    nameInEditingChanged: function(e) {
-        const self: Self = this;
-
-        self.setState({ nameInEditing: e.target.value });
+    nameInEditingChanged: function(this: Self, e: common.Event) {
+        this.setState!({ nameInEditing: e.target.value });
     },
-    homeUrlInEditingChanged: function(e) {
-        const self: Self = this;
-
-        self.setState({ homeUrlInEditing: e.target.value });
+    homeUrlInEditingChanged: function(this: Self, e: common.Event) {
+        this.setState!({ homeUrlInEditing: e.target.value });
     },
-    descriptionInEditingChanged: function(e) {
-        const self: Self = this;
-
-        self.setState({ descriptionInEditing: e.target.value });
+    descriptionInEditingChanged: function(this: Self, e: common.Event) {
+        this.setState!({ descriptionInEditing: e.target.value });
     },
-    authorizationCallbackUrlInEditingChanged: function(e) {
-        const self: Self = this;
-
-        self.setState({ authorizationCallbackUrlInEditing: e.target.value });
+    authorizationCallbackUrlInEditingChanged: function(this: Self, e: common.Event) {
+        this.setState!({ authorizationCallbackUrlInEditing: e.target.value });
     },
-    componentDidMount: function() {
-        const self: Self = this;
-
-        self.get();
+    componentDidMount: function(this: Self) {
+        this.get();
     },
     getInitialState: function() {
         return {
             applications: [],
-            idInEditing: null,
+            idInEditing: undefined,
             nameInEditing: "",
             homeUrlInEditing: "",
             descriptionInEditing: "",
@@ -177,14 +155,12 @@ const spec: Self = {
             clientSecretInEditing: "",
         } as State;
     },
-    render: function() {
-        const self: Self = this;
-
-        const applicationsView = self.state.applications.map(application => {
+    render: function(this: Self) {
+        const applicationsView = this.state!.applications!.map(application => {
             return (
                 <tr key={application.id}>
                     <td>
-                        <a href="javascript:void(0)" onClick={self.edit.bind(this, application)}>{application.name}</a>
+                        <a href="javascript:void(0)" onClick={this.edit.bind(this, application)}>{application.name}</a>
                         <p>
                             client id: {application.clientId}
                         </p>
@@ -196,44 +172,44 @@ const spec: Self = {
         const nameView = (
             <div className="form-group">
                 <label htmlFor="name">name</label>
-                <input type="text" className="form-control" id="name" placeholder="name" onChange={self.nameInEditingChanged} value={self.state.nameInEditing}/>
+                <input type="text" className="form-control" id="name" placeholder="name" onChange={this.nameInEditingChanged} value={this.state!.nameInEditing}/>
             </div>
         );
         const homeUrlView = (
             <div className="form-group">
                 <label htmlFor="home-url">home url</label>
-                <input type="text" className="form-control" id="home-url" placeholder="https://" onChange={self.homeUrlInEditingChanged} value={self.state.homeUrlInEditing}/>
+                <input type="text" className="form-control" id="home-url" placeholder="https://" onChange={this.homeUrlInEditingChanged} value={this.state!.homeUrlInEditing}/>
             </div>
         );
         const descriptionView = (
             <div className="form-group">
                 <label htmlFor="description">description</label>
-                <input type="text" className="form-control" id="description" placeholder="optional" onChange={self.descriptionInEditingChanged} value={self.state.descriptionInEditing}/>
+                <input type="text" className="form-control" id="description" placeholder="optional" onChange={this.descriptionInEditingChanged} value={this.state!.descriptionInEditing}/>
             </div>
         );
         const authorizationCallbackUrl = (
             <div className="form-group">
                 <label htmlFor="authorizationCallbackUrl">authorization callback url</label>
-                <input type="text" className="form-control" id="authorizationCallbackUrl" placeholder="https://" onChange={self.authorizationCallbackUrlInEditingChanged} value={self.state.authorizationCallbackUrlInEditing}/>
+                <input type="text" className="form-control" id="authorizationCallbackUrl" placeholder="https://" onChange={this.authorizationCallbackUrlInEditingChanged} value={this.state!.authorizationCallbackUrlInEditing}/>
             </div>
         );
 
-        let applicationView;
-        if (self.state.idInEditing) {
+        let applicationView: JSX.Element | undefined = undefined;
+        if (this.state!.idInEditing) {
             applicationView = (
                 <form className="form">
-                    <button type="button" className="btn btn-default" onClick={self.new}>New</button>
+                    <button type="button" className="btn btn-default" onClick={this.new}>New</button>
                     <div className="form-group">
                         <label>client secret</label>
-                        <input type="text" className="form-control" readOnly value={self.state.clientSecretInEditing}/>
+                        <input type="text" className="form-control" readOnly value={this.state!.clientSecretInEditing}/>
                     </div>
-                    <button type="button" className="btn btn-danger" onClick={self.resetClientSecret}>Reset client secret</button>
+                    <button type="button" className="btn btn-danger" onClick={this.resetClientSecret}>Reset client secret</button>
                     {nameView}
                     {homeUrlView}
                     {descriptionView}
                     {authorizationCallbackUrl}
-                    <button type="button" className="btn btn-primary" onClick={self.save}>Update</button>
-                    <button type="button" className="btn btn-danger" onClick={self.remove}>Delete</button>
+                    <button type="button" className="btn btn-primary" onClick={this.save}>Update</button>
+                    <button type="button" className="btn btn-danger" onClick={this.remove}>Delete</button>
                 </form>
             );
         } else {
@@ -243,7 +219,7 @@ const spec: Self = {
                     {homeUrlView}
                     {descriptionView}
                     {authorizationCallbackUrl}
-                    <button type="button" className="btn btn-primary" onClick={self.save}>Register</button>
+                    <button type="button" className="btn btn-primary" onClick={this.save}>Register</button>
                 </form>
             );
         }

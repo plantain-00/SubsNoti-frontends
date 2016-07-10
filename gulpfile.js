@@ -4,20 +4,15 @@ const gulp = require("gulp");
 const rename = require("gulp-rename");
 const ejs = require("gulp-ejs");
 const webpack = require("webpack-stream");
-const minifyHtml = require("gulp-minify-html");
+const htmlmin = require("gulp-htmlmin");
 const rev = require("gulp-rev");
-const minifyCSS = require("gulp-minify-css");
+const cleanCSS = require("gulp-clean-css");
 const autoprefixer = require("autoprefixer");
 const postcss = require("gulp-postcss");
 const revReplace = require("gulp-rev-replace");
 const shell = require("gulp-shell");
 
 const pjson = require("./package.json");
-
-const minifyHtmlConfig = {
-    conditionals: true,
-    spare: true,
-};
 
 const command = "rm -rf build && tsc -p components --pretty && npm run tslint && sass styles/base.scss > build/base.css && scss-lint styles/*.scss";
 
@@ -72,7 +67,7 @@ function uglifyCss(isDevelopment) {
     else {
         return gulp.src("build/" + name + ".css")
             .pipe(postcss([autoprefixer({ browsers: ["last 2 versions"] })]))
-            .pipe(minifyCSS())
+            .pipe(cleanCSS({ compatibility: "ie8" }))
             .pipe(rename(name + ".min.css"))
             .pipe(gulp.dest("build/styles/"));
     }
@@ -153,7 +148,7 @@ function bundleAndUglifyHtml(isDevelopment) {
     else {
         return gulp.src("templates/" + name + ".ejs")
             .pipe(ejs(config))
-            .pipe(minifyHtml(minifyHtmlConfig))
+            .pipe(htmlmin({ collapseWhitespace: true }))
             .pipe(rename(name + ".html"))
             .pipe(revReplace({
                 manifest: manifest
